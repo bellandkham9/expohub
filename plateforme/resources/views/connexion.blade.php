@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - EHD</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #224194;
+             background-image: url("{{ asset('images/pattern.png') }}");
+             background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 95%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .social-btn:hover {
+            background-color: #f8f9fa;
+        }
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .google-btn {
+            color: #4285F4;
+        }
+        .facebook-btn {
+            color: #5477be;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+
+        <div class="logo">
+            <img src="{{ asset('images/expoH_logo.png') }}" alt="Logo" style="">
+        </div>
+        
+        <button class="social-btn google-btn">
+            <i class="fab fa-google"></i> Continuer avec Google
+        </button>
+        
+        <button class="social-btn facebook-btn">
+            <i class="fab fa-facebook-f"></i> Continuer avec Facebook
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
