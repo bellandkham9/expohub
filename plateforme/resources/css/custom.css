@@ -1,0 +1,70 @@
+/* la section IA robot */
+.gradient-bg {
+    background: linear-gradient(to bottom, #224194, #0b142e);
+    padding: 2rem;
+    border-radius: 30px;
+    color: white;
+}
+
+#robot-big-title {
+    font-size: 250%;
+}
+
+.justified-text {
+    text-align: justify;
+}
+
+/* boutton commencer maintenant */
+
+#btn-commencer {
+    background-color: #224194;
+    color: white;
+    border-radius: 30px;
+}
+
+/* boutton se connecter*/
+
+#btn-connecter {
+    border-color: #224194;
+    color: #224194;
+    border-radius: 30px;
+    border: 2px solid;
+}
+
+/* card type de test */
+
+.type-test {
+    width: 200px;
+    height: 150px;
+    justify-content: center;
+    border-color: #224194;
+    color: #49494e;
+    border: 3px solid #224194;
+    font-weight: 500;
+}
+
+.type-test:hover {
+    background-color: #224194;
+    color: white;
+}
+
+/* tester gratuitement */
+
+#btn-testGratuitement {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 30px;
+}
+#btn-testGratuitement1 {
+    margin-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 30px;
+    background-color: #224194;
+}
+
+.testimonial-card {
+    border-radius: 10px;
+    border: 2px solid #224194;
+}
