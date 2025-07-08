@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-light">
+    <div class="">
 
         <!-- Header -->
         <nav class="navbar navbar-expand-lg bg-white  sticky-top">
@@ -67,33 +67,51 @@
                                             </div>
                                             <hr class="my-2">
                                             <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Résultats :</strong> 600
+
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-md-5">
+                                                            <strong>Résultats :</strong> 600
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <strong>Réponses exactes :</strong> 65 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses exactes :</strong> 65 / 78
+                                                <div class="col-md-4">
+
                                                 </div>
 
                                             </div>
-                                            <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Niveau :</strong> C2
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-4 col-md-5">
+                                                            <strong>Niveau :</strong> C2
+                                                        </div>
+                                                        <div class="col-8 col-md-7">
+                                                            <strong>Réponses fausses :</strong> 13 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses fausses :</strong> 13 / 78
+                                                <div class="col-md-4">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
+                                                        <a href="#" class="btn "
+                                                            style="border: 2px solid #224194;">Plus de
+                                                            détails</a>
+                                                        <a href="#" class="btn "
+                                                            style="background-color:  #224194; color: white;">Refaire le
+                                                            test</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
-                                                    détails</a>
-                                                <a href="#" class="btn "
-                                                    style="background-color:  #224194; color: white;">Refaire le test</a>
-                                            </div>
+
+
                                         </div>
                                     </div>
 
                                 </li>
-                                <li>
+                               <li>
                                     <div class="container my-3">
                                         <div class="border rounded shadow-sm p-3">
                                             <div class="d-flex flex-column flex-md-row justify-content-between">
@@ -107,34 +125,51 @@
                                             </div>
                                             <hr class="my-2">
                                             <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Résultats :</strong> 600
+
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-md-5">
+                                                            <strong>Résultats :</strong> 600
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <strong>Réponses exactes :</strong> 65 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses exactes :</strong> 65 / 78
+                                                <div class="col-md-4">
+
                                                 </div>
 
                                             </div>
-                                            <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Niveau :</strong> C2
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-4 col-md-5">
+                                                            <strong>Niveau :</strong> C2
+                                                        </div>
+                                                        <div class="col-8 col-md-7">
+                                                            <strong>Réponses fausses :</strong> 13 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses fausses :</strong> 13 / 78
+                                                <div class="col-md-4">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
+                                                        <a href="#" class="btn "
+                                                            style="border: 2px solid #224194;">Plus de
+                                                            détails</a>
+                                                        <a href="#" class="btn "
+                                                            style="background-color:  #224194; color: white;">Refaire le
+                                                            test</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
-                                                    détails</a>
-                                                <a href="#" class="btn "
-                                                    style="background-color:  #224194; color: white;">Refaire le test</a>
-                                            </div>
+
+
                                         </div>
                                     </div>
 
                                 </li>
-
-                                <li>
+                                 <li>
                                     <div class="container my-3">
                                         <div class="border rounded shadow-sm p-3">
                                             <div class="d-flex flex-column flex-md-row justify-content-between">
@@ -148,33 +183,108 @@
                                             </div>
                                             <hr class="my-2">
                                             <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Résultats :</strong> 600
+
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-md-5">
+                                                            <strong>Résultats :</strong> 600
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <strong>Réponses exactes :</strong> 65 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses exactes :</strong> 65 / 78
+                                                <div class="col-md-4">
+
                                                 </div>
 
                                             </div>
-                                            <div class="row g-2 mb-3">
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Niveau :</strong> C2
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-4 col-md-5">
+                                                            <strong>Niveau :</strong> C2
+                                                        </div>
+                                                        <div class="col-8 col-md-7">
+                                                            <strong>Réponses fausses :</strong> 13 / 78
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-6 col-md-3">
-                                                    <strong>Réponses fausses :</strong> 13 / 78
+                                                <div class="col-md-4">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
+                                                        <a href="#" class="btn "
+                                                            style="border: 2px solid #224194;">Plus de
+                                                            détails</a>
+                                                        <a href="#" class="btn "
+                                                            style="background-color:  #224194; color: white;">Refaire le
+                                                            test</a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                <a href="#" class="btn " style="border: 2px solid #224194;">Plus
-                                                    de détails</a>
-                                                <a href="#" class="btn "
-                                                    style="background-color:  #224194; color: white;">Refaire le test</a>
-                                            </div>
+
+
                                         </div>
                                     </div>
 
                                 </li>
+                                 <li>
+                                    <div class="container my-3">
+                                        <div class="border rounded shadow-sm p-3">
+                                            <div class="d-flex flex-column flex-md-row justify-content-between">
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">TCF CANADA, expression écrit</h6>
+                                                </div>
+                                                <div class="text-md-end text-muted small">
+                                                    <div><strong>60 min</strong></div>
+                                                    <div>11 Déc 2025</div>
+                                                </div>
+                                            </div>
+                                            <hr class="my-2">
+                                            <div class="row g-2 mb-3">
 
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-md-5">
+                                                            <strong>Résultats :</strong> 600
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <strong>Réponses exactes :</strong> 65 / 78
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-4 col-md-5">
+                                                            <strong>Niveau :</strong> C2
+                                                        </div>
+                                                        <div class="col-8 col-md-7">
+                                                            <strong>Réponses fausses :</strong> 13 / 78
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
+                                                        <a href="#" class="btn "
+                                                            style="border: 2px solid #224194;">Plus de
+                                                            détails</a>
+                                                        <a href="#" class="btn "
+                                                            style="background-color:  #224194; color: white;">Refaire le
+                                                            test</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </li>
                             </ul>
                         </div>
                     </div>

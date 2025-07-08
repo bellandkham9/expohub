@@ -172,4 +172,10 @@ ul {
     color: white;
 }
 
+#label-left, #label-right {
+  font-weight: 500;
+  color: black;
+}
+
+
 

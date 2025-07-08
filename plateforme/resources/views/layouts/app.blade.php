@@ -8,8 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('../../css/app.css') }}">
-
+   
     <title>Document</title>
     <style>
         .shadowed {
@@ -60,12 +59,12 @@
         }
     </style>
 
-    @vite(['resources/sass/app.scss', 'resources/css/custom.css', 'resources/js/app.sjs'])
+    @vite(['resources/sass/app.scss', 'resources/css/custom.css', 'resources/css/dashboard-client.css', 'resources/js/app.sjs'])
 </head>
 
 <body class="bg-dark">
-    <div id="app" class="bg-light">
-        <main class="bg-light">
+    <div id="app" class="" style="background-color: white">
+        <main class="">
             @yield('content')
         </main>
     </div>

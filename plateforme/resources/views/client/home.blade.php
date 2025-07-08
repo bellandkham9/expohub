@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="bg-light">
+    <div class="">
 
         <!-- Header -->
         <nav class="navbar navbar-expand-lg bg-white sticky-top">

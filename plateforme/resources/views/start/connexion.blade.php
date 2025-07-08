@@ -15,22 +15,36 @@
              background-image: url("{{ asset('images/pattern.png') }}");
              background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
             display: flex;
+            background-repeat: no-repeat;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            margin: 0 auto;
         }
         .login-container {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             padding: 40px;
-            width: 95%;
+            width: 100%;
             max-width: 400px;
             text-align: center;
         }
+        .welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.welcome-title {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: -10px; /* pour coller un peu à la box */
+}
+
         .logo {
             font-size: 36px;
             font-weight: bold;
@@ -66,22 +80,24 @@
     </style>
 </head>
 <body>
-    <div class="login-container">
+    <div class="welcome-container">
+        <h3 class="welcome-title">Bienvenue !</h3>
 
-        <div class="logo">
-            <img src="{{ asset('images/expoH_logo.png') }}" alt="Logo" style="">
+        <div class="login-container">
+            <div class="logo">
+                <img src="{{ asset('images/expoH_logo.png') }}" alt="Logo">
+            </div>
+
+            <button class="social-btn google-btn">
+                <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
+            </button>
+
+            <button class="social-btn facebook-btn">
+                <img src="{{ asset('images/facebook.png') }}" class="m-2"  alt="Logo"> Continuer avec Facebook
+            </button>
         </div>
-        
-        <button class="social-btn google-btn">
-            <i class="fab fa-google"></i> Continuer avec Google
-        </button>
-        
-        <button class="social-btn facebook-btn">
-            <i class="fab fa-facebook-f"></i> Continuer avec Facebook
-        </button>
     </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
+
 </html>
