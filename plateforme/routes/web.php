@@ -47,6 +47,23 @@ Route::get('/expression_ecrite', function () {
 
 // la partie admin
 
-Route::get('/utilisateur', function () {
+Route::get('/admin/gestion_utilisateur', function () {
     return view('admin/gestion_utilisateur');
+});
+
+Route::get('/admin/test', function () {
+    return view('admin/test');
+});
+
+Route::get('/admin/fichier_q_r', function () {
+    return view('admin/fichier_q_r');
+});
+
+Route::get('/admin/model_question', function () {
+    return view('admin/model_question');
+});
+
+
+Route::get('/admin/gestion_tests', function () {
+    return view('admin/gestion_tests');
 });

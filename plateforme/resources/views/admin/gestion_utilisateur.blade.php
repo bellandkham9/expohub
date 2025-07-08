@@ -13,72 +13,137 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
         }
+
         .sidebar {
             background-color: white;
             height: 100vh;
             position: sticky;
             top: 0;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
+
         .main-content {
             padding: 20px;
         }
+
         .user-table {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             overflow: hidden;
         }
+
         .table-responsive {
             overflow-x: auto;
         }
+
         .table thead th {
             border-bottom: 2px solid #dee2e6;
             font-weight: 600;
             color: #495057;
         }
+
         .table tbody tr:hover {
             background-color: #f8f9fa;
         }
+
         .role-badge {
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 0.75rem;
             font-weight: 500;
         }
+
         .admin-badge {
             background-color: #e3f2fd;
             color: #1976d2;
         }
+
         .dev-badge {
             background-color: #e8f5e9;
             color: #388e3c;
         }
+
         .designer-badge {
             background-color: #f3e5f5;
             color: #8e24aa;
         }
+
         .action-btn {
             padding: 5px 10px;
             font-size: 0.85rem;
         }
+
         .status-text {
             font-size: 0.85rem;
             color: #6c757d;
         }
+
         .header-card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             padding: 15px;
             margin-bottom: 20px;
         }
+
         @media (max-width: 992px) {
             .sidebar {
                 height: auto;
                 position: relative;
             }
         }
+
+        /*========>     CARD STYLE*/
+        .stat-card {
+            width: 280px;
+            border-radius: 1rem;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            background-color: #00e676;
+            width: 56px;
+            height: 56px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-icon i {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-data .label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .stat-data .count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stat-footer {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .stat-footer .up {
+            color: #00e676;
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
@@ -122,9 +187,31 @@
                 </button>
             </div>
 
+
+            <!-- CARDS -->
+            <div class="row pw-3">
+                <div class="col-auto mb-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="stat-data">
+                            <div class="label">Utilisateurs actifs</div>
+                            <div class="count">128</div>
+                            <div class="stat-footer">
+                                <span class="up">+1</span> par rapport à hier
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
-                <!-- Header Cards -->
+                <!-- Filters -->
                 <div class="header-card">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="h4 mb-0">Liste des utilisateurs</h2>
