@@ -27,3 +27,10 @@ Route::get('/contact', function () {
 Route::get('/paiement', function () {
     return view('client/paiement');
 });
+
+
+// la partie admin
+
+Route::get('/utilisateur', function () {
+    return view('admin/gestion_utilisateur');
+});
