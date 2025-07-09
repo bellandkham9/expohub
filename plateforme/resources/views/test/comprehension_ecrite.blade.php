@@ -11,39 +11,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/expression_ecrite.css')
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
-            color: #333;
-        }
-
         .test-container {
             background-color: white;
         }
 
-        .test-header {
-            border-bottom: 1px solid #eee;
-            padding: 20px;
-        }
-
-        .test-title {
-            color: #224194;
-            font-weight: 600;
-        }
-
-        .question-section {
-            padding: 25px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .question-title {
-            color: #224194;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
         .chat-container {
-            height: 300px;
+
             overflow-y: auto;
             padding: 15px;
             background-color: #F8F9FA;
@@ -62,22 +35,29 @@
             color: black;
             border-radius: 15px 15px 0 15px;
             padding: 10px 15px;
+            display: flex;
+            width: 30%;
+            align-items: center;
             box-shadow: 1px 1px 1px rgb(193, 192, 192)
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 5px;
         }
 
         .bot-message {
             background-color: #FEF8E7;
             border-radius: 15px 15px 15px 0;
             padding: 10px 15px;
-            box-shadow: 1px 1px 1px rgb(193, 192, 192)
+            box-shadow: 1px 1px 1px rgb(193, 192, 192);
+            margin: 8px;
         }
 
-        .input-group {
-            margin-top: 20px;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 2px 2px 2px 1px rgb(179, 178, 178)
-        }
+
 
         #btn-abonne {
             background-color: #BB1C1E;
@@ -99,13 +79,18 @@
             background-color: #f8d7da;
             color: #721c24;
         }
+
+        #inpu-group {
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 2px 2px 2px 2px gainsboro
+        }
     </style>
 </head>
 
 <body>
     <div class="container py-5">
         <div class="test-container">
-
             <!-- Chat Interface -->
             <div class="p-4">
                 <div class="row g-2 gap-x-4 gap-y-4 justify-between">
@@ -113,7 +98,7 @@
                         <h4>60 : 00</h4>
                     </div>
                     <div class="col-md-4  d-flex justify-content-center my-3">
-                        <h3>TCF CANADA, Expression écrite</h3>
+                        <h3>TCF CANADA, Expression orale</h3>
                     </div>
                     <div class="col-md-4 d-flex justify-content-center my-3">
                         <button id="btn-abonne" class="btn btn-outline-danger px-4 py-2" type="button">
@@ -123,25 +108,60 @@
                 </div>
                 <div class="chat-container mb-3" id="chatWindow">
                     <!-- Sample Chat Messages -->
-                    <div class="message bot-message">
-                        <strong>Assistant:</strong> Bonjour! Comment puis-je vous aider avec votre test d'expression
-                        écrite?
-                    </div>
-                    <div class="message user-message">
-                        <strong>Vous:</strong> Je ne comprends pas la deuxième question
-                    </div>
-                    <div class="message bot-message">
-                        <strong>Assistant:</strong> La question 2 vous demande de décrire une image de 433x140 pixels.
-                        Concentrez-vous sur les éléments visibles et utilisez un vocabulaire varié.
+                    <div class="p-3 shadow-lg rounded text-center" style="width: 500px; height: 350px; margin-top: 15px; background-color: #FEF8E7; margin: 0 auto;">
+                        <p class="mb-0" style="align-items: baseline">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer interdum quam eu sem
+                            lobortis, et dignissim nunc rhoncus. Curabitur finibus, dolor nec vestibulum consectetur,
+                            arcu diam vestibulum nisl, sit amet imperdiet magna nulla sed magna. Donec fermentum aliquam
+                            ligula in lobortis. Morbi aliquam, massa in vestibulum eleifend, nibh l
+                        </p>
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <input type="text" class="form-control" id="chatInput" placeholder="Un petit texte ici......">
-                    <button class="btn " id="sendButton">
-                        <img src="{{ asset('images/send.png') }}" alt="Profil" class="" style="">
-                    </button>
+                <div id="inpu-group" class="container  my-5">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ?</h3>
+                    </div>
+
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-5 btn">
+                            <div class="p-3 shadow-lg rounded bg-white text-center h-100">
+                                <p class="mb-0">
+                                    <span class="fw-bold fs-4 me-2">A</span>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5 btn">
+                            <div class="p-3 shadow-lg rounded bg-white text-center h-100">
+                                <p class="mb-0">
+                                    <span class="fw-bold fs-4 me-2">B</span>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 justify-content-center mt-3">
+                        <div class="col-md-5 btn">
+                            <div class="p-3 shadow-lg rounded bg-white text-center h-100">
+                                <p class="mb-0">
+                                    <span class="fw-bold fs-4 me-2">C</span>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5 btn">
+                            <div class="p-3 shadow-lg rounded bg-white text-center h-100">
+                                <p class="mb-0">
+                                    <span class="fw-bold fs-4 me-2">D</span>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
