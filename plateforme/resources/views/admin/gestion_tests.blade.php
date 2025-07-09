@@ -182,7 +182,7 @@
                         <h2 class="h4 mb-0">Liste des tests</h2>
                         <div class="d-flex align-items-center">
                             <input type="text" id="searchInput" class="form-control me-3" placeholder="Rechercher...">
-                            <button type="button" class="btn btn-primary btn-add-test" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                            <button type="button" class="btn btn-primary btn-add-test" data-bs-toggle="modal" data-bs-target="#ajoutTestModal">
                                 <i class="fas fa-plus me-1"></i> Ajouter un Test
                             </button>
 

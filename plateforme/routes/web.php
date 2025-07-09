@@ -86,9 +86,13 @@ Route::get('/admin/model_question', function () {
     return view('admin/model_question');
 })->name('model_question');
 
-Route::get('/admin/gestion_tests', function () {
+/* Route::get('/admin/gestion_tests', function () {
     return view('admin/gestion_tests');
 })->name('gestion_tests');
+ */
+Route::get('/admin/gestion_test', function () {
+    return view('admin/gestion_test');
+})->name('gestion_test');
 
 Route::get('/admin/model_examen', function () {
     return view('admin/model_examen');
