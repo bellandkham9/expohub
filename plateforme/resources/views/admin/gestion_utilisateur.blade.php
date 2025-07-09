@@ -364,8 +364,77 @@
                                     <th class="text-light">Actions</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                <!-- Utilisateur fictif répété -->
+                                {{--
+                                @for ($i = 1; $i <= 5; $i++) <tr>
+                                    <td><input type="checkbox" class="form-check-input"></td>
+                                    <td>M. Hervé</td>
+                                    <td>herve.ei@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary action-btn me-1" type="button" data-bs-toggle="modal" data-bs-target="#modifier_utilisateur_{{ $i }}">
+                                <i class="fas fa-edit"></i>
+                                </button>
+
+                                <!-- Modal Modifier -->
+                                <div class="modal fade" id="modifier_utilisateur_{{ $i }}" tabindex="-1" aria-labelledby="modifier_utilisateur_{{ $i }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Modifier un utilisateur</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="">
+                                                    <div class="form-floating mb-3">
+                                                        <input type="email" class="form-control" id="floatingInput_{{ $i }}" placeholder="name@example.com">
+                                                        <label for="floatingInput_{{ $i }}">mail de l'utilisateur</label>
+                                                    </div>
+                                                    <select class="form-select form-select-sm" aria-label="Small select example">
+                                                        <option selected>Selectionner le rôle</option>
+                                                        <option value="1">Admin</option>
+                                                        <option value="2">Utilisateur</option>
+                                                        <option value="3">Invité</option>
+                                                    </select>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn btn-primary">Modifier l'utilisateur</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-sm btn-outline-danger action-btn" type="button" data-bs-toggle="modal" data-bs-target="#supprimerUser_{{ $i }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+
+                                <!-- Modal Supprimer -->
+                                <div class="modal fade" id="supprimerUser_{{ $i }}" tabindex="-1" aria-labelledby="supprimerUser_{{ $i }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5">Supprimer un utilisateur</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Voulez-vous vraiment supprimer cet utilisateur ? Cette action est irréversible.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn btn-danger">Supprimer l'utilisateur</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </td>
+                                </tr>
+                                @endfor
+                                --}}
+
                                 <!-- Répéter manuellement pour l'exemple -->
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
@@ -374,12 +443,65 @@
                                     <td><span class="role-badge admin-badge">Admin</span></td>
                                     <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary action-btn me-1">
+                                        <button class="btn btn-sm btn-outline-primary action-btn me-1" type="button" data-bs-toggle="modal" data-bs-target="#modifier_utilisateur">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger action-btn">
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="modifier_utilisateur" tabindex="-1" aria-labelledby="modifier_utilisateur" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="modifier_utilisateur">Modifier un utilisateur</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="">
+                                                            <div class="form-floating mb-3">
+                                                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                                                <label for="floatingInput">mail de l'utilisateur</label>
+
+                                                            </div>
+                                                            <select class="form-select form-select-sm" aria-label="Small select example">
+                                                                <option selected>Selectionner le role</option>
+                                                                <option value="1">One</option>
+                                                                <option value="2">Two</option>
+                                                                <option value="3">Three</option>
+                                                            </select>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button type="button" class="btn btn-primary">Modifier l'utilisateur</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <button class="btn btn-sm btn-outline-danger action-btn" type="button" data-bs-toggle="modal" data-bs-target="#supprimerUser">
                                             <i class="fas fa-trash-alt"></i>
                                         </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="supprimerUser" tabindex="-1" aria-labelledby="supprimerUser" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="supprimerUser">Supprimer un utilisateur</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            Voulez-vous vraiment supprimer cet utilisateur ? Cette action est irréversible.
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                        <button type="button" class="btn btn-danger">Supprimer l'utilisateur</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
