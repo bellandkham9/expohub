@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-   
+
     <title>Document</title>
     <style>
         .shadowed {
@@ -57,6 +57,13 @@
             padding: 30px;
             border-radius: 30px;
         }
+
+        /*========>     STYLE SIDEBAR*/
+        .sidebar .nav-link.active {
+            background-color: #f0f8ff;
+            border-radius: 0.5rem;
+        }
+
     </style>
 
     @vite(['resources/sass/app.scss', 'resources/css/custom.css', 'resources/css/suggestion.css',  'resources/css/choix_test.css', 'resources/css/dashboard-client.css', 'resources/js/app.sjs'])
@@ -70,7 +77,7 @@
     </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 
 </body>
 

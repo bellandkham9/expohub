@@ -91,31 +91,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 sidebar">
-                <h5 class="mb-4 text-primary fw-bold">ExpoHub</h5>
-                <div class="d-flex align-items-center mb-4">
-                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User" />
-                    <div>
-                        <div class="fw-bold">Maya AKAMA</div>
-                        <div class="text-muted small"><i class="fas fa-chevron-down"></i></div>
-                    </div>
-                </div>
-
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#"><i class="fas fa-users me-2"></i> Gestion des Utilisateurs</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#"><i class="fas fa-chart-bar me-2"></i> Statistiques</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link active" href="#"><i class="fas fa-tasks me-2"></i> Gestion des tests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-calendar-alt me-2"></i> Gestion des activités</a>
-                    </li>
-                </ul>
-            </div>
+            @include('admin.partials.side_bar')
 
             <!-- Main content -->
             <div class="col-lg-10 col-md-9 p-4">
