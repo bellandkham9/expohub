@@ -86,14 +86,6 @@
             color: #aaa;
         }
 
-        .chart-placeholder {
-            background-color: white;
-            border-radius: 1rem;
-            height: 300px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-        }
-
         .print-btn {
             background-color: #2f54eb;
             color: #fff;
@@ -102,14 +94,15 @@
             font-weight: 500;
         }
 
-        @media (max-width: 992px) {
-            .sidebar {
-                position: relative;
-                height: auto;
-            }
+        /* ========= TEST CARDS ========== */
+        .card-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        /*========= TEST CARDS*/
         .test-card {
             background-color: white;
             border-radius: 12px;
@@ -153,6 +146,25 @@
             color: #000;
         }
 
+        .header-card {
+            background-color: none;
+            border-radius: 8px;
+            /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);*/
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: relative;
+                height: auto;
+            }
+
+            .card-row {
+                justify-content: center;
+            }
+        }
+
     </style>
 </head>
 
@@ -160,164 +172,151 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-2 col-md-3 sidebar">
-                <h5 class="mb-4 text-primary fw-bold">EXPO HUB</h5>
-
-                <div class="d-flex align-items-center mb-4">
-                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="User" />
-                    <div>
-                        <div class="fw-bold">Maya AKAMA</div>
-                        <div class="text-muted small"><i class="fas fa-chevron-down"></i></div>
-                    </div>
-                </div>
-
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#"><i class="fas fa-users me-2"></i> Gestion des Utilisateurs</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link active" href="#"><i class="fas fa-chart-bar me-2"></i> Statistiques</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#"><i class="fas fa-tasks me-2"></i> Gestion des tests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-calendar-alt me-2"></i> Gestion des activités</a>
-                    </li>
-                </ul>
-            </div>
+            @include('admin.partials.side_bar')
 
             <!-- Main content -->
             <div class="col-lg-10 col-md-9 p-4">
-                <!-- Cards -->
-                <div class="row g-3 mb-4">
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon gray"><i class="fas fa-user"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Utilisateurs inscrits</div>
-                                <div class="count">281</div>
-                                <div class="footer">Temps</div>
-                            </div>
+                <!-- Stat Cards -->
+                <div class="card-row">
+                    <div class="stat-card">
+                        <div class="stat-icon gray"><i class="fas fa-user"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Utilisateurs inscrits</div>
+                            <div class="count">281</div>
+                            <div class="footer">Temps</div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon green"><i class="fas fa-store"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Utilisateurs actifs</div>
-                                <div class="count">128</div>
-                                <div class="footer">Temps</div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-store"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Utilisateurs actifs</div>
+                            <div class="count">128</div>
+                            <div class="footer">Temps</div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Utilisateurs inactifs</div>
-                                <div class="count">2,300</div>
-                                <div class="footer">Temps</div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Utilisateurs inactifs</div>
+                            <div class="count">2,300</div>
+                            <div class="footer">Temps</div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon gray"><i class="fas fa-user"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Test effectué</div>
-                                <div class="count">281</div>
-                                <div class="footer">Temps</div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gray"><i class="fas fa-user"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Test effectué</div>
+                            <div class="count">281</div>
+                            <div class="footer">Temps</div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon green"><i class="fas fa-store"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Taux de réussite</div>
-                                <div class="count">181</div>
-                                <div class="footer">Temps</div>
-                            </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fas fa-store"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Taux de réussite</div>
+                            <div class="count">181</div>
+                            <div class="footer">Temps</div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <div class="stat-card">
-                            <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
-                            <div class="stat-content">
-                                <div class="label">Abandonnés</div>
-                                <div class="count">100</div>
-                                <div class="footer">Temps</div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
+                        <div class="stat-content">
+                            <div class="label">Abandonnés</div>
+                            <div class="count">100</div>
+                            <div class="footer">Temps</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-card d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Liste des tests</h2>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="searchInput" class="form-control me-3" placeholder="Rechercher...">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fas fa-plus me-1"></i> Ajouter un Test
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un test</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" placeholder="Donnez un nom a votre test">
+                                                <label for="floatingInput">Donnez un nom a votre test *</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="floatingInput" placeholder="Ajoutez une descripti
+                                                <label for="floatingInput">Ajoutez une description</label>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="button" class="btn btn-primary">Ajouter un test</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Test Cards -->
+                <div class="card-row">
 
-
-
-                <div class="row g-3 mb-4">
-
-                    <div class="col-auto">
-                        <div class="test-card">
-                            <div class="test-content">
-                                <div class="label fw-bold">TCF CANADA</div>
-                                <div class="description">Une petite description ici pour parler du testt</div>
-                                <div class="footer d-flex justify-content-end gap-2">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                    <div class="test-card">
+                        <div class="test-content">
+                            <div class="label fw-bold">TCF CANADA</div>
+                            <div class="description">Une petite description ici pour parler du testt</div>
+                            <div class="footer d-flex justify-content-end gap-2">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="test-card">
-                            <div class="test-content">
-                                <div class="label fw-bold">TCF QUEBEC</div>
-                                <div class="description">Une petite description ici pour parler du testt</div>
-                                <div class="footer d-flex justify-content-end gap-2">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                    <div class="test-card">
+                        <div class="test-content">
+                            <div class="label fw-bold">TCF QUEBEC</div>
+                            <div class="description">Une petite description ici pour parler du testt</div>
+                            <div class="footer d-flex justify-content-end gap-2">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="test-card">
-                            <div class="test-content">
-                                <div class="label fw-bold">TEF</div>
-                                <div class="description">Une description pour expliquer le déroulement du test en France</div>
-                                <div class="footer d-flex justify-content-end gap-2">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                    <div class="test-card">
+                        <div class="test-content">
+                            <div class="label fw-bold">TEF</div>
+                            <div class="description">Une description pour expliquer le déroulement du test en France</div>
+                            <div class="footer d-flex justify-content-end gap-2">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="test-card">
-                            <div class="test-content">
-                                <div class="label fw-bold">DELF</div>
-                                <div class="description">Détails concernant les modalités du test en Belgique</div>
-                                <div class="footer d-flex justify-content-end gap-2">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                    <div class="test-card">
+                        <div class="test-content">
+                            <div class="label fw-bold">DELF</div>
+                            <div class="description">Détails concernant les modalités du test en Belgique</div>
+                            <div class="footer d-flex justify-content-end gap-2">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-auto">
-                        <div class="test-card">
-                            <div class="test-content">
-                                <div class="label fw-bold">DALF</div>
-                                <div class="description">Détails concernant les modalités du test en Belgique</div>
-                                <div class="footer d-flex justify-content-end gap-2">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash-alt"></i>
-                                </div>
+                    <div class="test-card">
+                        <div class="test-content">
+                            <div class="label fw-bold">DALF</div>
+                            <div class="description">Détails concernant les modalités du test en Belgique</div>
+                            <div class="footer d-flex justify-content-end gap-2">
+                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-trash-alt"></i>
                             </div>
                         </div>
                     </div>

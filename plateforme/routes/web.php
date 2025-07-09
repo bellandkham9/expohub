@@ -33,21 +33,29 @@ Route::get('/paiement', function () {
 
 Route::get('/admin/gestion_utilisateur', function () {
     return view('admin/gestion_utilisateur');
-});
-
-Route::get('/admin/test', function () {
-    return view('admin/test');
-});
+})->name('gestion_utilisateurs');
 
 Route::get('/admin/fichier_q_r', function () {
     return view('admin/fichier_q_r');
-});
+})->name('fichier_q_r');
 
 Route::get('/admin/model_question', function () {
     return view('admin/model_question');
-});
-
+})->name('model_question');
 
 Route::get('/admin/gestion_tests', function () {
     return view('admin/gestion_tests');
-});
+})->name('gestion_tests');
+
+Route::get('/admin/model_examen', function () {
+    return view('admin/model_examen');
+})->name('model_examen');
+
+Route::get('/admin/model_reponse', function () {
+    return view('admin/model_reponse');
+})->name('model_reponse');
+
+Route::get('/admin/statistiques', function () {
+    return view('admin/statistiques');
+})->name('statistiques');
+

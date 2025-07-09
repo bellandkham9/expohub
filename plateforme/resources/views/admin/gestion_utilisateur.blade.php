@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Utilisateurs</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -59,16 +57,6 @@
             color: #1976d2;
         }
 
-        .dev-badge {
-            background-color: #e8f5e9;
-            color: #388e3c;
-        }
-
-        .designer-badge {
-            background-color: #f3e5f5;
-            color: #8e24aa;
-        }
-
         .action-btn {
             padding: 5px 10px;
             font-size: 0.85rem;
@@ -80,9 +68,9 @@
         }
 
         .header-card {
-            background-color: white;
+            background-color: none;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);*/
             padding: 15px;
             margin-bottom: 20px;
         }
@@ -94,54 +82,68 @@
             }
         }
 
-        /*========>     CARD STYLE*/
+        .card-row {
+            width: 100%;
+            max-width: 100%;
+            /* Même largeur que la table */
+            gap: 1rem;
+        }
+
         .stat-card {
-            width: 280px;
+            background-color: #fff;
             border-radius: 1rem;
-            background-color: #f8f9fa;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             padding: 1rem;
             display: flex;
             align-items: center;
             gap: 1rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            min-width: 260px;
+            flex: 0;
+            min-width: 240px;
+            margin-bottom: 1rem;
         }
 
         .stat-icon {
-            background-color: #00e676;
-            width: 56px;
-            height: 56px;
+            width: 48px;
+            height: 48px;
             border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #fff;
             flex-shrink: 0;
         }
 
-        .stat-icon i {
-            color: white;
-            font-size: 1.5rem;
+        .stat-icon.gray {
+            background-color: #b0b0b0;
         }
 
-        .stat-data .label {
+        .stat-icon.green {
+            background-color: #00e676;
+        }
+
+        .stat-icon.red {
+            background-color: #e74c3c;
+        }
+
+        .stat-content .label {
             font-size: 0.875rem;
             color: #6c757d;
         }
 
-        .stat-data .count {
+        .stat-content .count {
             font-size: 1.5rem;
             font-weight: 700;
             color: #2c3e50;
         }
 
-        .stat-footer {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-top: 0.25rem;
+        .stat-content .footer {
+            font-size: 0.8rem;
+            color: #aaa;
         }
 
-        .stat-footer .up {
-            color: #00e676;
-            font-weight: 500;
+        #searchInput {
+            width: 250px;
         }
 
     </style>
@@ -149,111 +151,102 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-3">
-                <h4 class="mb-4">Menu</h4>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link active" href="#"><i class="fas fa-chart-bar me-2"></i> Statistiques</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#"><i class="fas fa-tasks me-2"></i> Gestion des tests</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-calendar-alt me-2"></i> Gestion des activités</a>
-                    </li>
-                </ul>
+            @include('admin.partials.side_bar')
 
-                <hr class="my-4">
-
-                <h5 class="mb-3">Listation en outre</h5>
-                <div class="mb-3">
-                    <small class="text-muted">Lité</small>
-                    <div class="fw-bold">+8 Cette semaine</div>
-                </div>
-                <div class="mb-3">
-                    <small class="text-muted">Utilisateurs</small>
-                    <div class="fw-bold">+3 Cette semaine</div>
-                </div>
-                <div class="mb-3">
-                    <small class="text-muted">Total</small>
-                    <div class="fw-bold">2,300</div>
-                </div>
-
-                <hr class="my-4">
-
-                <button class="btn btn-primary w-100 mt-3">
-                    <i class="fas fa-plus me-2"></i> Ajouter un utilisateur
-                </button>
-            </div>
-
-
-            <!-- CARDS -->
-            <div class="row pw-3">
-                <div class="col-auto mb-3">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-store"></i>
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Stat Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="card-row d-flex justify-content-between flex-wrap mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon gray"><i class="fas fa-user"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Utilisateurs inscrits</div>
+                                <div class="count">281</div>
+                                <div class="footer">Temps</div>
+                            </div>
                         </div>
-                        <div class="stat-data">
-                            <div class="label">Utilisateurs actifs</div>
-                            <div class="count">128</div>
-                            <div class="stat-footer">
-                                <span class="up">+1</span> par rapport à hier
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="fas fa-store"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Utilisateurs actifs</div>
+                                <div class="count">128</div>
+                                <div class="footer">Temps</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Utilisateurs inactifs</div>
+                                <div class="count">2,300</div>
+                                <div class="footer">Temps</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="header-card d-flex justify-content-between align-items-center">
+                    <h2 class="h4 mb-0">Liste des utilisateurs</h2>
+                    <div class="d-flex align-items-center">
+                        <input type="text" id="searchInput" class="form-control me-3" placeholder="Rechercher...">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fas fa-plus me-1"></i> Ajouter un utilisateur
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un test</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="">
+                                            <div class="form-floating mb-3">
+                                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                                                <label for="floatingInput">mail de l'utilisateur</label>
+
+                                            </div>
+                                            <select class="form-select form-select-sm" aria-label="Small select example">
+                                                <option selected>Selectionner le role</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="button" class="btn btn-primary">Ajouter un utilisateur</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-
-
-
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 main-content">
-                <!-- Filters -->
-                <div class="header-card">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h2 class="h4 mb-0">Liste des utilisateurs</h2>
-                        <div>
-                            <button class="btn btn-outline-danger me-2">
-                                <i class="fas fa-trash-alt me-1"></i> Supprimer
-                            </button>
-                            <button class="btn btn-primary">
-                                <i class="fas fa-plus me-1"></i> Nouveau
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User Table -->
                 <div class="user-table">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table class="table table-hover mb-0" id="userTable">
                             <thead>
-                                <tr>
-                                    <th width="40"></th>
-                                    <th>Nom</th>
-                                    <th>Email</th>
-                                    <th>Rôle</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
+                                <tr class="table-dark">
+                                    <th><input type="checkbox" class="form-check-input"></th>
+                                    <th class="text-light">Nom</th>
+                                    <th class="text-light">Email</th>
+                                    <th class="text-light">Rôle</th>
+                                    <th class="text-light">Statut</th>
+                                    <th class="text-light">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- Utilisateur fictif répété -->
+                                <!-- Répéter manuellement pour l'exemple -->
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; margin-right: 10px;">
-                                                <i class="fas fa-user text-muted"></i>
-                                            </div>
-                                            <span>Moyen ANAMA</span>
-                                        </div>
-                                    </td>
-                                    <td>mysq@kuma.com</td>
-                                    <td><span class="role-badge admin-badge">Administrateur</span></td>
-                                    <td class="status-text">En ligne le 03 Juillet 2025</td>
+                                    <td>M. Hervé</td>
+                                    <td>herve.ei@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1">
                                             <i class="fas fa-edit"></i>
@@ -265,17 +258,10 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; margin-right: 10px;">
-                                                <i class="fas fa-user text-muted"></i>
-                                            </div>
-                                            <span>Liam CARTER</span>
-                                        </div>
-                                    </td>
-                                    <td>liam.carter@example.com</td>
-                                    <td><span class="role-badge dev-badge">Développeur</span></td>
-                                    <td class="status-text">En ligne le 01 Aout 2025</td>
+                                    <td>M. Fodjo</td>
+                                    <td>fodjo.ei@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1">
                                             <i class="fas fa-edit"></i>
@@ -287,17 +273,10 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; margin-right: 10px;">
-                                                <i class="fas fa-user text-muted"></i>
-                                            </div>
-                                            <span>Sofia MARTINEZ</span>
-                                        </div>
-                                    </td>
-                                    <td>sofia.martinez@example.com</td>
-                                    <td><span class="role-badge designer-badge">Designer</span></td>
-                                    <td class="status-text">En ligne le 15 Juillet 2025</td>
+                                    <td>Mme Rell</td>
+                                    <td>rell.ei@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1">
                                             <i class="fas fa-edit"></i>
@@ -309,17 +288,10 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; margin-right: 10px;">
-                                                <i class="fas fa-user text-muted"></i>
-                                            </div>
-                                            <span>Noah SMITH</span>
-                                        </div>
-                                    </td>
-                                    <td>noah.smith@example.com</td>
-                                    <td><span class="role-badge admin-badge">Chef de projet</span></td>
-                                    <td class="status-text">En ligne le 22 Juillet 2025</td>
+                                    <td>Maya AKAMA</td>
+                                    <td>maya.akama@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1">
                                             <i class="fas fa-edit"></i>
@@ -331,17 +303,40 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" class="form-check-input"></td>
+                                    <td>Karl trafi</td>
+                                    <td>karl.trafi@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; margin-right: 10px;">
-                                                <i class="fas fa-user text-muted"></i>
-                                            </div>
-                                            <span>Emily JOHNSON</span>
-                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary action-btn me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger action-btn">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </td>
-                                    <td>emily.johnson@example.com</td>
-                                    <td><span class="role-badge dev-badge">Analyste</span></td>
-                                    <td class="status-text">En ligne le 30 Juin 2025</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="form-check-input"></td>
+                                    <td>Belland K</td>
+                                    <td>belland.k@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary action-btn me-1">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger action-btn">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" class="form-check-input"></td>
+                                    <td>Wonder NG</td>
+                                    <td>wonder.ng@example.com</td>
+                                    <td><span class="role-badge admin-badge">Admin</span></td>
+                                    <td class="status-text">En ligne le 09 Juillet 2025</td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1">
                                             <i class="fas fa-edit"></i>
@@ -359,7 +354,17 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            const value = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#userTable tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(value) ? '' : 'none';
+            });
+        });
+
+    </script>
 </body>
 </html>
