@@ -75,3 +75,6 @@ Route::get('/admin/statistiques', function () {
     return view('admin/statistiques');
 })->name('statistiques');
 
+Route::get('/admin/gestion_activites', function () {
+    return view('admin/gestion_activites');
+})->name('gestion_activites');

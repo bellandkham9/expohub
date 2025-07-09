@@ -50,7 +50,7 @@
     </li>
 
 
-    {{-- <li class="nav-item mb-2">
+    <li class="nav-item mb-2">
       <a href="{{ route('gestion_activites') }}"
          class="nav-link d-flex justify-content-between align-items-center w-100 
          {{ request()->routeIs('gestion_activites') ? 'bg-primary text-white rounded px-3 py-2' : 'text-dark px-3 py-2' }}">
@@ -61,6 +61,6 @@
           <i class="fas fa-arrow-right"></i>
         @endif
       </a>
-    </li> --}}
+    </li>
   </ul>
 </div>

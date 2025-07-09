@@ -86,73 +86,20 @@
             color: #aaa;
         }
 
-        .print-btn {
-            background-color: #2f54eb;
-            color: #fff;
-            border-radius: 0.5rem;
-            padding: 0.6rem 1.2rem;
-            font-weight: 500;
+
+        .btn-add-test {
+            white-space: nowrap;
+            padding-left: 1.2rem;
+            padding-right: 1.2rem;
+            min-width: 190px;
+        }
+
+        .modal-title i {
+            margin-right: 0.5rem;
         }
 
         /* ========= TEST CARDS ========== */
-        .card-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
 
-        .test-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            width: 300px;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .test-content {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-            width: 100%;
-        }
-
-        .test-content .label {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .test-content .description {
-            font-size: 0.95rem;
-            text-align: center;
-            color: #444;
-            margin-bottom: 15px;
-        }
-
-        .test-content .footer i {
-            cursor: pointer;
-            font-size: 1rem;
-            color: #666;
-        }
-
-        .test-content .footer i:hover {
-            color: #000;
-        }
-
-        .header-card {
-            background-color: none;
-            border-radius: 8px;
-            /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);*/
-            padding: 15px;
-            margin-bottom: 20px;
-        }
 
         @media (max-width: 992px) {
             .sidebar {
@@ -163,6 +110,28 @@
             .card-row {
                 justify-content: center;
             }
+        }
+
+        .test-card {
+            background-color: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            transition: all 0.2s ease;
+            height: 100%;
+        }
+
+        .test-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .test-content .footer i {
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .test-content .footer i:hover {
+            color: #000;
         }
 
     </style>
@@ -177,156 +146,268 @@
             <!-- Main content -->
             <div class="col-lg-10 col-md-9 p-4">
                 <!-- Stat Cards -->
-                <div class="card-row">
-                    <div class="stat-card">
-                        <div class="stat-icon gray"><i class="fas fa-user"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Utilisateurs inscrits</div>
-                            <div class="count">281</div>
-                            <div class="footer">Temps</div>
+                <div class="row g-3 mb-4">
+                    <div class="card-row d-flex justify-content-between flex-wrap mb-4">
+                        <div class="stat-card">
+                            <div class="stat-icon gray"><i class="fas fa-user"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Test effectuer</div>
+                                <div class="count">281</div>
+                                <div class="footer">Temps</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green"><i class="fas fa-store"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Taux de réussite</div>
+                                <div class="count">128</div>
+                                <div class="footer">Temps</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
+                            <div class="stat-content">
+                                <div class="label">Abandonnés</div>
+                                <div class="count">2,300</div>
+                                <div class="footer">Temps</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><i class="fas fa-store"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Utilisateurs actifs</div>
-                            <div class="count">128</div>
-                            <div class="footer">Temps</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Utilisateurs inactifs</div>
-                            <div class="count">2,300</div>
-                            <div class="footer">Temps</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon gray"><i class="fas fa-user"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Test effectué</div>
-                            <div class="count">281</div>
-                            <div class="footer">Temps</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon green"><i class="fas fa-store"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Taux de réussite</div>
-                            <div class="count">181</div>
-                            <div class="footer">Temps</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon red"><i class="fas fa-chart-bar"></i></div>
-                        <div class="stat-content">
-                            <div class="label">Abandonnés</div>
-                            <div class="count">100</div>
-                            <div class="footer">Temps</div>
+
+                </div>
+
+                <!-- Tests Cards -->
+                <div class="col">
+                    <div class="header-card d-flex justify-content-between align-items-center">
+                        <h2 class="h4 mb-0">Liste des tests</h2>
+                        <div class="d-flex align-items-center">
+                            <input type="text" id="searchInput" class="form-control me-3" placeholder="Rechercher...">
+                            <button type="button" class="btn btn-primary btn-add-test" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                                <i class="fas fa-plus me-1"></i> Ajouter un Test
+                            </button>
+
+                            <!-- Modal : Choix discipline -->
+                            <div class="modal fade" id="choisirDisciplineModal" tabindex="-1" aria-labelledby="choisirDisciplineLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content p-4 text-center">
+                                        <div class="modal-header border-0">
+                                            <h5 class="modal-title w-100" id="choisirDisciplineLabel">Choisissez la discipline</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                        </div>
+                                        <div class="row g-3 px-3 py-2">
+                                            <div class="col-6">
+                                                <div class="card choose-discipline shadow-sm p-3 text-center bg-warning text-white" data-bs-toggle="modal" data-bs-target="#ajoutTestModal" data-bs-dismiss="modal" data-discipline="Compréhension Écrite" data-icon="fa-user-graduate" style="cursor: pointer;">
+                                                    <i class="fas fa-user-graduate fa-2x mb-2"></i>
+                                                    <div>Compréhension Écrite</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="card choose-discipline shadow-sm p-3 text-center bg-danger text-white" data-bs-toggle="modal" data-bs-target="#ajoutTestModal" data-bs-dismiss="modal" data-discipline="Compréhension Orale" data-icon="fa-headphones-alt" style="cursor: pointer;">
+                                                    <i class="fas fa-headphones-alt fa-2x mb-2"></i>
+                                                    <div>Compréhension Orale</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="card choose-discipline shadow-sm p-3 text-center bg-primary text-white" data-bs-toggle="modal" data-bs-target="#ajoutTestModal" data-bs-dismiss="modal" data-discipline="Expression Orale" data-icon="fa-microphone" style="cursor: pointer;">
+                                                    <i class="fas fa-microphone fa-2x mb-2"></i>
+                                                    <div>Expression Orale</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="card choose-discipline shadow-sm p-3 text-center bg-info text-white" data-bs-toggle="modal" data-bs-target="#ajoutTestModal" data-bs-dismiss="modal" data-discipline="Expression Écrite" data-icon="fa-pen-nib" style="cursor: pointer;">
+                                                    <i class="fas fa-pen-nib fa-2x mb-2"></i>
+                                                    <div>Expression Écrite</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal : Ajout test -->
+                            <div class="modal fade" id="ajoutTestModal" tabindex="-1" aria-labelledby="ajoutTestLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content p-4">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="ajoutTestLabel">
+                                                <i id="disciplineIcon" class="fas fa-plus"></i> Ajouter un test
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" id="testName" placeholder="Nom du test">
+                                                    <label for="testName">Nom du test *</label>
+                                                </div>
+                                                <div class="form-floating mb-3">
+                                                    <textarea class="form-control" id="testDesc" placeholder="Description" style="height: 100px"></textarea>
+                                                    <label for="testDesc">Description</label>
+                                                </div>
+                                                <input type="hidden" id="disciplineType" name="discipline">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <button class="btn btn-primary">Ajouter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-                <div class="header-card d-flex justify-content-between align-items-center">
-                    <h2 class="h4 mb-0">Liste des tests</h2>
-                    <div class="d-flex align-items-center">
-                        <input type="text" id="searchInput" class="form-control me-3" placeholder="Rechercher...">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <i class="fas fa-plus me-1"></i> Ajouter un Test
-                        </button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un test</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" placeholder="Donnez un nom a votre test">
-                                                <label for="floatingInput">Donnez un nom a votre test *</label>
+
+                <!-- Liste des cartes de tests -->
+                <div class="row gy-4 mt-3">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="test-card">
+                            <div class="test-content">
+                                <div class="label fw-bold text-primary text-center">TCF CANADA</div>
+                                <div class="description text-center">Une petite description ici pour parler du test</div>
+                                <div class="footer d-flex justify-content-end gap-3">
+                                    <!-- Button Modifier -->
+                                    <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <i class="fas fa-edit" title="Modifier"></i>
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form>
+                                                        <div class="form-floating mb-3">
+                                                            <input type="text" class="form-control" id="testName" placeholder="Nom du test">
+                                                            <label for="testName">Nom du test *</label>
+                                                        </div>
+                                                        <div class="form-floating mb-3">
+                                                            <textarea class="form-control" id="testDesc" placeholder="Description" style="height: 100px"></textarea>
+                                                            <label for="testDesc">Description</label>
+                                                        </div>
+                                                        <input type="hidden" id="disciplineType" name="discipline">
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                                </div>
                                             </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="floatingInput" placeholder="Ajoutez une descripti
-                                                <label for="floatingInput">Ajoutez une description</label>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <!-- Button Supprimer -->
+                                    <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTest">
+                                        <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="supprimerTest" tabindex="-1" aria-labelledby="supprimerTest" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="supprimerTest">Supprimer un test</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>
+                                                        Voulez-vous vraiment supprimer ce Test ? Cette action est irréversible.
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="button" class="btn btn-danger">Supprimer le Test</button>
+                                                </div>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                        <button type="button" class="btn btn-primary">Ajouter un test</button>
-                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="test-card">
+                            <div class="test-content">
+                                <div class="label fw-bold text-primary text-center">TCF QUÉBEC</div>
+                                <div class="description text-center">Une petite description ici pour parler du test</div>
+                                <div class="footer d-flex justify-content-end gap-3">
+                                    <i class="fas fa-edit" title="Modifier"></i>
+                                    <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="test-card">
+                            <div class="test-content">
+                                <div class="label fw-bold text-primary text-center">TEF</div>
+                                <div class="description text-center">Une description pour expliquer le déroulement du test en France</div>
+                                <div class="footer d-flex justify-content-end gap-3">
+                                    <i class="fas fa-edit" title="Modifier"></i>
+                                    <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="test-card">
+                            <div class="test-content">
+                                <div class="label fw-bold text-primary text-center">DELF</div>
+                                <div class="description text-center">Détails concernant les modalités du test en Belgique</div>
+                                <div class="footer d-flex justify-content-end gap-3">
+                                    <i class="fas fa-edit" title="Modifier"></i>
+                                    <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <div class="test-card">
+                            <div class="test-content">
+                                <div class="label fw-bold text-primary text-center">DALF</div>
+                                <div class="description text-center">Détails concernant les modalités du test en Belgique</div>
+                                <div class="footer d-flex justify-content-end gap-3">
+                                    <i class="fas fa-edit" title="Modifier"></i>
+                                    <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Test Cards -->
-                <div class="card-row">
-
-                    <div class="test-card">
-                        <div class="test-content">
-                            <div class="label fw-bold">TCF CANADA</div>
-                            <div class="description">Une petite description ici pour parler du testt</div>
-                            <div class="footer d-flex justify-content-end gap-2">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="test-card">
-                        <div class="test-content">
-                            <div class="label fw-bold">TCF QUEBEC</div>
-                            <div class="description">Une petite description ici pour parler du testt</div>
-                            <div class="footer d-flex justify-content-end gap-2">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="test-card">
-                        <div class="test-content">
-                            <div class="label fw-bold">TEF</div>
-                            <div class="description">Une description pour expliquer le déroulement du test en France</div>
-                            <div class="footer d-flex justify-content-end gap-2">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="test-card">
-                        <div class="test-content">
-                            <div class="label fw-bold">DELF</div>
-                            <div class="description">Détails concernant les modalités du test en Belgique</div>
-                            <div class="footer d-flex justify-content-end gap-2">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="test-card">
-                        <div class="test-content">
-                            <div class="label fw-bold">DALF</div>
-                            <div class="description">Détails concernant les modalités du test en Belgique</div>
-                            <div class="footer d-flex justify-content-end gap-2">
-                                <i class="fas fa-edit"></i>
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script pour actualiser le titre -->
+    <script>
+        document.querySelectorAll('.choose-discipline').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const discipline = this.getAttribute('data-discipline');
+                const iconClass = this.getAttribute('data-icon');
+                document.getElementById('ajoutTestLabel').innerHTML = `<i id="disciplineIcon" class="fas ${iconClass}"></i> ${discipline}`;
+                document.getElementById('disciplineType').value = discipline;
+            });
+        });
+
+    </script>
 </body>
 </html>
