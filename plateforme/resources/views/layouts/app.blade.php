@@ -66,7 +66,7 @@
 
     </style>
 
-    @vite(['resources/sass/app.scss', 'resources/css/custom.css', 'resources/css/dashboard-client.css', 'resources/js/app.sjs'])
+    @vite(['resources/sass/app.scss', 'resources/css/custom.css',  'resources/css/choix_test.css', 'resources/css/dashboard-client.css', 'resources/js/app.sjs'])
 </head>
 
 <body class="bg-dark">
