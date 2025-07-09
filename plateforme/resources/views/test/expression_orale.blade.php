@@ -11,35 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/expression_ecrite.css')
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
-            color: #333;
-        }
-
         .test-container {
             background-color: white;
-        }
-
-        .test-header {
-            border-bottom: 1px solid #eee;
-            padding: 20px;
-        }
-
-        .test-title {
-            color: #224194;
-            font-weight: 600;
-        }
-
-        .question-section {
-            padding: 25px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .question-title {
-            color: #224194;
-            font-weight: 500;
-            margin-bottom: 15px;
         }
 
         .chat-container {
@@ -56,20 +29,32 @@
             max-width: 80%;
         }
 
-        .user-message {
+     .user-message {
             margin-left: auto;
             background-color: white;
             color: black;
             border-radius: 15px 15px 0 15px;
             padding: 10px 15px;
+            display: flex;
+            width: 30%;
+            align-items: center;
             box-shadow: 1px 1px 1px rgb(193, 192, 192)
+        
+        }
+         .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 5px;
         }
 
         .bot-message {
             background-color: #FEF8E7;
             border-radius: 15px 15px 15px 0;
             padding: 10px 15px;
-            box-shadow: 1px 1px 1px rgb(193, 192, 192)
+            box-shadow: 1px 1px 1px rgb(193, 192, 192);
+            margin: 8px;
         }
 
         .input-group {
@@ -113,7 +98,7 @@
                         <h4>60 : 00</h4>
                     </div>
                     <div class="col-md-4  d-flex justify-content-center my-3">
-                        <h3>TCF CANADA, Expression écrite</h3>
+                        <h3>TCF CANADA, Expression orale</h3>
                     </div>
                     <div class="col-md-4 d-flex justify-content-center my-3">
                         <button id="btn-abonne" class="btn btn-outline-danger px-4 py-2" type="button">
@@ -127,8 +112,12 @@
                         <strong>Assistant:</strong> Bonjour! Comment puis-je vous aider avec votre test d'expression
                         écrite?
                     </div>
-                    <div class="message user-message">
-                        <strong>Vous:</strong> Je ne comprends pas la deuxième question
+                    <div class="user-message">
+                        <audio id="audio" controls>
+                            <source src="{{ asset('songs/himra.m4a') }}" type="audio/mp3">
+                            Votre navigateur ne supporte pas l'élément audio.
+                        </audio>
+                        <img src="{{ asset('images/beautiful-woman.png') }}" alt="Avatar" class="avatar">
                     </div>
                     <div class="message bot-message">
                         <strong>Assistant:</strong> La question 2 vous demande de décrire une image de 433x140 pixels.
@@ -137,9 +126,10 @@
                 </div>
 
                 <div class="input-group">
-                    <input type="text" class="form-control" id="chatInput" placeholder="Un petit texte ici......">
+                    <input type="text" class="form-control" id="chatInput"
+                        placeholder="enregistrer une note vocale ici......">
                     <button class="btn " id="sendButton">
-                        <img src="{{ asset('images/send.png') }}" alt="Profil" class="" style="">
+                        <img src="{{ asset('images/micro.png') }}" alt="Profil" class="" style="">
                     </button>
                 </div>
             </div>

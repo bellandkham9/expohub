@@ -9,6 +9,11 @@ Route::get('/', function () {
 Route::get('/connexion', function () {
     return view('start/connexion');
 });
+
+Route::get('/inscription', function () {
+    return view('start/inscription');
+});
+
 Route::get('/home', function () {
     return view('client/home');
 });
@@ -41,9 +46,31 @@ Route::get('/competence', function () {
 Route::get('/expression_ecrite', function () {
     return view('test/expression_ecrite');
 });
+
+Route::get('/expression_orale', function () {
+    return view('test/expression_orale');
+});
+
+Route::get('/comprehension_ecrite', function () {
+    return view('test/comprehension_ecrite');
+});
+
+Route::get('/comprehension_orale', function () {
+    return view('test/comprehension_orale');
+});
+
+Route::get('/dashboard_details', function () {
+    return view('test/dashboard_details');
+});
 // fin partie test
 
+// partie suggestion
 
+Route::get('/suggestion', function () {
+    return view('suggestion/suggestion');
+});
+
+// fin partie suggestion
 
 // la partie admin
 

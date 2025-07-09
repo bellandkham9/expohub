@@ -118,8 +118,13 @@
                         <input type="tel" class="form-control" id="phone" required placeholder="Mot de passe">
                     </div>
 
+                    <div class="mb-3">
 
-                    <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
+                        <input type="tel" class="form-control" id="phone" required placeholder="Repéter le mot de passe">
+                    </div>
+
+
+                    <button id="sendmessage" type="submit" class="btn btn-send">Inscription</button>
                 </form>
             </div>
             
