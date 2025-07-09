@@ -102,3 +102,8 @@ Route::get('/admin/statistiques', function () {
     return view('admin/statistiques');
 })->name('statistiques');
 
+
+
+Route::get('/yes', function () {
+    return view('admin/yes');
+});
