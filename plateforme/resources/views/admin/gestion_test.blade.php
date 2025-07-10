@@ -19,7 +19,7 @@
             padding: 10px;
             position: relative;
             /* Ajoutez cette ligne */
-            z-index: 1;
+
             /* Valeur inférieure à celle du sidebar */
             /* ... conservez le reste de vos styles ... */
         }
@@ -331,42 +331,53 @@
                 </div>
                 <div class="row g-4 justify-content-center m-4">
                     <!-- Carte TCF CANADA 1 -->
-                    <div class="col-12 col-md-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="test-card text-center h-100 p-4">
                             <h3 class="test-title h5 mb-3">TCF CANADA</h3>
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
+                                <!-- Button Choisir Discipline -->
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#choisirDisciplineModal">
+                                    <i class="fas fa-list" title="Choisir discipline"></i>
+                                </button>
+
                                 <!-- Button Modifier -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                                    data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTest">
+                                    data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
-
                             </div>
                         </div>
                     </div>
 
                     <!-- Carte TCF QUEBEC 1 -->
-                    <div class="col-12 col-md-6 col-lg-4 btn" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="test-card text-center h-100 p-4">
                             <h3 class="test-title h5 mb-3">TCF QUEBEC</h3>
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
+                                <!-- Button Choisir Discipline -->
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#choisirDisciplineModal">
+                                    <i class="fas fa-list" title="Choisir discipline"></i>
+                                </button>
+
                                 <!-- Button Modifier -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                                    data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTest">
+                                    data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -374,20 +385,26 @@
                     </div>
 
                     <!-- Carte TCF CANADA 2 -->
-                    <div class="col-12 col-md-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="test-card text-center h-100 p-4">
                             <h3 class="test-title h5 mb-3">TCF CANADA</h3>
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
+                                <!-- Button Choisir Discipline -->
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#choisirDisciplineModal">
+                                    <i class="fas fa-list" title="Choisir discipline"></i>
+                                </button>
+
                                 <!-- Button Modifier -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                                    data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTest">
+                                    data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -395,20 +412,26 @@
                     </div>
 
                     <!-- Carte TCF QUEBEC 2 -->
-                    <div class="col-12 col-md-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="test-card text-center h-100 p-4">
                             <h3 class="test-title h5 mb-3">TCF QUEBEC</h3>
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
+                                <!-- Button Choisir Discipline -->
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#choisirDisciplineModal">
+                                    <i class="fas fa-list" title="Choisir discipline"></i>
+                                </button>
+
                                 <!-- Button Modifier -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                                    data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTest">
+                                    data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -416,62 +439,32 @@
                     </div>
 
                     <!-- Carte TCF CANADA 3 -->
-                    <div class="col-12 col-md-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="test-card text-center h-100 p-4">
                             <h3 class="test-title h5 mb-3">TCF CANADA</h3>
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
-                               <!-- Button Modifier -->
+                                <!-- Button Choisir Discipline -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModal">
+                                    data-bs-target="#choisirDisciplineModal">
+                                    <i class="fas fa-list" title="Choisir discipline"></i>
+                                </button>
+
+                                <!-- Button Modifier -->
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
                                 <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTest">
+                                    data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="choixDixipline" tabindex="-1" aria-labelledby="choixDixipline"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un test</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-
-
-                                </div>
-                                <div class="modal-body">
-                                    <form action="">
-                                        <div class="form-floating mb-3">
-                                            <input type="email" class="form-control" id="floatingInput"
-                                                placeholder="name@example.com">
-                                            <label for="floatingInput">mail de l'utilisateur</label>
-
-                                        </div>
-                                        <select class="form-select form-select-sm" aria-label="Small select example">
-                                            <option selected>Selectionner le role</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Annuler</button>
-                                    <button type="button" class="btn btn-primary">Ajouter un test</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!-- Modal : Choix discipline -->
                     <div class="modal fade" id="choisirDisciplineModal" tabindex="-1"
                         aria-labelledby="choisirDisciplineLabel" aria-hidden="true">
@@ -483,44 +476,65 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Fermer"></button>
                                 </div>
-                                <div class="row g-3 px-3 py-2">
-                                    <div class="col-6">
-                                        <div class="card choose-discipline shadow-sm p-3 text-center bg-warning text-white"
-                                            data-bs-toggle="modal" data-bs-target="#ajoutTestModal"
-                                            data-bs-dismiss="modal" data-discipline="Compréhension Écrite"
-                                            data-icon="fa-user-graduate" style="cursor: pointer;">
-                                            <i class="fas fa-user-graduate fa-2x mb-2"></i>
-                                            <div>Compréhension Écrite</div>
+
+                                <div class="row g-4 justify-content-center mr-6">
+
+                                    <!-- Carte TCF QUEBEC 1 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6"
+                                        onclick="window.location.href='{{ route('model_examen') }}'">
+                                        <div class="test-card text-center h-100 p-4"
+                                            style="background-color: #F8B70D;">
+                                            <div class="test-icon mb-3 mt-4">
+                                                <img src="{{ asset('images/lecture.png') }}" alt="Logo"
+                                                    style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white;" class="test-title h5 mb-3">Compréhension Écrite
+                                            </h3>
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
-                                        <div class="card choose-discipline shadow-sm p-3 text-center bg-danger text-white"
-                                            data-bs-toggle="modal" data-bs-target="#ajoutTestModal"
-                                            data-bs-dismiss="modal" data-discipline="Compréhension Orale"
-                                            data-icon="fa-headphones-alt" style="cursor: pointer;">
-                                            <i class="fas fa-headphones-alt fa-2x mb-2"></i>
-                                            <div>Compréhension Orale</div>
+
+                                    <!-- Carte TCF CANADA 2 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6"
+                                        onclick="window.location.href='{{ route('fichier_q_r') }}'">
+                                        <div class="test-card text-center h-100 p-4"
+                                            style="background-color: #FF3B30;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/ecoute.png') }}" alt="Logo"
+                                                    style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3"> Compréhension Orale
+                                            </h3>
+
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
-                                        <div class="card choose-discipline shadow-sm p-3 text-center bg-primary text-white"
-                                            data-bs-toggle="modal" data-bs-target="#ajoutTestModal"
-                                            data-bs-dismiss="modal" data-discipline="Expression Orale"
-                                            data-icon="fa-microphone" style="cursor: pointer;">
-                                            <i class="fas fa-microphone fa-2x mb-2"></i>
-                                            <div>Expression Orale</div>
+                                    <!-- Carte TCF QUEBEC 2 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6"
+                                        onclick="window.location.href='{{ route('model_question') }}'">
+                                        <div class="test-card text-center h-100 p-4"
+                                            style="background-color: #224194;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/orale.png') }}" alt="Logo"
+                                                    style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3">Expression Orale</h3>
+
                                         </div>
                                     </div>
 
-                                    <div class="col-6">
-                                        <div class="card choose-discipline shadow-sm p-3 text-center bg-info text-white"
-                                            data-bs-toggle="modal" data-bs-target="#ajoutTestModal"
-                                            data-bs-dismiss="modal" data-discipline="Expression Écrite"
-                                            data-icon="fa-pen-nib" style="cursor: pointer;">
-                                            <i class="fas fa-pen-nib fa-2x mb-2"></i>
-                                            <div>Expression Écrite</div>
+                                    <!-- Carte TCF CANADA 3 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6"
+                                        onclick="window.location.href='{{ route('expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4"
+                                            style="background-color: #249DB8;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/ecrite.png') }}" alt="Logo"
+                                                    style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3"> Expression Ecrite
+                                            </h3>
+
                                         </div>
                                     </div>
                                 </div>
@@ -528,72 +542,67 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="supprimerTest" tabindex="-1" aria-labelledby="supprimerTest"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="supprimerTest">Supprimer un test</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>
-                                        Voulez-vous vraiment supprimer ce Test ? Cette action est
-                                        irréversible.
-                                    </p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Annuler</button>
-                                    <button type="button" class="btn btn-danger">Supprimer le
-                                        Test</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
+                    <!-- Modal : Modifier -->
+                    <div class="modal fade" id="editModalTCFCanada1" tabindex="-1"
+                        aria-labelledby="editModalLabelTCFCanada1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                    <h1 class="modal-title fs-5" id="editModalLabelTCFCanada1">Modifier le test</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="testName"
-                                                placeholder="Nom du test">
-                                            <label for="testName">Nom du test *</label>
+                                            <input type="text" class="form-control" id="testNameTCFCanada1"
+                                                placeholder="Nom du test" value="TCF CANADA">
+                                            <label for="testNameTCFCanada1">Nom du test *</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <textarea class="form-control" id="testDesc" placeholder="Description" style="height: 100px"></textarea>
-                                            <label for="testDesc">Description</label>
+                                            <textarea class="form-control" id="testDescTCFCanada1" placeholder="Description" style="height: 100px">Une petite description ici pour parler du test!</textarea>
+                                            <label for="testDescTCFCanada1">Description</label>
                                         </div>
-                                        <input type="hidden" id="disciplineType" name="discipline">
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    <button class="btn btn-primary">Enregistrer</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Modal : Ajout test -->
+
+                    <!-- Modal : Supprimer -->
+                    <div class="modal fade" id="supprimerTestTCFCanada1" tabindex="-1"
+                        aria-labelledby="supprimerTestLabelTCFCanada1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="supprimerTestLabelTCFCanada1">Supprimer le test
+                                    </h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Voulez-vous vraiment supprimer ce Test ? Cette action est irréversible.
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <button class="btn btn-danger">Supprimer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal : Ajout Test -->
                     <div class="modal fade" id="ajoutTestModal" tabindex="-1" aria-labelledby="ajoutTestLabel"
                         aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content p-4">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="ajoutTestLabel">
-                                        <i id="disciplineIcon" class="fas fa-plus"></i> Ajouter un
-                                        test
+                                        <i id="disciplineIcon" class="fas fa-plus"></i> Ajouter un test
                                     </h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Fermer"></button>
@@ -601,15 +610,15 @@
                                 <div class="modal-body">
                                     <form>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="testName"
+                                            <input type="text" class="form-control" id="testNameAjout"
                                                 placeholder="Nom du test">
-                                            <label for="testName">Nom du test *</label>
+                                            <label for="testNameAjout">Nom du test *</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <textarea class="form-control" id="testDesc" placeholder="Description" style="height: 100px"></textarea>
-                                            <label for="testDesc">Description</label>
+                                            <textarea class="form-control" id="testDescAjout" placeholder="Description" style="height: 100px"></textarea>
+                                            <label for="testDescAjout">Description</label>
                                         </div>
-                                        <input type="hidden" id="disciplineType" name="discipline">
+                                        <input type="hidden" id="disciplineTypeAjout" name="discipline">
                                     </form>
                                 </div>
                                 <div class="modal-footer">
@@ -620,6 +629,18 @@
                         </div>
                     </div>
 
+                    {{--   <script>
+                        // Nettoie les backdrops fantômes au besoin
+                        document.querySelectorAll('.modal').forEach(modal => {
+                            modal.addEventListener('hidden.bs.modal', () => {
+                                const backdrop = document.querySelector('.modal-backdrop');
+                                if (backdrop) backdrop.remove();
+                                document.body.classList.remove('modal-open');
+                                document.body.style = '';
+                            });
+                        });
+                    </script>
+ --}}
 
                 </div>
 
@@ -656,6 +677,8 @@
             });
         });
     </script>
+
+
 </body>
 
 </html>

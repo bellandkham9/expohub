@@ -78,36 +78,29 @@ Route::get('/admin/gestion_utilisateur', function () {
     return view('admin/gestion_utilisateur');
 })->name('gestion_utilisateurs');
 
-Route::get('/admin/fichier_q_r', function () {
-    return view('admin/fichier_q_r');
-})->name('fichier_q_r');
-
-Route::get('/admin/model_question', function () {
-    return view('admin/model_question');
-})->name('model_question');
-
-/* Route::get('/admin/gestion_tests', function () {
-    return view('admin/gestion_tests');
-})->name('gestion_tests');
- */
 Route::get('/admin/gestion_test', function () {
     return view('admin/gestion_test');
 })->name('gestion_test');
-
-Route::get('/admin/model_examen', function () {
-    return view('admin/model_examen');
-})->name('model_examen');
-
-Route::get('/admin/model_reponse', function () {
-    return view('admin/model_reponse');
-})->name('model_reponse');
 
 Route::get('/admin/statistiques', function () {
     return view('admin/statistiques');
 })->name('statistiques');
 
 
+Route::get('/admin/expression_ecrite', function () {
+    return view('admin/expression_ecrite');
+})->name('expression_ecrite');
 
-Route::get('/yes', function () {
-    return view('admin/yes');
-});
+Route::get('/admin/comprehension_ecrite', function () {
+    return view('admin/comprehension_ecrite');
+})->name('comprehension_ecrite');
+
+
+Route::get('/admin/comprehension_orale', function () {
+    return view('admin/comprehension_orale');
+})->name('comprehension_orale');
+
+Route::get('/admin/expression_orale', function () {
+    return view('admin/expression_orale');
+})->name('expression_orale');
+

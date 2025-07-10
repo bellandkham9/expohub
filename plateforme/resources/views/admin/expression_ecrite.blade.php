@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,8 +10,59 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
+        body {
+            background-color: #f8f9fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .upload-box {
+            border: 2px dashed #ccc;
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #444;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.3s, background-color 0.3s;
+            min-height: 200px;
+        }
+
+        .upload-box.dragover {
+            border-color: #0d6efd;
+            background-color: #f0f8ff;
+        }
+
+        .submit-btn {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0b5ed7;
+        }
+
+        .audio-preview {
+            margin-top: 15px;
+        }
+
+        .audio-preview audio {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            margin-top: 30px;
+        }
+
         body {
             background-color: #f8f9fb;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +135,6 @@
                 height: auto;
             }
         }
-
     </style>
 </head>
 
@@ -91,37 +142,51 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            @include('admin.partials.side_bar')
-
+            <div class="col-md-3 col-lg-2 sidebar p-3">
+                @include('admin.partials.side_bar')
+            </div>
             <!-- Main content -->
             <div class="col-lg-10 col-md-9 p-4">
-                <!-- Title & Description -->
-                <h4 class="fw-bold">Apportez des nouvelles données pour générez plus de test</h4>
-                <p class="text-muted" style="max-width: 700px;">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu finibus neque. In sit amet tempor mauris. Suspendisse consectetur lobortis lacus, sed malesuada dui elementum id.
-                </p>
+                <div class="container py-5">
+                    <h3 class="fw-bold mb-3">Ajouter un dialogue(en pdf) d'entraînement</h3>
+                    <p class="text-muted">Téléversez un ou plusieurs fichiers pdf pour alimenter votre modèle IA.
+                        Formats acceptés : PDF.</p>
 
-                <!-- Upload Title -->
-                <h5 class="mt-4">Fichier question et réponses</h5>
+                    <!-- Upload Box -->
+                    <div id="uploadBox" class="upload-box" role="button">
+                        <div id="uploadContent" class="text-center">
+                            <div class="fw-semibold mb-2">Cliquez ou déposez un fichier ici</div>
+                            <div class="text-center">
+                                <i class="fas fa-file-pdf fa-2x mt-2"></i>
+                            </div>
 
-                <!-- Upload box -->
-                <div id="uploadBox" class="upload-box mt-3" role="button">
-                    <div id="uploadContent" class="text-center">
-                        <div class="fw-semibold mb-2">Télécharger<br>l’image descriptive</div>
-                        <i class="fas fa-cloud-upload-alt fa-2x text-secondary"></i>
+                        </div>
+                        <input type="file" id="fileInput" class="d-none" accept="pdf/*" multiple />
                     </div>
-                    <img id="previewImage" src="#" alt="Aperçu" class="preview-image d-none" />
-                    <input type="file" id="fileInput" class="d-none" accept="image/*" />
+
+                    <!-- Aperçus audio -->
+                    <div id="audioPreview" class="audio-preview"></div>
+
+                    <!-- Formulaire des métadonnées -->
+                    <div class="form-section">
+                        <div class="mb-3">
+                            <label for="transcription" class="form-label">Transcription du contenu pdf</label>
+                            <textarea class="form-control" id="transcription" rows="3" placeholder="Description du contenu..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="text-end mt-3">
+                        <button class="submit-btn">Envoyer les données</button>
+                    </div>
                 </div>
-                <!-- Submit button -->
-                <div class="mt-4 text-end">
-                    <button class="submit-btn">Envoyez</button>
-                </div>
+
             </div>
         </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
         <!-- Script UPLOAD BUTTON-->
         <script>
@@ -169,7 +234,8 @@
                     reader.readAsDataURL(file);
                 }
             }
-
         </script>
 </body>
+
 </html>
+
