@@ -131,7 +131,6 @@
                         
                     </div>
 
-
                     <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
                 </form>
             </div>

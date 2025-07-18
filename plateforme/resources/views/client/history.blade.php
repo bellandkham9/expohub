@@ -59,7 +59,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                    <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
+                                                    <a href="{{ route('test.dashboard_details') }}" class="btn " style="border: 2px solid #224194;">Plus de
                                                         détails</a>
                                                     <a href="#" class="btn " style="background-color:  #224194; color: white;">Refaire le
                                                         test</a>
@@ -115,7 +115,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                    <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
+                                                    <a href="{{ route('test.dashboard_details') }}" class="btn " style="border: 2px solid #224194;">Plus de
                                                         détails</a>
                                                     <a href="#" class="btn " style="background-color:  #224194; color: white;">Refaire le
                                                         test</a>
@@ -171,7 +171,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                    <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
+                                                    <a href="{{ route('test.dashboard_details') }}" class="btn " style="border: 2px solid #224194;">Plus de
                                                         détails</a>
                                                     <a href="#" class="btn " style="background-color:  #224194; color: white;">Refaire le
                                                         test</a>
@@ -227,7 +227,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                    <a href="#" class="btn " style="border: 2px solid #224194;">Plus de
+                                                    <a href="{{ route('test.dashboard_details') }}" class="btn " style="border: 2px solid #224194;">Plus de
                                                         détails</a>
                                                     <a href="#" class="btn " style="background-color:  #224194; color: white;">Refaire le
                                                         test</a>

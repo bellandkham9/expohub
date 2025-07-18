@@ -30,52 +30,52 @@ Route::get('/dashboard-student', function () {
 
 Route::get('/history', function () {
     return view('client.history');
-});
+})->name('client.history');
 
 Route::get('/contact', function () {
     return view('client.contact');
-});
+})->name('client.contact');
 
 Route::get('/paiement', function () {
     return view('client.paiement');
-});
+})->name('client.paiement');
 
 // partie test
 
 Route::get('/choix', function () {
     return view('test.choix_test');
-});
+})->name('test.choix_test');
 
 Route::get('/competence', function () {
     return view('test.competence');
-});
+})->name('test.competence');
 
 Route::get('/expression_ecrite', function () {
     return view('test.expression_ecrite');
-});
+})->name('test.expression_ecrite');
 
 Route::get('/expression_orale', function () {
     return view('test.expression_orale');
-});
+})->name('test.expression_orale');
 
 Route::get('/comprehension_ecrite', function () {
     return view('test.comprehension_ecrite');
-});
+})->name('test.comprehension_ecrite');
 
 Route::get('/comprehension_orale', function () {
     return view('test.comprehension_orale');
-});
+})->name('test.comprehension_orale');
 
 Route::get('/dashboard_details', function () {
     return view('test.dashboard_details');
-});
+})->name('test.dashboard_details');
 // fin partie test
 
 // partie suggestion
 
 Route::get('/suggestion', function () {
     return view('suggestion.suggestion');
-});
+})->name('suggestion.suggestion');
 
 // fin partie suggestion
 

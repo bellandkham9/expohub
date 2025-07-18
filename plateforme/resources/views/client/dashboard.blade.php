@@ -32,7 +32,7 @@
                                     <div class="test-card text-center">
                                         <h3 class="test-title">TCF CANADA</h3>
                                         <p>Une petite description ici pour parler du test!</p>
-                                        <button class="btn btn-test">Passer le test</button>
+                                        <button class="btn btn-test" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">Passer le test</button>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -43,6 +43,71 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                              <!-- Modal : Choix discipline -->
+                    <div class="modal fade" id="choisirDisciplineModal" tabindex="-1" aria-labelledby="choisirDisciplineLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content p-4 text-center">
+                                <div class="modal-header border-0">
+                                    <h5 class="modal-title w-100" id="choisirDisciplineLabel">
+                                        Choisissez la discipline</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                </div>
+
+                                <div class="row g-4 justify-content-center mr-6">
+
+                                    <!-- Carte TCF QUEBEC 1 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #F8B70D;">
+                                            <div class="test-icon mb-3 mt-4">
+                                                <img src="{{ asset('images/lecture.png') }}" alt="Logo" style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white;" class="test-title h5 mb-3">Compréhension Écrite
+                                            </h3>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Carte TCF CANADA 2 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_orale') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #FF3B30;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/ecoute.png') }}" alt="Logo" style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3"> Compréhension Orale
+                                            </h3>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Carte TCF QUEBEC 2 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_orale') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #224194;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/orale.png') }}" alt="Logo" style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3">Expression Orale</h3>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Carte TCF CANADA 3 -->
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #249DB8;">
+                                            <div class="test-icon mb-3">
+                                                <img src="{{ asset('images/ecrite.png') }}" alt="Logo" style="height: 40px;">
+                                            </div>
+                                            <h3 style="color: white" class="test-title h5 mb-3"> Expression Ecrite
+                                            </h3>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                             <div class="mt-3">
                                 <div class="container m-6">
 
@@ -98,7 +163,7 @@
                                                         <div class="col-md-4">
                                                             <div
                                                                 class="d-flex flex-column flex-md-row justify-content-end gap-2">
-                                                                <a href="#" class="btn "
+                                                                <a href="{{ route('test.dashboard_details') }}" class="btn "
                                                                     style="border: 2px solid #224194;">Plus de
                                                                     détails</a>
                                                                 <a href="#" class="btn "

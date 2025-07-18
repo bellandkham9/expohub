@@ -9,10 +9,10 @@
          <!-- Menu -->
          <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
              <ul class="navbar-nav gap-3">
-                 <li class="nav-item"><a class="nav-link" href="#">Tableau de bord</a></li>
-                 <li class="nav-item"><a class="nav-link" href="#">Tests</a></li>
-                 <li class="nav-item"><a class="nav-link" href="#">Historique</a></li>
-                 <li class="nav-item"><a class="nav-link" href="#">Stratégie</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Tableau de bord</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('test.choix_test') }}">Tests</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('client.history') }}">Historique</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('suggestion.suggestion') }}">Stratégie</a></li>
              </ul>
          </div>
          <!-- Droite : notif + avatar -->

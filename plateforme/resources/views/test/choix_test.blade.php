@@ -132,52 +132,5 @@
             </section>
         </div>
 
-
-        <!-- Footer -->
-        <footer class="container mb-4  p-4 text-light">
-            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <div>
-                    <p class="mb-1 fw-bold">Allez à</p>
-                    <ul class="list-unstyled d-flex gap-3">
-                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Stratégie</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Abonnements</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
-                    </ul>
-
-                    <div class="">
-                        <p class="mt-2 fw-bold">Suivez nous sur : <a href=""><i
-                                    class="bi bi-facebook m-2"></i></a>
-                            <a href=""><i class="bi bi-linkedin m-2"></i></a> <a href=""><i
-                                    class="bi bi-instagram m-2"></i></a>
-                        </p>
-                    </div>
-
-
-                </div>
-                <div class="d-flex flex-column align-items-end text-end">
-                    <div class="d-flex gap-2 mb-3">
-                        <a class="btn" href="#"
-                            style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
-                        <a class="btn" href="#"
-                            style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
-                    </div>
-                    <div>
-                        <small>
-                            <a href="#" class="text-decoration-none text-light me-2">Conditions d'utilisation</a>
-                            <a href="#" class="text-decoration-none text-light">Politique de confidentialité</a>
-                        </small>
-                    </div>
-                </div>
-
-            </div>
-            <hr style="height: 3px; background-color: white; border: 2px solid white;" class="">
-            <div class="container text-center mt-3">
-                <small class="d-block">&copy; 2025 ExpoHub Academy | tout les droits réservés</small>
-
-            </div>
-        </footer>
-
-
     </div>
 @endsection
