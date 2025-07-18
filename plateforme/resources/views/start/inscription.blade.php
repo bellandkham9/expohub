@@ -124,8 +124,6 @@
                     <div class="mb-3">
 
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required placeholder="Repéter le mot de passe">
-                            
-                        @enderror
                     </div>
 
 
