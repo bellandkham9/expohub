@@ -9,10 +9,10 @@
             <!-- Menu -->
             <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
                 <ul class="navbar-nav gap-3">
-                    <li class="nav-item"><a class="nav-link" href="#">Accueil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Stratégie</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Plans d'abonnements</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Nous contacter</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('start.home') }}">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Stratégie</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Plans d'abonnements</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Nous contacter</a></li>
                 </ul>
             </div>
             <!-- Buttons -->
