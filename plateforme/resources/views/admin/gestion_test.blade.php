@@ -7,13 +7,12 @@
     <title>Liste des Utilisateurs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+     @vite(['resources/css/admin-gestion-user.css'])
+    {{-- <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
         }
-
-
 
         .main-content {
             padding: 10px;
@@ -23,9 +22,6 @@
             /* Valeur inférieure à celle du sidebar */
             /* ... conservez le reste de vos styles ... */
         }
-
-
-
 
         .user-table {
             background-color: white;
@@ -208,7 +204,7 @@
             background-color: white;
             border-radius: 30px;
         }
-    </style>
+    </style> --}}
 </head>
 
 <body>
@@ -223,14 +219,10 @@
                 <div class="row g-5 m-3">
                     <!-- Stat Card 1 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
                             <!-- Badge -->
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/user.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/user.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
@@ -250,13 +242,9 @@
 
                     <!-- Stat Card 2 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/house.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/house.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
@@ -276,13 +264,9 @@
 
                     <!-- Stat Card 3 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/chart.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/chart.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
@@ -302,7 +286,6 @@
                     </div>
                 </div>
 
-
                 <div class="header-card d-flex justify-content-between align-items-center">
                     <div class="row justify-between" style="width: 100%">
                         <div class="col-md-6">
@@ -312,14 +295,12 @@
                             <div class="row g-3 align-items-center">
                                 <!-- Champ de recherche -->
                                 <div class="col-md-5">
-                                    <input type="text" id="searchInput" class="form-control"
-                                        placeholder="Rechercher...">
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher...">
                                 </div>
 
                                 <!-- Bouton d'ajout -->
                                 <div class="col-md-7">
-                                    <button type="button" class="btn btn-primary mx-2 w-80 w-md-auto"
-                                        data-bs-toggle="modal" data-bs-target="#ajoutTestModal">
+                                    <button type="button" class="btn btn-primary mx-2 w-80 w-md-auto" data-bs-toggle="modal" data-bs-target="#ajoutTestModal">
                                         Ajouter un test
                                     </button>
                                 </div>
@@ -337,20 +318,17 @@
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
                                 <!-- Button Choisir Discipline -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#choisirDisciplineModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
                                     <i class="fas fa-list" title="Choisir discipline"></i>
                                 </button>
 
                                 <!-- Button Modifier -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModalTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTestTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -364,20 +342,17 @@
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
                                 <!-- Button Choisir Discipline -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#choisirDisciplineModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
                                     <i class="fas fa-list" title="Choisir discipline"></i>
                                 </button>
 
                                 <!-- Button Modifier -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModalTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTestTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -391,20 +366,17 @@
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
                                 <!-- Button Choisir Discipline -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#choisirDisciplineModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
                                     <i class="fas fa-list" title="Choisir discipline"></i>
                                 </button>
 
                                 <!-- Button Modifier -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModalTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTestTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -418,20 +390,17 @@
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
                                 <!-- Button Choisir Discipline -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#choisirDisciplineModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
                                     <i class="fas fa-list" title="Choisir discipline"></i>
                                 </button>
 
                                 <!-- Button Modifier -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModalTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTestTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -445,20 +414,17 @@
                             <p class="mb-4 text-muted">Une petite description ici pour parler du test!</p>
                             <div class="footer d-flex justify-content-end gap-3">
                                 <!-- Button Choisir Discipline -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#choisirDisciplineModal">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#choisirDisciplineModal">
                                     <i class="fas fa-list" title="Choisir discipline"></i>
                                 </button>
 
                                 <!-- Button Modifier -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#editModalTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#editModalTCFCanada1">
                                     <i class="fas fa-edit" title="Modifier"></i>
                                 </button>
 
                                 <!-- Button Supprimer -->
-                                <button type="button" class="btn btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#supprimerTestTCFCanada1">
+                                <button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#supprimerTestTCFCanada1">
                                     <i class="fas fa-trash-alt text-danger" title="Supprimer"></i>
                                 </button>
                             </div>
@@ -466,27 +432,22 @@
                     </div>
 
                     <!-- Modal : Choix discipline -->
-                    <div class="modal fade" id="choisirDisciplineModal" tabindex="-1"
-                        aria-labelledby="choisirDisciplineLabel" aria-hidden="true">
+                    <div class="modal fade" id="choisirDisciplineModal" tabindex="-1" aria-labelledby="choisirDisciplineLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content p-4 text-center">
                                 <div class="modal-header border-0">
                                     <h5 class="modal-title w-100" id="choisirDisciplineLabel">
                                         Choisissez la discipline</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Fermer"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                                 </div>
 
                                 <div class="row g-4 justify-content-center mr-6">
 
                                     <!-- Carte TCF QUEBEC 1 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6"
-                                        onclick="window.location.href='{{ route('model_examen') }}'">
-                                        <div class="test-card text-center h-100 p-4"
-                                            style="background-color: #F8B70D;">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #F8B70D;">
                                             <div class="test-icon mb-3 mt-4">
-                                                <img src="{{ asset('images/lecture.png') }}" alt="Logo"
-                                                    style="height: 40px;">
+                                                <img src="{{ asset('images/lecture.png') }}" alt="Logo" style="height: 40px;">
                                             </div>
                                             <h3 style="color: white;" class="test-title h5 mb-3">Compréhension Écrite
                                             </h3>
@@ -495,13 +456,10 @@
 
 
                                     <!-- Carte TCF CANADA 2 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6"
-                                        onclick="window.location.href='{{ route('fichier_q_r') }}'">
-                                        <div class="test-card text-center h-100 p-4"
-                                            style="background-color: #FF3B30;">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #FF3B30;">
                                             <div class="test-icon mb-3">
-                                                <img src="{{ asset('images/ecoute.png') }}" alt="Logo"
-                                                    style="height: 40px;">
+                                                <img src="{{ asset('images/ecoute.png') }}" alt="Logo" style="height: 40px;">
                                             </div>
                                             <h3 style="color: white" class="test-title h5 mb-3"> Compréhension Orale
                                             </h3>
@@ -510,13 +468,10 @@
                                     </div>
 
                                     <!-- Carte TCF QUEBEC 2 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6"
-                                        onclick="window.location.href='{{ route('model_question') }}'">
-                                        <div class="test-card text-center h-100 p-4"
-                                            style="background-color: #224194;">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #224194;">
                                             <div class="test-icon mb-3">
-                                                <img src="{{ asset('images/orale.png') }}" alt="Logo"
-                                                    style="height: 40px;">
+                                                <img src="{{ asset('images/orale.png') }}" alt="Logo" style="height: 40px;">
                                             </div>
                                             <h3 style="color: white" class="test-title h5 mb-3">Expression Orale</h3>
 
@@ -524,13 +479,10 @@
                                     </div>
 
                                     <!-- Carte TCF CANADA 3 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6"
-                                        onclick="window.location.href='{{ route('expression_ecrite') }}'">
-                                        <div class="test-card text-center h-100 p-4"
-                                            style="background-color: #249DB8;">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('expression_ecrite') }}'">
+                                        <div class="test-card text-center h-100 p-4" style="background-color: #249DB8;">
                                             <div class="test-icon mb-3">
-                                                <img src="{{ asset('images/ecrite.png') }}" alt="Logo"
-                                                    style="height: 40px;">
+                                                <img src="{{ asset('images/ecrite.png') }}" alt="Logo" style="height: 40px;">
                                             </div>
                                             <h3 style="color: white" class="test-title h5 mb-3"> Expression Ecrite
                                             </h3>
@@ -543,20 +495,17 @@
                         </div>
                     </div>
                     <!-- Modal : Modifier -->
-                    <div class="modal fade" id="editModalTCFCanada1" tabindex="-1"
-                        aria-labelledby="editModalLabelTCFCanada1" aria-hidden="true">
+                    <div class="modal fade" id="editModalTCFCanada1" tabindex="-1" aria-labelledby="editModalLabelTCFCanada1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="editModalLabelTCFCanada1">Modifier le test</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="testNameTCFCanada1"
-                                                placeholder="Nom du test" value="TCF CANADA">
+                                            <input type="text" class="form-control" id="testNameTCFCanada1" placeholder="Nom du test" value="TCF CANADA">
                                             <label for="testNameTCFCanada1">Nom du test *</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -574,15 +523,13 @@
                     </div>
 
                     <!-- Modal : Supprimer -->
-                    <div class="modal fade" id="supprimerTestTCFCanada1" tabindex="-1"
-                        aria-labelledby="supprimerTestLabelTCFCanada1" aria-hidden="true">
+                    <div class="modal fade" id="supprimerTestTCFCanada1" tabindex="-1" aria-labelledby="supprimerTestLabelTCFCanada1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-5" id="supprimerTestLabelTCFCanada1">Supprimer le test
                                     </h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     Voulez-vous vraiment supprimer ce Test ? Cette action est irréversible.
@@ -596,22 +543,19 @@
                     </div>
 
                     <!-- Modal : Ajout Test -->
-                    <div class="modal fade" id="ajoutTestModal" tabindex="-1" aria-labelledby="ajoutTestLabel"
-                        aria-hidden="true">
+                    <div class="modal fade" id="ajoutTestModal" tabindex="-1" aria-labelledby="ajoutTestLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content p-4">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="ajoutTestLabel">
                                         <i id="disciplineIcon" class="fas fa-plus"></i> Ajouter un test
                                     </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Fermer"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form>
                                         <div class="form-floating mb-3">
-                                            <input type="text" class="form-control" id="testNameAjout"
-                                                placeholder="Nom du test">
+                                            <input type="text" class="form-control" id="testNameAjout" placeholder="Nom du test">
                                             <label for="testNameAjout">Nom du test *</label>
                                         </div>
                                         <div class="form-floating mb-3">
@@ -629,19 +573,6 @@
                         </div>
                     </div>
 
-                    {{--   <script>
-                        // Nettoie les backdrops fantômes au besoin
-                        document.querySelectorAll('.modal').forEach(modal => {
-                            modal.addEventListener('hidden.bs.modal', () => {
-                                const backdrop = document.querySelector('.modal-backdrop');
-                                if (backdrop) backdrop.remove();
-                                document.body.classList.remove('modal-open');
-                                document.body.style = '';
-                            });
-                        });
-                    </script>
- --}}
-
                 </div>
 
             </div>
@@ -658,6 +589,7 @@
                 row.style.display = text.includes(value) ? '' : 'none';
             });
         });
+
     </script>
     <script>
         // Script pour gérer l'affichage du menu mobile
@@ -676,6 +608,7 @@
                 }
             });
         });
+
     </script>
 
 

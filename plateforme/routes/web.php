@@ -72,6 +72,8 @@ Route::get('/suggestion', function () {
 
 // fin partie suggestion
 
+
+
 // la partie admin
 
 Route::get('/admin/gestion_utilisateur', function () {
@@ -85,7 +87,6 @@ Route::get('/admin/gestion_test', function () {
 Route::get('/admin/statistiques', function () {
     return view('admin/statistiques');
 })->name('statistiques');
-
 
 Route::get('/admin/expression_ecrite', function () {
     return view('admin/expression_ecrite');

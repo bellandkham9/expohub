@@ -3,42 +3,8 @@
 @section('content')
     <div class="m-4">
 
-        <!-- Header -->
-        <nav class="navbar navbar-expand-lg bg-white  sticky-top">
-            <div class="container">
-                <!-- Logo -->
-                <a class="navbar-brand fw-bold text-primary" href="#">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
-                </a>
-
-                <!-- Burger button (mobile) -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Menu & right side -->
-                <div class="collapse navbar-collapse justify-content-between" id="mainNavbar">
-                    <!-- Centred menu -->
-                    <ul class="navbar-nav mx-auto gap-4">
-                        <li class="nav-item"><a class="nav-link" href="#">Tableau de bord</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Test</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Historique</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Stratégie</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Nous contactez</a></li>
-                    </ul>
-
-                    <!-- Droite : notif + avatar -->
-                    <div class="d-flex align-items-center gap-3">
-                        <i class="btn bi bi-bell" style="font-size: 1.3rem;"></i>
-                        <img src="{{ asset('images/beautiful-woman.png') }}" alt="Profil" class="rounded-circle"
-                            style="width: 35px; height: 35px; object-fit: cover;">
-                        <i class="btn bi bi-caret-down-fill"></i>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
+        @include('client.partials.navbar')
+   
         <!-- Hero Banner -->
         <div class="container my-4">
             <section id="">

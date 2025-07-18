@@ -12,7 +12,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <style>
+     @vite(['resources/css/admin-entrainement.css'])
+
+{{--     <style>
         body {
             background-color: #f8f9fb;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -135,7 +137,7 @@
                 height: auto;
             }
         }
-    </style>
+    </style> --}}
 </head>
 
 <body>

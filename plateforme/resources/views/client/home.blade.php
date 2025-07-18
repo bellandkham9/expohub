@@ -3,39 +3,8 @@
 @section('content')
     <div class="">
 
-        <!-- Header -->
-        <nav class="navbar navbar-expand-lg bg-white sticky-top">
-            <div class="container">
-                <a class="navbar-brand fw-bold text-primary" href="#">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
-                </a>
-
-
-                <!-- Menu -->
-                <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
-                    <ul class="navbar-nav gap-3">
-                        <li class="nav-item"><a class="nav-link" href="#">Accueil</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Stratégie</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Plans d'abonnements</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Nous contacter</a></li>
-                    </ul>
-                </div>
-                <!-- Buttons -->
-                <div class="d-flex gap-2">
-                    <a id="btn-commencer" class="btn" href="#">Commencez maintenant</a>
-                    <a id="btn-connecter" class="btn btn-outline-primary" href="#">Se Connecter</a>
-                </div>
-                <!-- Burger button -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                    aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-
-            </div>
-        </nav>
-
-
+        @include('client.partials.navbar')
+   
         <!-- Hero Banner -->
         <div class="container my-4">
             <section id="hero">
@@ -172,50 +141,6 @@
             </div>
 
         </div>
-
-        <!-- Footer -->
-        <footer class="container mb-4  p-4 text-light">
-            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <div>
-                    <p class="mb-1 fw-bold">Allez à</p>
-                    <ul class="list-unstyled d-flex gap-3">
-                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Stratégie</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Abonnements</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
-                    </ul>
-
-                    <div class="">
-                        <p class="mt-2 fw-bold">Suivez nous sur : <a href=""><i class="bi bi-facebook m-2"></i></a> <a
-                                href=""><i class="bi bi-linkedin m-2"></i></a> <a href=""><i
-                                    class="bi bi-instagram m-2"></i></a></p>
-                    </div>
-
-
-                </div>
-                <div class="d-flex flex-column align-items-end text-end">
-                    <div class="d-flex gap-2 mb-3">
-                        <a class="btn" href="#"
-                            style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
-                        <a class="btn" href="#"
-                            style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
-                    </div>
-                    <div>
-                        <small>
-                            <a href="#" class="text-decoration-none text-light me-2">Conditions d'utilisation</a>
-                            <a href="#" class="text-decoration-none text-light">Politique de confidentialité</a>
-                        </small>
-                    </div>
-                </div>
-
-            </div>
-            <hr style="height: 3px; background-color: white; border: 2px solid white;" class="">
-            <div class="container text-center mt-3">
-                <small class="d-block">&copy; 2025 ExpoHub Academy | tout les droits réservés</small>
-
-            </div>
-        </footer>
-
 
     </div>
 @endsection
