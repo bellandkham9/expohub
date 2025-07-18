@@ -128,8 +128,10 @@
                     <div class="mb-3">
 
                         <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
-                        
                     </div>
+
+                    
+
 
 
                     <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
@@ -138,15 +140,20 @@
             
         </div>
         <div>
-            <button class="social-btn google-btn">
-                <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
-            </button>
+            <p class="">
+                <a href="{{ route('social.redirect', 'google') }}" class="d-block btn btn-light  btn-google">
+                    <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
+                </a>
+            </p>
 
-            <button class="social-btn facebook-btn">
-                <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
-            </button>
+            <p class="">
+<a href="{{ route('social.redirect', 'facebook') }}" class="d-block btn btn-light btn-facebook">
+                    <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
+</a>
+            </p>
             <p class="text-center"> 
                 <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>
+                
             </p>
         </div>
     </div>

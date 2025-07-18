@@ -24,7 +24,8 @@ class SocialAuthController extends Controller
         try {
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors('Erreur d’authentification via ' . $provider);
+            // return redirect('auth.connexion')->withErrors('Erreur d’authentification via ' . $provider);
+            dd('erreur ici'. $e->getMessage());
         }
 
         // Vérifie si l'utilisateur existe déjà
