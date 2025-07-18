@@ -3,11 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialAuthController;
 
-Route::get('/', function () {
-    return view('start.welcome');
-});
-
-
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
@@ -25,64 +20,66 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 
 
-Route::get('/home', function () {
-    return view('client.home');
+Route::get('/', function () {
+    return view('start.home');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard-student', function () {
     return view('client.dashboard');
 })->name('client.dashboard');
 
 Route::get('/history', function () {
     return view('client.history');
-});
+})->name('client.history');
 
 Route::get('/contact', function () {
     return view('client.contact');
-});
+})->name('client.contact');
 
 Route::get('/paiement', function () {
     return view('client.paiement');
-});
+})->name('client.paiement');
 
 // partie test
 
 Route::get('/choix', function () {
     return view('test.choix_test');
-});
+})->name('test.choix_test');
 
 Route::get('/competence', function () {
     return view('test.competence');
-});
+})->name('test.competence');
 
 Route::get('/expression_ecrite', function () {
     return view('test.expression_ecrite');
-});
+})->name('test.expression_ecrite');
 
 Route::get('/expression_orale', function () {
     return view('test.expression_orale');
-});
+})->name('test.expression_orale');
 
 Route::get('/comprehension_ecrite', function () {
     return view('test.comprehension_ecrite');
-});
+})->name('test.comprehension_ecrite');
 
 Route::get('/comprehension_orale', function () {
     return view('test.comprehension_orale');
-});
+})->name('test.comprehension_orale');
 
 Route::get('/dashboard_details', function () {
     return view('test.dashboard_details');
-});
+})->name('test.dashboard_details');
 // fin partie test
 
 // partie suggestion
 
 Route::get('/suggestion', function () {
     return view('suggestion.suggestion');
-});
+})->name('suggestion.suggestion');
 
 // fin partie suggestion
+
+
 
 // la partie admin
 
@@ -97,7 +94,6 @@ Route::get('/admin/gestion_test', function () {
 Route::get('/admin/statistiques', function () {
     return view('admin.statistiques');
 })->name('statistiques');
-
 
 Route::get('/admin/expression_ecrite', function () {
     return view('admin.expression_ecrite');
