@@ -107,15 +107,28 @@
 
             <div class="contact-form">
 
-                <form>
+                <form action="{{route('auth.connexion')}}" method="POST">
+                    
+                    @csrf
+
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <div class="mb-3">
 
-                        <input type="text" class="form-control" id="name" required placeholder="E-mail">
+                        <input type="text" class="form-control" id="email" name="email" required placeholder="E-mail">
                     </div>
 
                     <div class="mb-3">
 
-                        <input type="tel" class="form-control" id="phone" required placeholder="Mot de passe">
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
+                        
                     </div>
 
 
@@ -125,7 +138,6 @@
             
         </div>
         <div>
-            
             <button class="social-btn google-btn">
                 <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
             </button>
@@ -133,6 +145,9 @@
             <button class="social-btn facebook-btn">
                 <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
             </button>
+            <p class="text-center"> 
+                <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>
+            </p>
         </div>
     </div>
 </body>

@@ -29,11 +29,22 @@
                     </ul>
 
                     <!-- Droite : notif + avatar -->
-                    <div class="d-flex align-items-center gap-3">
+                    <div class= d-flex align-items-center gap-3">
                         <i class="btn bi bi-bell" style="font-size: 1.3rem;"></i>
-                        <img src="{{ asset('images/beautiful-woman.png') }}" alt="Profil" class="rounded-circle"
-                            style="width: 35px; height: 35px; object-fit: cover;">
-                        <i class="btn bi bi-caret-down-fill"></i>
+
+                       <div class="dropdown text-end">
+                            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false" ...>
+                                <img src="{{ asset('images/beautiful-woman.png') }}" alt="Profil" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                            </a>
+                            
+                            <ul class="dropdown-menu text-small" ... aria-labelledby="dropdownUser1">
+                                <li><a class="dropdown-item" href="#">Mon compte</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a></li>
+                            </ul>
+                        </div>
+                        
+
                     </div>
                 </div>
             </div>
