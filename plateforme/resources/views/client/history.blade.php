@@ -3,7 +3,7 @@
 @section('content')
 <div class="">
 
-   @include('client.partials.navbar')
+   @include('client.partials.navbar-client')
    
     <!-- Hero Banner -->
     <div class="container my-4">
@@ -13,7 +13,6 @@
                     <div class="container m-6">
                         <h2>Historique</h2>
                         <hr style="height: 2px; background-color: black; border: none;" class="">
-
                     </div>
                     <div class="" style="max-height: 70vh; overflow-y: auto;">
                         <ul class="">

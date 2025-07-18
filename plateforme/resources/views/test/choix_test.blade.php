@@ -3,7 +3,7 @@
 @section('content')
     <div class="m-4">
 
-        @include('client.partials.navbar')
+        @include('client.partials.navbar-client')
    
         <!-- Hero Banner -->
         <div class="container my-4">

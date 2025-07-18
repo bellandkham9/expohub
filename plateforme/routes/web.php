@@ -3,11 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialAuthController;
 
-Route::get('/', function () {
-    return view('start.welcome');
-});
-
-
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
@@ -25,11 +20,11 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 
 
-Route::get('/home', function () {
-    return view('client.home');
+Route::get('/', function () {
+    return view('start.home');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard-student', function () {
     return view('client.dashboard');
 })->name('client.dashboard');
 
