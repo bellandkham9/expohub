@@ -155,6 +155,8 @@
                 <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>
                 
             </p>
+
+            <p><a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a></p>
         </div>
     </div>
 </body>

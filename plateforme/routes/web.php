@@ -21,7 +21,7 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 
 Route::get('/', function () {
-    return view('start.home');
+    return view('start/home');
 });
 
 Route::get('/dashboard-student', function () {
