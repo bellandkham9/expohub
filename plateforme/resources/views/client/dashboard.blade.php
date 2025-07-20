@@ -58,7 +58,7 @@
                                 <div class="row g-4 justify-content-center mr-6">
 
                                     <!-- Carte TCF QUEBEC 1 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_ecrite') }}'">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_ecrite') }}'">
                                         <div class="test-card text-center h-100 p-4" style="background-color: #F8B70D;">
                                             <div class="test-icon mb-3 mt-4">
                                                 <img src="{{ asset('images/lecture.png') }}" alt="Logo" style="height: 40px;">
@@ -70,7 +70,7 @@
 
 
                                     <!-- Carte TCF CANADA 2 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_orale') }}'">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_orale') }}'">
                                         <div class="test-card text-center h-100 p-4" style="background-color: #FF3B30;">
                                             <div class="test-icon mb-3">
                                                 <img src="{{ asset('images/ecoute.png') }}" alt="Logo" style="height: 40px;">
@@ -82,7 +82,7 @@
                                     </div>
 
                                     <!-- Carte TCF QUEBEC 2 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_orale') }}'">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_orale') }}'">
                                         <div class="test-card text-center h-100 p-4" style="background-color: #224194;">
                                             <div class="test-icon mb-3">
                                                 <img src="{{ asset('images/orale.png') }}" alt="Logo" style="height: 40px;">
@@ -93,7 +93,7 @@
                                     </div>
 
                                     <!-- Carte TCF CANADA 3 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.comprehension_ecrite') }}'">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_ecrite') }}'">
                                         <div class="test-card text-center h-100 p-4" style="background-color: #249DB8;">
                                             <div class="test-icon mb-3">
                                                 <img src="{{ asset('images/ecrite.png') }}" alt="Logo" style="height: 40px;">
