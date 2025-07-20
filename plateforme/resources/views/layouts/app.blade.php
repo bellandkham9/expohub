@@ -84,10 +84,10 @@
                 <div>
                     <p class="mb-1 fw-bold">Allez à</p>
                     <ul class="list-unstyled d-flex gap-3">
-                        <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Stratégie</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Abonnements</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Contact</a></li>
+                        <li><a href="{{ route('start.home') }}" class="text-white text-decoration-none">Accueil</a></li>
+                        <li><a href="{{ route('suggestion.suggestion') }}" class="text-white text-decoration-none">Stratégie</a></li>
+                        <li><a href="{{ route('client.paiement') }}" class="text-white text-decoration-none">Abonnements</a></li>
+                        <li><a href="{{ route('client.contact') }}" class="text-white text-decoration-none">Contact</a></li>
                     </ul>
 
                     <div class="">
@@ -98,8 +98,8 @@
                 </div>
                 <div class="d-flex flex-column align-items-end text-end">
                     <div class="d-flex gap-2 mb-3">
-                        <a class="btn" href="#" style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
-                        <a class="btn" href="#" style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
+                        <a class="btn" href="{{route('auth.inscription')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
+                        <a class="btn" href="{{route('auth.connexion')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
                     </div>
                     <div>
                         <small>
@@ -117,11 +117,63 @@
             </div>
         </footer>
     </div>
-    <!-- Bootstrap JS -->
+ 
+
+    <!-- Toast Notification -->
+<div id="toast" style="
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #28a745;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 15px;
+    position: fixed;
+    z-index: 9999;
+    right: 30px;
+    bottom: 30px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: visibility 0s, opacity 0.5s linear;
+    opacity: 0;
+">
+    ✅ infotmation envoyé avec succès
+</div>
+
+<script>
+    function showToast(message, color = '#28a745') {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.style.backgroundColor = color;
+        toast.style.visibility = "visible";
+        toast.style.opacity = "1";
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.visibility = "hidden";
+        }, 3000);
+    }
+</script>
+
+@if(session('success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            showToast("{{ session('success') }}");
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            showToast("{{ session('error') }}", "#dc3545");
+        });
+    </script>
+@endif
+
+   <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Bootstrap Bundle (inclut Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YW8hRhP56V8VuSK9Eo0BtJXG5Dspu3j1gzDdt8ZMpPoQ9B/JW1yQlGb0n0e5l9lx" crossorigin="anonymous"></script>
-
 
 
 

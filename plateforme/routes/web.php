@@ -1,7 +1,10 @@
 <?php
 
+// Dans routes/web.php
+use App\Http\Controllers\ContactController; // ou le nom de votre contrôleur
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialAuthController;
+use App\Mail\ContactFormMail;
 
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
@@ -20,9 +23,11 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 
 
+Route::post('/envoyer-message', [ContactController::class, 'sendEmail'])->name('envoyer.message');
+
 Route::get('/', function () {
-    return view('start/home');
-});
+    return view('start.home');
+})->name('start.home');
 
 Route::get('/dashboard-student', function () {
     return view('client.dashboard');
