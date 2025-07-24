@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ComprehensionEcrite extends Model
+class ComprehensionOrale extends Model
 {
+    //
     protected $fillable = [
         'contexte_texte',
-        'contexte_image',
-        'question',
+        'question_audio',
         'proposition_1',
         'proposition_2',
         'proposition_3',

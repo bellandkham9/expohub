@@ -5,6 +5,9 @@ use App\Http\Controllers\ContactController; // ou le nom de votre contrôleur
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialAuthController;
 use App\Mail\ContactFormMail;
+use App\Http\Controllers\ComprehensionEcriteController;
+use App\Http\Controllers\ComprehensionOraleController;
+use App\Http\Controllers\ExpressionEcriteController;
 
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
@@ -55,21 +58,46 @@ Route::get('/competence', function () {
     return view('test.competence');
 })->name('test.competence');
 
-Route::get('/expression_ecrite', function () {
+/* Route::get('/expression_ecrite', function () {
     return view('test.expression_ecrite');
-})->name('test.expression_ecrite');
+})->name('test.expression_ecrite'); */
 
 Route::get('/expression_orale', function () {
     return view('test.expression_orale');
 })->name('test.expression_orale');
 
-Route::get('/comprehension_ecrite', function () {
+/* Route::get('/comprehension_ecrite', function () {
     return view('test.comprehension_ecrite');
 })->name('test.comprehension_ecrite');
+ */
 
-Route::get('/comprehension_orale', function () {
+Route::get('/comprehension_ecrite', [ComprehensionEcriteController::class, 'index'])->name('test.comprehension_ecrite');
+Route::get('/comprehension_ecrite/resultat', [ComprehensionEcriteController::class, 'resultat'])->name('test.comprehension_ecrite_resultat');
+Route::post('/comprehension_ecrite/repondre', [ComprehensionEcriteController::class, 'enregistrerReponse']);
+
+
+
+
+Route::get('/comprehension_orale', [ComprehensionOraleController::class, 'index'])->name('test.comprehension_orale');
+Route::post('/comprehension_orale/repondre', [ComprehensionOraleController::class, 'enregistrerReponse']);
+Route::get('/comprehension_orale/resultat', [ComprehensionOraleController::class, 'resultat'])->name('comprehension_orale_resultat');
+
+
+
+
+// Route GET : afficher l'interface
+Route::get('/expression_ecrite', [ExpressionEcriteController::class, 'afficherTest'])->name('expression_ecrite');
+
+// Route POST (AJAX) : dialogue avec l’IA
+Route::post('/expression_ecrite/message', [ExpressionEcriteController::class, 'envoyerMessage'])->name('expression_ecrite_message');
+
+// Résultat final
+Route::get('/expression_ecrite/resultat', [ExpressionEcriteController::class, 'resultat'])->name('expression_ecrite_resultat');
+
+
+/* Route::get('/comprehension_orale', function () {
     return view('test.comprehension_orale');
-})->name('test.comprehension_orale');
+})->name('test.comprehension_orale'); */
 
 Route::get('/dashboard_details', function () {
     return view('test.dashboard_details');
@@ -116,4 +144,11 @@ Route::get('/admin/comprehension_orale', function () {
 Route::get('/admin/expression_orale', function () {
     return view('admin.expression_orale');
 })->name('expression_orale');
+
+
+
+
+
+
+
 
