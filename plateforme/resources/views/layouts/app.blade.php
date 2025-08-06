@@ -97,10 +97,12 @@
 
                 </div>
                 <div class="d-flex flex-column align-items-end text-end">
-                    <div class="d-flex gap-2 mb-3">
-                        <a class="btn" href="{{route('auth.inscription')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
-                        <a class="btn" href="{{route('auth.connexion')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
-                    </div>
+                    @if(!auth()->check())
+                        <div class="d-flex gap-2 mb-3">
+                            <a class="btn" href="{{route('auth.inscription')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
+                            <a class="btn" href="{{route('auth.connexion')}}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
+                        </div>
+                    @endif
                     <div>
                         <small>
                             <a href="#" class="text-decoration-none text-light me-2">Conditions d'utilisation</a>

@@ -59,4 +59,13 @@ class AuthController extends Controller
     // Redirige vers la page de connexion ou d'accueil
     return redirect()->route('auth.connexion')->with('success', 'Vous avez été déconnecté.');
     }
+
+
+    public function checkAuthenticatedOrRedirect() {
+    if (!Auth::check()) {
+        return redirect()->route('auth.connexion');
+    }
+    // L'utilisateur est connecté, continuer normalement
+    return null;
+}
 }

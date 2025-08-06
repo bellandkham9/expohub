@@ -3,7 +3,11 @@
 @section('content')
     <div class="m-4">
 
-       @include('client.partials.navbar-client')
+       @if(auth()->check())
+            @include('client.partials.navbar-client')
+        @else
+            @include('client.partials.navbar')
+        @endif
    
         <!-- Hero Banner -->
         <div class="container my-4">
@@ -93,7 +97,7 @@
                                     </div>
 
                                     <!-- Carte TCF CANADA 3 -->
-                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('test.expression_ecrite') }}'">
+                                    <div class="btn col-12 col-md-6 col-lg-6" onclick="window.location.href='{{ route('expression_ecrite') }}'">
                                         <div class="test-card text-center h-100 p-4" style="background-color: #249DB8;">
                                             <div class="test-icon mb-3">
                                                 <img src="{{ asset('images/ecrite.png') }}" alt="Logo" style="height: 40px;">
@@ -292,9 +296,9 @@
                     <div class="col-lg-3">
                         <div class="card text-center p-3 rounded-4 shadow-sm" style="background-color: #ebe9e9;">
                             <div class="d-flex justify-center align-items-center gap-2">
-                                <img src="{{ asset('images/beautiful-woman.png') }}" alt="Emmanuelle"
+                                <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" alt="{{auth()->user()->name}}"
                                     class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                <h6 class="fw-bold mb-0">Emmanuelle</h6>
+                                <h6 class="fw-bold mb-0">{{auth()->user()->name}}</h6>
                             </div>
 
                             <hr class="my-2">

@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // Route personnalisée pour la connexion
+    'login' => 'auth.connexion',
 
     /*
     |--------------------------------------------------------------------------

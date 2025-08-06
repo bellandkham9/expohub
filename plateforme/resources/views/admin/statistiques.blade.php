@@ -23,86 +23,70 @@
             <div class="col-md-9 col-lg-10 main-content">
 
                 <div class="row g-5 m-3">
-                    <!-- Stat Card 1 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <!-- Badge -->
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/user.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/user.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
                                 <div class="d-flex flex-column align-items-end">
                                     <div>
                                         <div class="text-muted small">Utilisateurs inscrits</div>
-                                        <div class="h4 mb-0">281</div>
+                                        <div class="h4 mb-0">{{ $totalUsers }}</div>
                                     </div>
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #707070; font-weight: bold;">+55</span> que la semaine passée
+                                    <span style="color: #707070; font-weight: bold;">{{ $usersLastWeek }}</span> que la semaine passée
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Stat Card 2 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/house.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/house.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
                                 <div class="d-flex flex-column align-items-end">
                                     <div>
                                         <div class="text-muted small">Utilisateurs actifs</div>
-                                        <div class="h4 mb-0">128</div>
+                                        <div class="h4 mb-0">{{ $nombreUtilisateursActifs }}</div>
                                     </div>
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #0DF840; font-weight: bold;">+10</span> cette semaine
+                                    <span style="color: #0DF840; font-weight: bold;">{{ $nombreUtilisateursActifsCetteSemaine }}</span> cette semaine
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Stat Card 3 -->
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div
-                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span
-                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
-                                style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/chart.png') }}" alt="Logo"
-                                    style="max-width: 70%; max-height: 70%;">
+                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/chart.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
                                 <div class="d-flex flex-column align-items-end">
                                     <div>
                                         <div class="text-muted small">Utilisateurs inactifs</div>
-                                        <div class="h4 mb-0">2300</div>
+                                        <div class="h4 mb-0">{{$nombreUtilisateursInactifs}}</div>
                                     </div>
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #BB1C1E; font-weight: bold;">-5</span> par rapport à la semaine
-                                    passée
+                                    <span style="color: #BB1C1E; font-weight: bold;">{{$nombreUtilisateursInactifsSemainepassé}}</span> par rapport à la semaine passée
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="row g-5 m-3">
                     <!-- Stat Card 1 -->
                     <div class="col-12 col-sm-6 col-lg-4">

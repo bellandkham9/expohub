@@ -1,7 +1,7 @@
  <!-- Header -->
  <nav class="navbar navbar-expand-lg bg-white  sticky-top">
      <div class="container">
-         <a class="navbar-brand fw-bold text-primary" href="#">
+         <a class="navbar-brand fw-bold text-primary" href="{{ route('start.home') }}">
              <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
          </a>
 
@@ -21,11 +21,11 @@
 
              <div class="dropdown text-end">
                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false" ...>
-                     <img src="{{ asset('images/beautiful-woman.png') }}" alt="Profil" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                     <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
                  </a>
 
                  <ul class="dropdown-menu text-small" ... aria-labelledby="dropdownUser1">
-                     <li><a class="dropdown-item" href="#">Mon compte</a></li>
+                     <li><a class="dropdown-item" href="{{route('client.mon-compte')}}">Mon compte</a></li>
                      <li>
                          <hr class="dropdown-divider">
                      </li>

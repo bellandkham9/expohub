@@ -1,7 +1,7 @@
  <!-- Header -->
     <nav class="navbar navbar-expand-lg bg-white  sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#">
+            <a class="navbar-brand fw-bold text-primary" href="{{ route('start.home') }}">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
             </a>
 

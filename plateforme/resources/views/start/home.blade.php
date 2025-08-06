@@ -3,7 +3,11 @@
 @section('content')
     <div class="">
 
-        @include('client.partials.navbar')
+        @if(auth()->check())
+            @include('client.partials.navbar-client')
+        @else
+            @include('client.partials.navbar')
+        @endif
    
         <!-- Hero Banner -->
         <div class="container my-4">

@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    protected $casts = [
+    'last_seen_at' => 'datetime',
+];
+
+    public function isOnline()
+    {
+        return $this->last_seen_at && $this->last_seen_at->greaterThan(now()->subMinutes(5));
+    }
 }
