@@ -1,0 +1,271 @@
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    color: #333;
+}
+
+.test-header {
+    border-bottom: 1px solid #eee;
+    padding: 20px;
+}
+
+.test-title {
+    color: #224194;
+    font-weight: 600;
+}
+
+.question-section {
+    padding: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.question-title {
+    color: #224194;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.chat-container {
+    height: 10vh;
+    overflow-y: auto;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+ .btn-success{
+            background-color: #224194;
+            border: none;
+            color: white;
+        }
+        .btn-secondary{
+            background-color: #FEF8E7;
+            border: none;
+            color: black;
+        }
+        
+
+.user-message {
+    margin-left: auto;
+    background-color: white;
+    color: black;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    box-shadow: 1px 1px 1px rgb(193, 192, 192);
+}
+
+.bot-message {
+    background-color: #fef8e7;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    box-shadow: 1px 1px 1px rgb(193, 192, 192);
+}
+
+.input-group {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 25px;
+    box-shadow: 2px 2px 2px 1px rgb(179, 178, 178);
+}
+
+#btn-abonne {
+    background-color: #bb1c1e;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: none;
+}
+
+.prof {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+
+#timer {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.main-content {
+    background-color: #f8f9fa;
+    border: none;
+    height: 55vh;
+}
+
+#clavierSpeciaux{
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+.tache-btn button {
+    background-color: #fef8e7;
+    /* Couleur bleue Bootstrap */
+    color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+}
+
+.tache-btn button:hover {
+    background-color: #0056b3;
+    color: white;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.boutons-container {
+    display: flex;
+    gap: 16px;
+    /* Espace horizontal entre les boutons */
+    margin-bottom: 20px;
+}
+
+.consigne {
+    background-color: #fef8e7;
+    /* Couleur claire de fond */
+    padding: 20px;
+    border-radius: 20px;
+    text-align: justify;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.indication {
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.consigne h5 {
+    color: #343a40;
+    margin-bottom: 10px;
+}
+
+.consigne p {
+    color: #555;
+    font-size: 16px;
+}
+.redaction-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 2px 2px 2px 2px gainsboro;
+}
+
+.redaction-container textarea {
+    flex: 1;
+    resize: vertical;
+}
+
+.redaction-container button {
+    height: 48px;
+    width: 48px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.redaction-container button img {
+    width: 24px;
+    height: 24px;
+}
+
+.redaction-container button:hover {
+    background-color: #0056b3;
+}
+#sendButton {
+    background-color: transparent;
+}
+.form-control {
+    font-size: 18px;
+}
+
+        /* Style personnalisé */
+        .tache-btn1 {
+            width: 100px;
+            border-radius: 8px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-tache-active {
+            background-color: #224194 !important;
+            color: white !important;
+        }
+
+        .btn-tache-inactive {
+            background-color: #e9ecef !important;
+            color: #495057 !important;
+        }
+
+        .redaction-container {
+            position: relative;
+            margin-top: 20px;
+        }
+
+        #zoneRedaction {
+            min-height: 150px;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+
+        #sendButton {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+        }
+
+        #sendButton img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .char-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #audioContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #recorderSection {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            /* Ajustez selon vos besoins */
+        }
+
+        #main-content {
+            height: 60vh;
+        }
+
+        #startRecordBtn,
+        #stopRecordBtn {
+            border: 5px solid #224194;
+            border-radius: 100%;
+            box-shadow: 2px 2px 2px 2px gainsboro;
+        }

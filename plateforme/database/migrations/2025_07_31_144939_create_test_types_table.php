@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expression_ecrites', function (Blueprint $table) {
+        Schema::create('test_types', function (Blueprint $table) {
             $table->id();
-            $table->text('contexte_texte');
-            $table->text('consigne');
+            $table->string('nom')->unique(); // tcf_canada, tef, etc.
+            $table->string('description')->nullable();
             $table->timestamps();
-});
+        });
 
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expression_ecrites');
+        Schema::dropIfExists('test_types');
     }
 };
