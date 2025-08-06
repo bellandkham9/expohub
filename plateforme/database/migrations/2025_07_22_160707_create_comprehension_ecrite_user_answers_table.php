@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('question_id')->constrained('expression_ecrite')->onDelete('cascade');
             $table->string('reponse'); // réponse donnée (A, B, C, D)
+            $table->string('test_type');
             $table->boolean('is_correct')->default(false);
             $table->timestamps();
         });

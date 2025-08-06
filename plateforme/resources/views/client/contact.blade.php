@@ -113,7 +113,29 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-center">
+            <div id="map" style="height: 400px; width: 100%; border-radius: 10px; margin-top: 30px;"></div>
+
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var map = L.map('map').setView([3.848, 11.502], 13); // ← coordonnées de Yaoundé par exemple
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        L.marker([3.848, 11.502]).addTo(map)
+            .bindPopup("Nous sommes ici !")
+            .openPopup();
+    });
+</script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
 
 @endsection

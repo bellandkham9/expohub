@@ -76,7 +76,7 @@
     border: none
 }
 
-form-control: focus {
+form-control:focus {
     box-shadow: none;
     overflow: hidden;
     border: none

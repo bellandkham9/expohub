@@ -11,8 +11,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
-    <title>Document</title>
+
+    <title>ExpoHub</title>
     <style>
         .shadowed {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -67,7 +70,14 @@
             background-color: #f0f8ff;
             border-radius: 0.5rem;
         }
-
+        .card-body:hover{
+            background-color: white;
+            color: black;
+        }
+        .card:hover{
+ background-color: white;
+            color: black;
+        }
     </style>
 
     @vite(['resources/sass/app.scss', 'resources/css/custom.css', 'resources/css/suggestion.css',  'resources/css/choix_test.css', 'resources/css/dashboard-client.css', 'resources/js/app.js'])

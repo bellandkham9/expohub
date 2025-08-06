@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExpressionEcriteScore extends Model
+class TestType extends Model
 {
     //
+     protected $fillable = ['nom', 'description'];
 }

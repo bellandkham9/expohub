@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Niveau;
 
 class User extends Authenticatable
 {
@@ -53,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->last_seen_at && $this->last_seen_at->greaterThan(now()->subMinutes(5));
     }
+
+    public function niveaux()
+{
+    return $this->hasMany(Niveau::class);
+}
+
 }

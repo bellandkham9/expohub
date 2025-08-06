@@ -1,411 +1,409 @@
-<!-- Tu peux renommer ce fichier en expression_ecrite.blade.php -->
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCF Canada - Expression Écrite</title>
-
-    <!-- Bootstrap + FontAwesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite('resources/css/expression_ecrite.css')
-
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
-            color: #333;
-        }
-        .test-container { background-color: white; }
-        .test-header { border-bottom: 1px solid #eee; padding: 20px; }
-        .test-title { color: #224194; font-weight: 600; }
-        .question-section { padding: 25px; border-bottom: 1px solid #eee; }
-        .question-title { color: #224194; font-weight: 500; margin-bottom: 15px; }
-        .chat-container {
-            height: 60vh; overflow-y: auto; padding: 15px;
-            background-color: #F8F9FA; border-radius: 8px;
-        }
-        .message { margin-bottom: 15px; max-width: 80%; }
-        .user-message {
-            margin-left: auto; background-color: white; color: black;
-            border-radius: 15px 15px 0 15px; padding: 10px 15px;
-            box-shadow: 1px 1px 1px rgb(193, 192, 192);
-        }
-        .bot-message {
-            background-color: #FEF8E7; border-radius: 15px 15px 15px 0;
-            padding: 10px 15px; box-shadow: 1px 1px 1px rgb(193, 192, 192);
-        }
-        .input-group {
-            margin-top: 20px; padding: 30px; border-radius: 25px;
-            box-shadow: 2px 2px 2px 1px rgb(179, 178, 178);
-        }
-        #btn-abonne {
-            background-color: #BB1C1E; border-radius: 5px; color: white;
-            padding: 10px 20px; font-weight: bold; border: none;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container py-4">
-    <h2 class="mb-3">Test d'Expression Écrite</h2>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5><strong>Contexte :</strong></h5>
-            <p>{{ $question->contexte_texte }}</p>
-
-            <h5><strong>Consigne :</strong></h5>
-            <p>{{ $question->consigne }}</p>
-
-            <input type="hidden" id="questionId" value="{{ $question->id }}">
-        </div>
-    </div>
-
-    <!-- Timer -->
-    <div class="mb-3">
-        <div class="alert alert-info">
-            Temps restant : <span id="timer">05:00</span>
-        </div>
-    </div>
-
-    <!-- Chat window -->
-    <div class="card mb-3" style="height: 300px; overflow-y: auto;" id="chatWindow">
-        <div class="card-body">
-            @foreach ($reponses as $rep)
-                <div class="mb-2"><strong>Vous :</strong> {{ $rep->reponse }}</div>
-                <div class="mb-3"><strong>ExpoHub :</strong> {{ $rep->prompt }}</div>
-            @endforeach
-        </div>
-    </div>
-
-    <!-- Input -->
-    <div class="input-group mb-3">
-        <input type="text" id="chatInput" class="form-control" placeholder="Écrivez votre réponse...">
-        <button id="sendButton" class="btn btn-primary">Envoyer</button>
-    </div>
-
-
-        <input type="hidden" name="abandonner" value="1">
-        <button onclick="abandonnerTest()" class="btn btn-danger">Abandonner</button>
-
-        <script>
-            function abandonnerTest() {
-    if (confirm("Voulez-vous vraiment abandonner le test ?")) {
-        window.location.href = "{{ route('expression_ecrite_resultat') }}";
-    }
-}
-
-        </script>
- 
-</div>
-
-<script>
-    const timerDisplay = document.getElementById('timer');
-    let duration = 5 * 60; // 5 minutes
-
-    function updateTimer() {
-        let minutes = Math.floor(duration / 60);
-        let seconds = duration % 60;
-        timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        if (duration > 0) {
-            duration--;
-        } else {
-            window.location.href = "{{ route('expression_ecrite_resultat') }}";
-        }
-    }
-    setInterval(updateTimer, 1000);
-
-    function appendMessage(content, sender) {
-        const chatBody = document.querySelector('#chatWindow .card-body');
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('mb-2');
-        msgDiv.innerHTML = `<strong>${sender === 'user' ? 'Vous' : 'Assistant'}:</strong> ${content}`;
-        chatBody.appendChild(msgDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    document.getElementById('sendButton').addEventListener('click', sendMessage);
-    document.getElementById('chatInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            sendMessage();
-            e.preventDefault();
-        }
-    });
-
-function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-
-    appendMessage(message, 'user');
-    input.value = '';
-
-    fetch("{{ route('expression_ecrite_message') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            message: message,
-            expression_ecrite_id: document.getElementById('questionId').value
-        })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error("Erreur de l'IA");
-        return res.json();
-    })
-    .then(data => {
-        appendMessage(data.reply, 'assistant');
-    })
-    .catch(err => {
-        console.error(err);
-        appendMessage("Erreur de connexion avec l'IA.", 'assistant');
-    });
-}
-
-
-   window.addEventListener('DOMContentLoaded', () => {
-    fetch("{{ route('expression_ecrite_message') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            message: "Bonjour, je suis prêt à commencer.",
-            expression_ecrite_id: document.getElementById('questionId').value
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        appendMessage(data.reply, 'assistant');
-    })
-    .catch(err => {
-        appendMessage("Erreur de connexion avec l'IA : " + err.message, 'assistant');
-    });
-});
-
-</script>
-
-
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-{{-- <!DOCTYPE html>
-<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TCF Canada - Expression Écrite</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @vite('resources/css/expression_ecrite.css')
+    @vite(['resources/css/expression_ecrite.css', 'resources/css/myExpressionEcrite.css'])
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
-            color: #333;
-        }
-
-        .test-container {
-            background-color: white;
-        }
-
-        .test-header {
-            border-bottom: 1px solid #eee;
-            padding: 20px;
-        }
-
-        .test-title {
-            color: #224194;
-            font-weight: 600;
-        }
-
-        .question-section {
-            padding: 25px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .question-title {
-            color: #224194;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-
-        .chat-container {
-            height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background-color: #F8F9FA;
+        /* Style personnalisé */
+        .tache-btn1 {
+            width: 100px;
             border-radius: 8px;
-            height: 60vh;
+            margin: 5px;
+            transition: all 0.3s ease;
         }
 
-        .message {
-            margin-bottom: 15px;
-            max-width: 80%;
+        .btn-tache-active {
+            background-color: #224194 !important;
+            color: white !important;
         }
 
-        .user-message {
-            margin-left: auto;
-            background-color: white;
-            color: black;
-            border-radius: 15px 15px 0 15px;
-            padding: 10px 15px;
-            box-shadow: 1px 1px 1px rgb(193, 192, 192)
+        .btn-tache-inactive {
+            background-color: #e9ecef !important;
+            color: #495057 !important;
         }
 
-        .bot-message {
-            background-color: #FEF8E7;
-            border-radius: 15px 15px 15px 0;
-            padding: 10px 15px;
-            box-shadow: 1px 1px 1px rgb(193, 192, 192)
-        }
-
-        .input-group {
+        .redaction-container {
+            position: relative;
             margin-top: 20px;
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 2px 2px 2px 1px rgb(179, 178, 178)
         }
 
-        #btn-abonne {
-            background-color: #BB1C1E;
-            border-radius: 5px;
-            color: white;
-            padding: 10px;
-            font-weight: bold;
+        #zoneRedaction {
+            min-height: 150px;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+
+        #sendButton {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: none;
             border: none;
-            padding-left: 20px;
-            padding-right: 20px;
         }
 
-        .status-active {
-            background-color: #d4edda;
-            color: #155724;
+        #sendButton img {
+            width: 30px;
+            height: 30px;
         }
 
-        .status-abandoned {
-            background-color: #f8d7da;
-            color: #721c24;
+        .char-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 
 <body>
-    <div class="container py-5">
+    <div class="container py-3">
         <div class="test-container">
-
-            <!-- Chat Interface -->
-            <div class="p-4">
-                <div class="row g-2 gap-x-4 gap-y-4 justify-between">
-                    <div class="col-md-4  d-flex justify-content-center my-3">
-                        <h4>60 : 00</h4>
-                    </div>
-                    <div class="col-md-4  d-flex justify-content-center my-3">
-                        <h3>TCF CANADA, Expression écrite</h3>
-                    </div>
-                    <div class="col-md-4 d-flex justify-content-center my-3">
-                        <button id="btn-abonne" class="btn btn-outline-danger px-4 py-2" type="button">
-                            <i class="fas fa-times-circle me-2"></i> Abandonné
-                        </button>
-                    </div>
+            <div class="row g-2 justify-content-between align-items-center mb-4">
+                <div class="col-md-2 text-center">
+                    <div class="alert alert-info mb-0">Temps restant : <span id="timer">60:00</span></div>
                 </div>
-                <div class="chat-container mb-3" id="chatWindow">
-                    <!-- Sample Chat Messages -->
-                    <div class="message bot-message">
-                        <strong>Assistant:</strong> Bonjour! Comment puis-je vous aider avec votre test d'expression
-                        écrite?
-                    </div>
-                    <div class="message user-message">
-                        <strong>Vous:</strong> Je ne comprends pas la deuxième question
-                    </div>
-                    <div class="message bot-message">
-                        <strong>Assistant:</strong> La question 2 vous demande de décrire une image de 433x140 pixels.
-                        Concentrez-vous sur les éléments visibles et utilisez un vocabulaire varié.
-                    </div>
+                <div class="col-md-8 text-center">
+                    <h3>TCF CANADA, Expression écrite</h3>
                 </div>
-
-                <div class="input-group">
-                    <input type="text" class="form-control" id="chatInput" placeholder="Un petit texte ici......">
-                    <button class="btn " id="sendButton">
-                        <img src="{{ asset('images/send.png') }}" alt="Profil" class="" style="">
+                <div class="col-md-2 text-center">
+                    <button onclick="abandonnerTest()" id="btn-abonne" class="btn btn-danger">
+                        <i class="fas fa-times-circle me-2"></i> Abandonner
                     </button>
                 </div>
             </div>
+
+            <div class="card mb-4 main-content">
+                <div class="d-flex gap-3 p-2">
+                    <div class="boutons-container d-flex flex-wrap">
+                        @foreach ($taches as $q)
+                            <button
+                                class="btn tache-btn1 {{ $q->id == $tacheActive->id ? 'btn-tache-active' : 'btn-tache-inactive' }}"
+                                data-tache="{{ $q->numero_tache }}">
+                                Tâche {{ $q->numero_tache }}
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Zone dynamique pour le texte de la tâche -->
+                <div class="card-body indication mt-7" id="indications">
+                    <h5><strong>Indications</strong></h5>
+                    <p>{{ $tacheActive->contexte_texte }}</p>
+                    <div class="consigne">
+                        <p>{{ $tacheActive->consigne }}</p>
+                    </div>
+                    <div id="clavierSpeciaux" class="mt-2 d-flex justify-content-center">
+                        <div class="d-flex flex-wrap gap-2 p-3"
+                            style="box-shadow: 2px 2px 2px 2px gainsboro; border-radius: 15px; max-width: fit-content;">
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">é</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">è</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ê</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">à</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ù</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ç</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ô</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">î</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">â</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">û</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ë</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ï</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">œ</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">Æ</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">«</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm char-btn">»</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="formRedaction" onsubmit="event.preventDefault(); envoyerRedaction();">
+                <div class="redaction-container">
+                    <textarea class="form-control" rows="6" name="reponse" id="zoneRedaction" placeholder="Rédige ta réponse ici..."></textarea>
+                    <input type="hidden" id="questionId" name="expression_ecrite_id"
+                        value="{{ $tacheActive->id ?? '' }}">
+                    <button type="submit" class="btn" id="sendButton">
+                        <img src="{{ asset('images/send.png') }}" alt="Envoyer">
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+    <input type="hidden" id="testType" value="{{$test_type}}">
+    
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Simple Chat Functionality -->
     <script>
-        document.getElementById('sendButton').addEventListener('click', function() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-
-            if (message) {
-                // Add user message
-                const chatWindow = document.getElementById('chatWindow');
-                const userMsg = document.createElement('div');
-                userMsg.className = 'message user-message';
-                userMsg.innerHTML = `<strong>Vous:</strong> ${message}`;
-                chatWindow.appendChild(userMsg);
-
-                // Clear input
-                input.value = '';
-
-                // Simulate bot response after 1 second
-                setTimeout(function() {
-                    const botResponses = [
-                        "Je comprends votre question. Pouvez-vous préciser?",
-                        "Pour cette partie du test, il faut se concentrer sur...",
-                        "Voici un exemple de réponse possible: ...",
-                        "N'hésitez pas à utiliser des connecteurs logiques comme 'premièrement', 'ensuite'...",
-                        "Votre réponse devrait contenir environ 120-150 mots."
-                    ];
-                    const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-
-                    const botMsg = document.createElement('div');
-                    botMsg.className = 'message bot-message';
-                    botMsg.innerHTML = `<strong>Assistant:</strong> ${randomResponse}`;
-                    chatWindow.appendChild(botMsg);
-
-                    // Scroll to bottom
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }, 1000);
-
-                // Scroll to bottom
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            }
-        });
-
-        // Also allow sending with Enter key
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('sendButton').click();
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            const testType = document.getElementById('testType').value;
+            console.log("Valeur du test type :", testType);
         });
     </script>
+
+    <script>
+        // ⏱️ Timer
+        let duration = 3600;
+        const timerDisplay = document.getElementById('timer');
+        setInterval(() => {
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            if (--duration < 0) {
+                alert("Temps écoulé ! Vous allez voir vos résultats.");
+                enregistrerResultatFinalEtRediriger()
+            }
+        }, 1000);
+
+                        
+        function enregistrerResultatFinalEtRediriger() {
+            const data = {
+            test_type: document.getElementById('testType')?.value
+            };
+
+            console.log("Data envoyée au serveur :", data);
+
+            fetch("{{ route('expression_ecrite.resultat_final') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(data)
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error("Réponse erreur brute :", text);
+                    throw new Error('Erreur HTTP : ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Résultat enregistré :", data);
+                //window.location.href = "{{ route('test.expression_orale_resultat1') }}";
+            })
+            .catch(error => {
+                console.log('Erreur enregistrement résultat final :', error);
+            });
+        }
+
+
+
+        // Caractères spéciaux
+        document.querySelectorAll('.char-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const textarea = document.getElementById('zoneRedaction');
+                const char = this.textContent;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                textarea.value = text.substring(0, start) + char + text.substring(end);
+                textarea.focus();
+                textarea.selectionStart = textarea.selectionEnd = start + char.length;
+            });
+        });
+
+        // ❌ Abandonner le test
+        function abandonnerTest() {
+            if (confirm("Voulez-vous vraiment abandonner le test ?")) {
+                enregistrerResultatFinalEtRediriger();
+            }
+        }
+
+        // 🔁 Changer de tâche
+        document.querySelectorAll('.tache-btn1').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const numeroTache = this.dataset.tache;
+
+                // Mettre à jour le style des boutons
+                document.querySelectorAll('.tache-btn1').forEach(b => {
+                    b.classList.remove('btn-tache-active');
+                    b.classList.add('btn-tache-inactive');
+                });
+                this.classList.remove('btn-tache-inactive');
+                this.classList.add('btn-tache-active');
+
+                fetch("{{ route('expression_ecrite.changer_tache') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            numero_tache: numeroTache
+                        })
+                    })
+                    .then(async res => {
+                        if (!res.ok) {
+                            const errText = await res.text();
+                            throw new Error(`Erreur HTTP (${res.status}): ${errText}`);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        const indicationsDiv = document.getElementById('indications');
+                        const zoneRedaction = document.getElementById('formRedaction');
+
+                        if (data.reponse !== null) {
+                            indicationsDiv.innerHTML = `
+                                <div class="alert alert-success">
+                                    ✅ Cette tâche a déjà été complétée. Vous ne pouvez plus la modifier.
+                                </div>
+                            `;
+                            zoneRedaction.style.display = "none";
+                        } else {
+                            indicationsDiv.innerHTML = `
+                                <h5><strong>Indications</strong></h5>
+                                <p>${data.tache.contexte_texte}</p>
+                                <div class="consigne"><p>${data.tache.consigne}</p></div>
+
+                                          <div id="clavierSpeciaux" class="mt-2 d-flex justify-content-center">
+                                                <div class="d-flex flex-wrap gap-2 p-3" 
+                                                    style="box-shadow: 2px 2px 2px 2px gainsboro; border-radius: 15px; max-width: fit-content;">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">é</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">è</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ê</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">à</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ù</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ç</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ô</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">î</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">â</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">û</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ë</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">ï</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">œ</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">Æ</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">«</button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm char-btn">»</button>
+                                                </div>
+                                            </div>
+                            `;
+                            zoneRedaction.style.display = "block";
+                        }
+
+                        document.getElementById('questionId').value = data.tache.id;
+                        document.getElementById('zoneRedaction').value = '';
+                    })
+                    .catch(err => {
+                        alert("Erreur lors du chargement de la tâche !");
+                        console.error(err);
+                    });
+            });
+        });
+
+        function envoyerRedaction() {
+            const textarea = document.getElementById('zoneRedaction');
+            const questionIdInput = document.getElementById('questionId');
+            const sendButton = document.querySelector('#sendButton');
+            const testType = document.getElementById('testType')?.value;
+
+            // Validation des éléments DOM
+            if (!textarea || !questionIdInput || !sendButton) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Éléments introuvables. Veuillez recharger la page.'
+                });
+                return;
+            }
+
+            const reponse = textarea.value.trim();
+            const questionId = questionIdInput.value;
+
+            // Validation du contenu
+            if (!reponse) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champ vide',
+                    text: 'Veuillez rédiger une réponse avant d\'envoyer.'
+                });
+                return;
+            }
+
+            // Désactive le bouton pendant l'envoi
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+
+            fetch("{{ route('expression_ecrite.repondre') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": '{{ csrf_token() }}',
+                        "Accept": "application/json" // Important pour les erreurs Laravel
+                    },
+                    body: JSON.stringify({
+                        reponse: reponse,
+                        expression_ecrite_id: questionId,
+                        test_type: testType
+                    })
+                })
+                .then(async response => {
+                    // Gestion des réponses non-OK (400, 500, etc.)
+                    if (!response.ok) {
+                        let errorData;
+
+                        try {
+                            errorData = await response.json();
+                        } catch (e) {
+                            throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                        }
+
+                        throw new Error(errorData.message || errorData.error || 'Erreur inconnue');
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Information',
+                            text: data.error,
+                            showConfirmButton: true
+                        });
+                        return;
+                    }
+
+                    // Succès
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succès!',
+                        text: data.message || 'Votre réponse a été sauvegardée.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Réinitialisation du formulaire
+                    textarea.value = '';
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: error.message || 'Une erreur est survenue lors de l\'envoi.',
+                        showConfirmButton: true
+                    });
+                })
+                .finally(() => {
+                    // Réactive le bouton
+                    sendButton.disabled = false;
+                    sendButton.innerHTML = '<img src="{{ asset('images/send.png') }}" alt="Envoyer">';
+                });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
- --}}

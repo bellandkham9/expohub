@@ -1,146 +1,213 @@
-<!DOCTYPE html>
-<html lang="fr">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultat - Compréhension Orale</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-    @vite('resources/css/expression_ecrite.css')
-    <style>
-        .result-container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+@section('content')
+<div class="m-4">
 
-        .question-result {
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-            background-color: #f8f9fa;
-        }
+    @include('client.partials.navbar-client')
 
-        .correct {
-            color: green;
-            font-weight: bold;
-        }
+    <div class="container my-4">
+        <section id="">
+            <div class="row justify-between align-items-start g-4">
+                <div class="col-lg-9">
+                    <!-- Résumé du test -->
+                    <section class="container mb-5">
+                        <div class="mt-3">
+                            <div style="max-height: 70vh; overflow-y: auto;">
+                                <ul>
+                                    <li>
+                                        <div class="container my-3">
+                                            <div class="border rounded shadow-sm p-3">
+                                                <div class="d-flex flex-column flex-md-row justify-content-between">
+                                                    <div>
+                                                        <h6 class="fw-bold mb-1">{{ $titre }}</h6>
+                                                    </div>
+                                                    <div class="text-md-end text-muted small">
+                                                        <div><strong>60 min</strong></div>
+                                                        <div>{{ now()->format('d M Y') }}</div>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="row g-2 mb-3">
+                                                            <div class="col-12 col-md-5">
+                                                                <strong>Niveau :</strong> {{ $niveau }}
+                                                            </div>
+                                                            <div class="col-12 col-md-5">
+                                                                <strong>Score :</strong> {{ $totalPoints }} points
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <a href="{{ route($route) }}" class="btn" style="background-color:  #224194; color: white;">
+                                                            Refaire le test
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
 
-        .incorrect {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
-</head>
+                    <!-- Résultats détaillés -->
+                    <section class="container mb-5" style="padding-left: 45px; padding-right: 45px;">
+                        <div class="text-start mt-1">
+                            <a href="#" class="btn-show-more" style="color: black">Toutes les réponses <i class="fas fa-chevron-down"></i></a>
+                        </div>
 
-<body class="bg-light">
-    <div class="container py-5">
-        <div class="result-container text-center">
-            <h2 class="mb-4">🎧 Résultat - Compréhension Orale</h2>
+                        @foreach ($reponses as $reponse)
+                        <div class="row g-4 justify-content-center align-items-center mt-1 mb-3">
+                            <!-- Colonne gauche -->
+                            <div class="col-12 col-md-10 col-lg-6" style="height: 20vh">
+                                <div class="result-card astuce p-4 h-100 text-justify rounded shadow-sm">
+                                    @if(Str::endsWith($reponse->contexte_texte, ['.jpg', '.jpeg', '.png', '.gif', '.webp']))
+                                        <img src="{{ asset('storage/' . $reponse->contexte_texte) }}" alt="situation" class="img-fluid rounded" style="max-height: 100%; object-fit: contain;">
+                                    @else
+                                        <p class="text-justify">{{ $reponse->contexte_texte }}</p>
+                                    @endif
+                                </div>
+                            </div>
 
-            <h4>Score : {{ $score }} / {{ $total }}</h4>
-            <h5 class="text-{{ $pourcentage >= 50 ? 'success' : 'danger' }}">Taux de réussite : {{ $pourcentage }}%</h5>
+                            <!-- Colonne droite -->
+                            <div class="col-12 col-md-10 col-lg-6" style="height: 20vh">
+                                <div class="p-2 text-justify rounded">
+                                    <div class="row justify-between align-items-center mb-2">
+                                        <div class="col-12">
+                                            <p class="fw-bold">Question {{ $reponse->numero ?? $reponse->question_id }}:</p>
 
-            <canvas id="progressChart" height="100"></canvas>
+                                            @if(Str::endsWith($reponse->question_audio, '.mp3') || Str::endsWith($reponse->question_audio, '.wav'))
+                                                <audio controls class="mt-2 w-100">
+                                                    <source src="{{ asset('storage/' . $reponse->question_audio) }}" type="audio/mpeg">
+                                                    Votre navigateur ne supporte pas l'élément audio.
+                                                </audio>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <p>
+                                        <span style="color: {{ $reponse->is_correct ? '#0DF840' : '#FF3B30' }}" class="fw-bold">Votre réponse :</span>
+                                        {{ $reponse->reponse_utilisateur }}<br>
+                                        <span class="fw-bold" style="color: #0DF840">Bonne réponse :</span> {{ $reponse->bonne_reponse }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </section>
+                </div>
 
-            <div class="mt-4">
-                <a href="{{ route('test.comprehension_orale') }}" class="btn btn-primary me-3">
-                    Recommencer le test
-                </a>
-                <a href="#reponses" class="btn btn-outline-secondary">
-                    Voir mes réponses
-                </a>
+                <!-- Sidebar Profil -->
+                     <div class="col-lg-3">
+                    <!-- Profil -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body text-center">
+                            <img src="{{ asset('images/avatar.png') }}" alt="Profil" class="rounded-circle mb-3"
+                                width="80">
+                            <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
+
+                            @php
+                                $skills = [
+                                    'Compréhension Écrite' => 'comprehension_ecrite',
+                                    'Compréhension Orale' => 'comprehension_orale',
+                                    'Expression Écrite' => 'expression_ecrite',
+                                    'Expression Orale' => 'expression_orale',
+                                ];
+                            @endphp
+
+                            <div class="mt-4">
+                                <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
+
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach ($testTypes as $testType)
+                                        @php
+                                            $modalId = 'modal_' . $testType->id;
+                                            $key = $testType->nom;
+                                            $niveaux = $userLevels[$key] ?? null;
+                                        @endphp
+
+                                        <!-- Bouton -->
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#{{ $modalId }}">
+                                            {{ strtoupper($key) }}
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                            aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux pour
+                                                            {{ strtoupper($key) }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Fermer"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @if ($niveaux)
+                                                            <div class="row g-2">
+                                                                @foreach ($skills as $label => $champ)
+                                                                    @php
+                                                                        $level = $niveaux[$champ] ?? 'Non défini';
+                                                                        $color = match ($level) {
+                                                                            'C2', 'C1', 'B2' => 'success',
+                                                                            'B1', 'A2', 'A1' => 'warning',
+                                                                            default => 'secondary',
+                                                                        };
+                                                                    @endphp
+                                                                    <div class="col-6">
+                                                                        <div class="p-2 bg-light rounded">
+                                                                            <small
+                                                                                class="d-block text-muted">{{ $label }}</small>
+                                                                            <strong
+                                                                                class="text-{{ $color }}">{{ $level }}</strong>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @else
+                                                            <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Fermer</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Objectif -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Votre objectif</h6>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Progression</span>
+                                <span>{{ $learningGoal['current_progress'] }}%</span>
+                            </div>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: {{ $learningGoal['current_progress'] }}%">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Niveau visé: {{ $learningGoal['target_level'] }}</span>
+                                <span>{{ $learningGoal['target_date']->format('d/m/Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
-        </div>
-
-        <div class="mt-5" id="reponses">
-            <h4 class="mb-3">📋 Détail des réponses</h4>
-     @foreach($reponses as $rep)
-    <div class="question-result border p-3 mb-3 rounded shadow-sm {{ $rep->is_correct ? 'border-success' : 'border-danger' }}">
-        <p><strong>Contexte :</strong></p>
-
-        @if(Str::endsWith($rep->contexte_texte, ['.jpg', '.png', '.jpeg']))
-            <img src="{{ asset('storage/' . $rep->contexte_texte) }}" alt="image" class="img-fluid mb-2" style="max-height: 200px;">
-        @else
-            <p>{{ $rep->contexte_texte }}</p>
-        @endif
-
-        <audio controls class="mb-2">
-            <source src="{{ asset('storage/' . $rep->question_audio) }}" type="audio/mpeg">
-        </audio>
-
-        <p><strong>Votre réponse :</strong>
-            <span class="{{ $rep->is_correct ? 'text-success fw-bold' : 'text-danger fw-bold' }}">
-                {{ ['A', 'B', 'C', 'D'][$rep->reponse_utilisateur - 1] ?? '?' }}
-                - {{ $rep->{'proposition_' . $rep->reponse_utilisateur} }}
-            </span>
-        </p>
-
-        <p><strong>Bonne réponse :</strong>
-            <span class="text-success fw-bold">
-                {{ ['A', 'B', 'C', 'D'][$rep->bonne_reponse - 1] ?? '?' }}
-                - {{ $rep->{'proposition_' . $rep->bonne_reponse} }}
-            </span>
-        </p>
+        </section>
     </div>
-@endforeach
-
-<div class="text-center mt-4">
-    <h3>Votre score : {{ $score }} / {{ $total }} ({{ $pourcentage }}%)</h3>
 </div>
-
-
-        </div>
-    </div>
-
-    <audio id="success-sound" src="{{ asset('sounds/success.mp3') }}"></audio>
-    <audio id="fail-sound" src="{{ asset('sounds/fail.mp3') }}"></audio>
-
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const successSound = document.getElementById('success-sound');
-            const failSound = document.getElementById('fail-sound');
-
-            @if($pourcentage >= 50)
-                confetti();
-                successSound.play();
-            @else
-                failSound.play();
-            @endif
-
-            const ctx = document.getElementById('progressChart').getContext('2d');
-            const chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: {!! json_encode($historique->pluck('created_at')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d/m/y'))->toArray()) !!},
-                    datasets: [{
-                        label: 'Score (%)',
-                        data: {!! json_encode($historique->map(fn($h) => $h->total > 0 ? round(($h->score / $h->total) * 100) : 0)->toArray()) !!},
-                        borderColor: '#007bff',
-                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            title: {
-                                display: true,
-                                text: '% de réussite'
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-</body>
-
-</html>
+@endsection

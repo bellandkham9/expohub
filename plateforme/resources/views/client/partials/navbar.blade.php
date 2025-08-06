@@ -18,7 +18,7 @@
             <!-- Buttons -->
             <div class="d-flex gap-2">
                 <a id="btn-commencer" class="btn" href="{{ route('auth.inscription') }}">Commencez maintenant</a>
-                <a id="btn-connecter" class="btn btn-outline-primary" href="{{ route('auth.connexion') }}">Se Connecter</a>
+                <a id="btn-connecter" class="btn btn-outline-primary" href="{{ route('login') }}">Se Connecter</a>
             </div>
             <!-- Burger button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
