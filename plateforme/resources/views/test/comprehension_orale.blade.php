@@ -369,7 +369,7 @@
                     col.innerHTML = `
                         <div class="p-3 rounded option w-100 border" style="cursor: pointer;" data-rep="${rep.value}">
                             <p class="mb-0">
-                                <span class="fw-bold fs-4 me-2">${rep.label}</span> ${rep.text}
+                                <span class="fw-bold me-2">${rep.label}</span> ${rep.text}
                             </p>
                         </div>
                     `;

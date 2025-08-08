@@ -187,7 +187,9 @@
             })
             .then(data => {
                 console.log("Résultat enregistré :", data);
-                //window.location.href = "{{ route('test.expression_orale_resultat1') }}";
+
+                window.location.href = '/expression-ecrite/resultat';
+                
             })
             .catch(error => {
                 console.log('Erreur enregistrement résultat final :', error);

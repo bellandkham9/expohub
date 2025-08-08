@@ -12,16 +12,17 @@ use App\Http\Controllers\Client\CompteController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Middleware\UpdateLastSeen;
-
 use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistoriqueTestController;
 
+
+
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
-Route::get('/connexion', [\App\Http\Controllers\AuthController::class, 'connexion'])->name('login');
+Route::get('/connexion', [\App\Http\Controllers\AuthController::class, 'connexion'])->name('auth.connexion');
 Route::post('/connexion', [\App\Http\Controllers\AuthController::class, 'doConnexion']);
 
 Route::get('/inscription', [\App\Http\Controllers\AuthController::class, 'inscription'])->name('auth.inscription');
@@ -31,14 +32,12 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 
 Route::post('/envoyer-message', [ContactController::class, 'sendEmail'])->name('envoyer.message');
 
-Route::get('/', function () {
-    return view('start.home');
-})->name('start.home');
+Route::get('/', function () {return view('start.home');})->name('start.home');
 
 
 
 // Application du middleware 'auth' sur les routes nécessitant une authentification
-Route::middleware(['web', 'auth', \App\Http\Middleware\UpdateLastSeen::class])->group(function () {
+Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     
     
     
@@ -137,14 +136,12 @@ Route::middleware(['web', 'auth', \App\Http\Middleware\UpdateLastSeen::class])->
 
     Route::get('/admin/statistiques', [UserController::class, 'indexStatistiques'])->name('statistiques');
 
+
+
+
     Route::get('/admin/expression_ecrite', function () {
         return view('admin.expression_ecrite');
     })->name('admin.expression_ecrite');
-
-    // Route::get('/admin/comprehension_ecrite', function () {
-    //     return view('admin.comprehension_ecrite');
-    // })->name('comprehension_ecrite');
-
 
     Route::get('/admin/comprehension_orale', function () {
         return view('admin.comprehension_orale');
@@ -159,6 +156,10 @@ Route::middleware(['web', 'auth', \App\Http\Middleware\UpdateLastSeen::class])->
     })->name('test.dashboard_details');
     // fin partie test
 
+
+
+
+    
     // partie suggestion
 
     Route::get('/suggestion', function () {

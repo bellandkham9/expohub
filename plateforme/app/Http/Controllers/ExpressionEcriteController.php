@@ -23,7 +23,15 @@ class ExpressionEcriteController extends Controller
        
         $user = Auth::user();
 
-        $taches = ExpressionEcrite::orderBy('numero_tache')->take(3)->get();
+        $taches = collect();
+
+        foreach ([1, 2, 3] as $numero) {
+            $tache = ExpressionEcrite::where('numero_tache', $numero)->inRandomOrder()->first();
+
+            if ($tache) {
+                $taches->push($tache);
+            }
+        }
 
         $test_type = TestType::where('nom', 'tcf_canada')->firstOrFail();
 
@@ -137,6 +145,8 @@ class ExpressionEcriteController extends Controller
         $promptIA = $this->generateShortIAPrompt($question, $validated['reponse'] ?? '');
     }
 
+    $testType = TestType::where('nom', $validated['test_type'])->firstOrFail();
+
     DB::beginTransaction();
     try {
         $evaluation = $this->fallbackEvaluation($validated['reponse']);
@@ -154,7 +164,7 @@ class ExpressionEcriteController extends Controller
             'prompt' => $promptIA,
             'score' => $evaluation['note'],
             'commentaire' => $evaluation['commentaire'],
-            'test_type' => $validated['test_type'],
+            'test_type' => $testType->id,
         ]);
 
         // ✅ Maintenant on calcule et enregistre le score final

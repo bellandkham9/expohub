@@ -80,7 +80,7 @@
     </div>
     <input type="hidden" id="test_type" value="{{$test_type}}">
     <input type="hidden" id="expression_orale_id" value="{{ $question->id ?? 1 }}">
-<textarea id="zoneRedaction"></textarea>
+    {{-- <textarea id="zoneRedaction"></textarea> --}}
 
 
 
@@ -97,7 +97,7 @@ function enregistrerResultatFinalEtRediriger() {
         test_type: document.getElementById('test_type')?.value // ✅ camelCase → snake_case
     };
 
-    fetch("{{ route('expression_ecrite.resultat_final') }}", {
+    fetch("{{ route('expression_orale.resultat_final') }}", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -116,13 +116,14 @@ function enregistrerResultatFinalEtRediriger() {
     })
     .then(data => {
         console.log("Résultat enregistré :", data);
-        //window.location.href = "{{ route('test.expression_orale_resultat1') }}";
+
+         window.location.href = '/expression-orale/resultat';
+
     })
     .catch(error => {
         console.log('Erreur enregistrement résultat final :', error);
     });
 }
-
 
         setInterval(() => {
             const minutes = Math.floor(duration / 60);

@@ -21,7 +21,17 @@ class ExpressionOraleController1 extends Controller
     {
         $user = auth()->user();
 
-        $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
+        $taches = collect();
+
+    foreach ([1, 2, 3] as $numero) {
+        $tache = ExpressionOrale::where('numero', $numero)->inRandomOrder()->first();
+
+        if ($tache) {
+            $taches->push($tache);
+        }
+    }
+
+    
 
         $test_type = TestType::where('nom', 'tcf_canada')->firstOrFail();
 
@@ -327,7 +337,7 @@ class ExpressionOraleController1 extends Controller
         $niveau = $this->determineNiveau($noteTotale);
         // Ajoutez cette ligne pour récupérer les tâches
         $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
-        return view('test.expression_orale_resultat1', [
+        return view('test.expression_orale_resultat', [
             'titre' => 'TCF CANADA, Expression écrite',
             'niveau' => $niveau,
             'note' => $noteTotale,
@@ -378,7 +388,7 @@ class ExpressionOraleController1 extends Controller
             'score' => $scoreTotal,
             'niveau' => $niveau,
             'duration' => null, // ou tu peux calculer si tu veux (ex: fin - début)
-            'details_route'=> 'test.expression_orale_resultat1',
+            'details_route'=> 'test.expression_orale_resultat',
             'refaire_route'=> 'expression_orale.reinitialiser',
             'completed_at' => now(),
             'created_at' => now(),

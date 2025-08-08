@@ -107,7 +107,7 @@
 
             <div class="contact-form">
 
-                <form action="{{route('login')}}" method="POST">
+                <form action="{{route('auth.connexion')}}" method="POST">
                     
                     @csrf
 

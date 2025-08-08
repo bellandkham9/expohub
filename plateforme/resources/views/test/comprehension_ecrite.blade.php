@@ -18,6 +18,60 @@
 
     @vite(['resources/css/expression_ecrite.css', 'resources/js/comprehension_ecrite.js'])
 
+    <style>
+        .question-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .btn-success{
+            background-color: #224194;
+            border: none;
+            color: white;
+        }
+        .btn-secondary{
+            background-color: #FEF8E7;
+            border: none;
+            color: black;
+        }
+
+        .chat-container {
+            overflow-y: auto;
+            background-color: #F8F9FA;
+            border-radius: 8px;
+            padding: 10px;
+            height: 30vh;
+        }
+        .main-content{
+            padding: 10px;
+            background-color: #F8F9FA;
+        }
+
+        .test-container {
+            background-color: white;
+        }
+
+        .situation-box {
+            background-color: #FEF8E7;
+            width: 500px;
+            height:25vh;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        #inpu-group{
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 3px 3px 3px 3px rgba(23, 22, 22, 0.2);
+        }
+        .choix-reponse{
+            border-radius: 15px;
+            box-shadow: 2px 2px 2px 2px rgba(23, 22, 22, 0.2);
+        }
+
+    </style>
 </head>
 
 <body>

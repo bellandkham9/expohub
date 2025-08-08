@@ -14,7 +14,7 @@
 
      @vite(['resources/css/admin-entrainement.css'])
 
-{{--     <style>
+ <style>
         body {
             background-color: #f8f9fb;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -137,7 +137,7 @@
                 height: auto;
             }
         }
-    </style> --}}
+    </style> 
 </head>
 
 <body>
