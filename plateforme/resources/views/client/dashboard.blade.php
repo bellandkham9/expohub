@@ -12,9 +12,7 @@
             <section class="hero-section mb-4">
                 <div class="bg-light p-4 rounded-3 text-start">
                     <h1 class="fw-bold mb-3">Tableau de bord linguistique</h1>
-                    <p class="lead text-muted">
-                        Suivez votre progression et préparez-vous efficacement aux tests officiels de français.
-                    </p>
+                    
                 </div>
             </section>
 
@@ -405,4 +403,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let userName = @json(Auth::user()->name ?? 'Cher utilisateur');
+    let testPropose = "Compréhension Écrite"; // Exemple, à remplacer par ta valeur dynamique
+
+    // Vérifie si le popup a déjà été affiché pour cet utilisateur
+    if (!localStorage.getItem(`popupShown_${userName}`)) {
+        let message = `Bonjour ${userName}, bienvenue sur notre plateforme ! 
+Vous pouvez suivre vos tests, continuer votre progression, et nous contacter à tout moment.
+Nous vous proposons aujourd'hui de continuer avec le test : ${testPropose}.`;
+
+        Swal.fire({
+            title: `Bienvenue ${userName} 🎉`,
+            html: `
+                <p>${message.replace(/\n/g, "<br>")}</p>
+                <button id="btnCommencerTest" class="btn btn-primary mt-2">
+                    Commencer ${testPropose}
+                </button>
+            `,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                document.getElementById("btnCommencerTest").addEventListener("click", () => {
+                    Swal.close();
+                    // Marque comme affiché
+                    localStorage.setItem(`popupShown_${userName}`, "true");
+                });
+            }
+        });
+    }
+});
+</script>
+
 @endsection
