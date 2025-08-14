@@ -85,8 +85,6 @@ function envoyerReponse(reponse, index) {
     })
     .then(res => res.json())
     .then(data => {
-   
-    
         // ✅ Enchaîne automatiquement sur la question suivante
         setTimeout(() => {
             if (index < questions.length - 1) {

@@ -16,8 +16,11 @@ use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistoriqueTestController;
-
-
+use App\Http\Controllers\Admin\IAComprehensionEcriteController;
+use App\Http\Controllers\trainCo; 
+use App\Http\Controllers\IAExpressionEcriteController;
+use App\Http\Controllers\IAExpressionOraleController; 
+use App\Http\Controllers\train_dashboardController;
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
@@ -207,15 +210,8 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     Route::get('/expression-ecrite/resultat', [ExpressionEcriteController::class, 'afficherResultat'])->name('test.expression_ecrite_resultat');
     Route::post('/expression_ecrite/reinitialiser', [ExpressionEcriteController::class, 'reinitialiserTest'])->name('expression_ecrite.reinitialiser');
     Route::post('/expression-ecrite/resultat/final', [ExpressionEcriteController::class, 'enregistrerResultatFinal'])->name('expression_ecrite.resultat_final');
-
-    
     
 });
-
-
-
-
-
 
 
 Route::get('/contact', function () {
@@ -226,25 +222,79 @@ Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'ind
 
 
 
-// partie test
+
+
+use App\Http\Controllers\TrainController;
+
+// ================= Dashboard =================
+Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
+
+// ================= Comprehension Ecrite =================
+
+Route::post('/admin/train/ce/generate', [IAComprehensionEcriteController::class, 'generate'])->name('train.ce.generate');
+
+// ================= Expression Ecrite =================
+
+Route::post('/admin/train/ee/generate', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])->name('train.ee.generate');
+
+// ================= Comprehension Orale =================
+
+Route::post('/admin/train/co/generate', [trainCo::class, 'genererNouvellesQuestions'])->name('train.co.generate');
+
+// ================= Expression Orale =================
+
+Route::post('/admin/train/eo/generate', [IAExpressionOraleController::class, 'genererNouvellesTaches'])->name('train.eo.generate');
 
 
 
 
-// Expression Écrite
-Route::middleware(['auth'])->group(function () {
-  
+/* // Dashboard
+Route::get('/admin/generate-data', [train_dashboardController::class, 'index'])
+    ->name('dashboard_train');
+
+// Compréhension écrite
+Route::post('/admin/comprehension-ecrite/generate', [IAComprehensionEcriteController::class, 'generate'])
+    ->name('admin.comprehension_ecrite.generate');
+
+// Compréhension orale
+Route::post('/admin/comprehension-orale/generate', [trainCo::class, 'genererNouvellesQuestions'])
+    ->name('admin.comprehension_orale.generate');
+
+// Expression écrite
+Route::post('/admin/expression-ecrite/generate', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])
+    ->name('admin.expression_ecrite.generate');
+
+// Expression orale
+Route::post('/admin/expression-orale/generate', [IAExpressionOraleController::class, 'genererNouvellesTaches'])
+    ->name('admin.expression_orale.generate');
+
+ */
 
 
-});
 
+/* 
 
+// Compréhension écrite
+Route::get('/admin/generate-data', [train_dashboardController::class, 'index'])
+    ->name('dashboard_train');
+Route::post('/admin/generate-data', [IAComprehensionEcriteController::class, 'generate'])
+    ->name('admin.comprehension_ecrite.generate');
 
-Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(function () {
+// Compréhension orale
+Route::get('/comprehension-orale/train', [trainCo::class, 'formGenerer'])
+    ->name('comprehension-orale.form-generer');
+Route::post('/comprehension-orale/train', [trainCo::class, 'genererNouvellesQuestions'])
+    ->name('admin.comprehension_orale.generate');
 
+// Expression écrite
+Route::get('/expression-ecrite/train', [IAExpressionEcriteController::class, 'formGenerer'])
+    ->name('expression-ecrite.form-generer');
+Route::post('/expression-ecrite/train', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])
+    ->name('admin.expression_ecrite.generate');
 
-
-});
-
-
-
+// Expression orale
+Route::get('/expression-orale/train', [IAExpressionOraleController::class, 'formGenerer'])
+    ->name('expression-orale.form-generer');
+Route::post('/expression-orale/train', [IAExpressionOraleController::class, 'genererNouvellesTaches'])
+    ->name('admin.expression_orale.generate');
+ */

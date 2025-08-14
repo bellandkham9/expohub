@@ -96,6 +96,7 @@
                 <!-- Zone dynamique pour le texte de la tâche -->
                 <div class="card-body indication mt-7" id="indications">
                     <h5><strong>Indications</strong></h5>
+                    
                     <p>{{ $tacheActive->contexte_texte }}</p>
                     <div class="consigne">
                         <p>{{ $tacheActive->consigne }}</p>
@@ -403,7 +404,18 @@
                 });
         }
     </script>
+    <script>
+        const speechSynthesis = window.speechSynthesis;
+        const speakButton = document.getElementById('speak-button');
+        const textInput = document.getElementById('text-input');
 
+        speakButton.addEventListener('click', () => {
+            const text = textInput.value;
+            const speech = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(speech);
+        });
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
