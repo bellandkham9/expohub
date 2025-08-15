@@ -4,3 +4,12 @@
 !public/
 !public/**
 !.gitignore
+
+# Autoriser certains sous-dossiers du storage si besoin
+!storage/app/public/audios/**
+!storage/app/public/audios/eleves/**
+!storage/app/public/audios/eleves/**
+!storage/app/public/audios/ia/**
+!storage/app/public/audios/questions/**
+!storage/app/public/expression_orale/**
+!storage/app/public/comprehension_orale/**
