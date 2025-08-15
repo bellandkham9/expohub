@@ -48,9 +48,11 @@
                 </div>
 
                 <div class="card-body indication mt-7" id="indications">
+
                     <h5><strong>Indications</strong></h5>
+                    <button class="btn" id="speak-button"><img src="{{ asset('images/volume.png') }}" width="32" alt=""></button>
                     <div class="p-2" style="width: 60%; height: 10vh; overflow-y: scroll; margin: 0 auto;">
-                        <p style="text-align: justify">{{ $tacheActive->consigne }}</p>
+                        <p style="text-align: justify" id="text-input">{{ $tacheActive->consigne }}</p>
                     </div>
                     <p>{{ $tacheActive->contexte_texte }}</p>
                     <div class="consigne">
@@ -379,6 +381,36 @@ function enregistrerResultatFinalEtRediriger() {
     
     </script>
 
+    <script>
+    const speechSynthesisInstance = window.speechSynthesis;
+    const speakButton = document.getElementById('speak-button');
+    const textElement = document.getElementById('text-input');
+
+    function speakText(text) {
+        // Stop toute lecture en cours
+        speechSynthesisInstance.cancel();
+
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = "fr-FR"; // Met la voix en français
+        speech.rate = 1; // Vitesse normale
+        speech.pitch = 1; // Hauteur normale
+        speechSynthesisInstance.speak(speech);
+    }
+
+    // Lancer la lecture automatiquement au chargement de la page
+    window.addEventListener('load', () => {
+        const text = textElement.textContent.trim();
+        if (text) {
+            speakText(text);
+        }
+    });
+
+    // Lecture manuelle via bouton
+    speakButton.addEventListener('click', () => {
+        const text = textElement.textContent.trim();
+        speakText(text);
+    });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

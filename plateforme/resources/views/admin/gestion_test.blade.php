@@ -8,203 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
      @vite(['resources/css/admin-gestion-user.css'])
-    {{-- <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-        }
 
-        .main-content {
-            padding: 10px;
-            position: relative;
-            /* Ajoutez cette ligne */
-
-            /* Valeur inférieure à celle du sidebar */
-            /* ... conservez le reste de vos styles ... */
-        }
-
-        .user-table {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .table thead th {
-            border-bottom: 2px solid #dee2e6;
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .role-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .admin-badge {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .action-btn {
-            padding: 5px 10px;
-            font-size: 0.85rem;
-        }
-
-        .status-text {
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-
-        .header-card {
-            background-color: none;
-            border-radius: 8px;
-            /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);*/
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .card-row {
-            width: 100%;
-            max-width: 100%;
-            /* Même largeur que la table */
-            gap: 1rem;
-        }
-
-        .stat-card {
-            background-color: #fff;
-            border-radius: 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-width: 260px;
-            flex: 0;
-            min-width: 240px;
-            margin-bottom: 1rem;
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            flex-shrink: 0;
-        }
-
-        .stat-icon.gray {
-            background-color: #b0b0b0;
-        }
-
-        .stat-icon.green {
-            background-color: #00e676;
-        }
-
-        .stat-icon.red {
-            background-color: #e74c3c;
-        }
-
-        .stat-content .label {
-            font-size: 0.875rem;
-            color: #6c757d;
-        }
-
-        .stat-content .count {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .stat-content .footer {
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-
-        #searchInput {
-            width: 250px;
-        }
-
-        /* Styles pour le sidebar responsive */
-        .sidebar {
-            background-color: white;
-            height: 100vh;
-            position: sticky;
-            top: 0;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            z-index: 1050;
-            /* Augmentez cette valeur (Bootstrap navbar a 1030) */
-            /* ... conservez le reste de vos styles ... */
-        }
-
-        /* Cache le sidebar sur mobile par défaut */
-        @media (max-width: 991.98px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 999;
-                transform: translateX(-100%);
-                width: 250px;
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .mobile-menu-btn {
-                display: block !important;
-            }
-        }
-
-        /* Assure que le contenu principal ne soit pas caché par le sidebar */
-        .main-content {
-            transition: margin-left 0.3s ease;
-        }
-
-        @media (min-width: 992px) {
-            .mobile-menu-btn {
-                display: none !important;
-            }
-        }
-
-        .stat-card {
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .badge {
-            width: 60px;
-            height: 60px;
-            font-size: 0.7rem;
-            padding: 0.35em 0.65em;
-
-        }
-
-        .test-card {
-            box-shadow: 1px 1px 1px 1px gainsboro;
-            background-color: white;
-            border-radius: 30px;
-        }
-    </style> --}}
 </head>
 
 <body>
@@ -288,10 +92,10 @@
 
                 <div class="header-card d-flex justify-content-between align-items-center">
                     <div class="row justify-between" style="width: 100%">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <h2 class="h4 m-4">Liste des Tests</h2>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="row g-3 align-items-center">
                                 <!-- Champ de recherche -->
                                 <div class="col-md-5">
@@ -304,6 +108,18 @@
                                         Ajouter un test
                                     </button>
                                 </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row g-3 align-items-center">
+                                <!-- Bouton d'ajout -->
+                                
+                                    <button type="button" class="btn btn-success mx-2 w-80 w-md-auto" onclick="window.location.href='{{ route('train.dashboard') }}'">
+                                        Generate Data
+                                    </button>
+
+                               
                             </div>
 
                         </div>

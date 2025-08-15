@@ -14,6 +14,7 @@ class ExpressionOrale extends Model
         'numero',
         'contexte',
         'consigne',
+        'consigne_audio', // <-- IMPORTANT
     ];
 
    public function reponses()

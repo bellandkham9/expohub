@@ -17,7 +17,12 @@ use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistoriqueTestController;
 use App\Http\Controllers\ChatbotController;
-
+use App\Http\Controllers\Admin\IAComprehensionEcriteController;
+use App\Http\Controllers\trainCo; 
+use App\Http\Controllers\IAExpressionEcriteController;
+use App\Http\Controllers\IAExpressionOraleController; 
+use App\Http\Controllers\train_dashboardController;
+use App\Http\Controllers\TrainController;
 
 
 
@@ -220,14 +225,32 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     Route::post('/expression_ecrite/reinitialiser', [ExpressionEcriteController::class, 'reinitialiserTest'])->name('expression_ecrite.reinitialiser');
     Route::post('/expression-ecrite/resultat/final', [ExpressionEcriteController::class, 'enregistrerResultatFinal'])->name('expression_ecrite.resultat_final');
 
+
+
     
+    // ================= Dashboard =================
+    Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
+
+    // ================= Comprehension Ecrite =================
+
+    Route::post('/admin/train/ce/generate', [IAComprehensionEcriteController::class, 'generate'])->name('train.ce.generate');
+
+    // ================= Expression Ecrite =================
+
+    Route::post('/admin/train/ee/generate', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])->name('train.ee.generate');
+
+    // ================= Comprehension Orale =================
+
+    Route::post('/admin/train/co/generate', [trainCo::class, 'genererNouvellesQuestions'])->name('train.co.generate');
+
+    // ================= Expression Orale =================
+
+    Route::post('/admin/train/eo/generate', [IAExpressionOraleController::class, 'genererNouvellesTaches'])->name('train.eo.generate');
+
+    //  Route du chatbot
+    Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
     
 });
-
-
-
-
-
 
 
 Route::get('/contact', function () {
@@ -247,8 +270,7 @@ Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(functi
 
 });
 
-//  Route du chatbot
-Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
+
 
 
 
