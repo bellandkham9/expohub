@@ -18,7 +18,7 @@ class ChatbotController extends Controller
         // Données pour l'API DeepSeek
         // Notez que le format est similaire à OpenAI, mais c'est toujours bien de le vérifier
         $data = [
-            'model' => 'deepseek-chat', // C'est le modèle pour le chat
+            'model' => 'deepseek/deepseek-chat', // C'est le modèle pour le chat
             'messages' => [
                 [
                     'role' => 'user',
@@ -31,7 +31,7 @@ class ChatbotController extends Controller
         // Appel de l'API de DeepSeek
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('DEEPSEEK_API_KEY'),
+                'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
                 'Content-Type' => 'application/json',
             ])->post($deepseekApiUrl, $data);
 

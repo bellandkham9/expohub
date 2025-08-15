@@ -28,24 +28,39 @@
                         <!-- Section Tests Disponibles -->
                         <section class="container mb-5">
                             <div class="row g-4 justify-content-center">
+                                {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
                                 @foreach ($testTypes as $testType)
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="test-card text-center h-100 p-4">
-                                            <div class="test-icon mb-3">
-                                                <i class="fas fa-certificate fa-3x text-primary"></i>
-                                            </div>
-                                            <h3 class="test-title h5 mb-3">{{ strtoupper($testType->nom) }}</h3>
+                                            
+                                            <h3 class="test-title h5 mb-3">{{ strtoupper($testType->examen) }}</h3>
                                             <p class="mb-4 text-muted">
-                                                {{ $type->description ?? 'Test de langue officiel pour tous niveaux.' }}</p>
-                                            <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-type="{{ $testType->nom }}" data-id="{{ $testType->id }}"
-                                                data-bs-target="#testModal">
+                                                {{-- Assurez-vous que $testType->description existe, sinon vous utilisez $testType->description ?? '...' --}}
+                                                {{ $testType->description ?? 'Test de langue officiel pour tous niveaux.' }}
+                                            </p>
+                                            
+                                            {{-- Le bouton "Commencer" avec la logique payé/non-payé --}}
+                                            <button 
+                                                class="btn {{ $testType->paye ? 'btn-primary' : 'btn-secondary' }} 
+                                                    {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) 
+                                                    data-bs-toggle="modal"
+                                                    data-type="{{ $testType->nom }}" {{-- Assurez-vous que $testType->nom existe --}}
+                                                    data-id="{{ $testType->id }}"
+                                                    data-bs-target="#testModal"
+                                                @endif
+                                            >
+                                                @if (!$testType->paye)
+                                                    {{-- Icône de cadenas si l'abonnement n'est pas payé --}}
+                                                    <i class="fas fa-lock me-2"></i> 
+                                                @endif
                                                 Commencer
                                             </button>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
+
                         </section>
                         <!-- Modal Choix Test -->
                         <div class="modal fade" id="testModal" tabindex="-1" aria-hidden="true">
@@ -107,8 +122,10 @@
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
-                                <img src="{{ asset('images/avatar.png') }}" alt="Profil" class="rounded-circle mb-3"
-                                    width="80">
+                                <div class="avatar-container mb-3">
+                                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" 
+                                        alt="Avatar" class="rounded-circle avatar-img" width="80">
+                                </div>
                                 <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
                                 @php
                                     $skills = [
@@ -123,27 +140,38 @@
                                     <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
 
                                     <div class="d-flex flex-wrap gap-2">
+                                        {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->nom;
+                                                $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
+                                                // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
+                                                // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
                                                 $niveaux = $userLevels[$key] ?? null;
                                             @endphp
 
-                                            <!-- Bouton -->
-                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                                data-bs-target="#{{ $modalId }}">
+                                            {{-- Le bouton principal --}}
+                                            <button type="button"
+                                                class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
+                                                {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif
+                                            >
+                                                @if (!$testType->paye)
+                                                    {{-- Icône de cadenas pour les abonnements non payés --}}
+                                                    <i class="fas fa-lock me-2"></i> 
+                                                @endif
                                                 {{ strtoupper($key) }}
                                             </button>
 
-                                            <!-- Modal -->
+
+                                            {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
                                                 aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
-                                                                pour {{ strtoupper($key) }}</h5>
+                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux pour
+                                                                {{ strtoupper($key) }}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Fermer"></button>
                                                         </div>
@@ -161,17 +189,14 @@
                                                                         @endphp
                                                                         <div class="col-6">
                                                                             <div class="p-2 bg-light rounded">
-                                                                                <small
-                                                                                    class="d-block text-muted">{{ $label }}</small>
-                                                                                <strong
-                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                                <small class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong class="text-{{ $color }}">{{ $level }}</strong>
                                                                             </div>
                                                                         </div>
                                                                     @endforeach
                                                                 </div>
                                                             @else
-                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
-                                                                </p>
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
                                                             @endif
                                                         </div>
                                                         <div class="modal-footer">
@@ -183,7 +208,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+                                    </div>
 
                             </div>
                         </div>

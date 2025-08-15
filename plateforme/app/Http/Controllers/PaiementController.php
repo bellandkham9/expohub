@@ -57,9 +57,9 @@ class PaiementController extends Controller
 
             // 2. Création ou mise à jour de la souscription dans la table `souscriptions`
             // C'est l'enregistrement qui gère la période d'accès de l'utilisateur.
-            Souscription::updateOrCreate(
-                ['user_id' => $user->id], // Cherche une souscription existante pour cet utilisateur
+            Souscription::create(
                 [
+                    'user_id' => $user->id,
                     'abonnement_id' => $abonnement->id,
                     'date_debut' => Carbon::now(),
                     'date_fin' => Carbon::now()->addDays($duree_jours),

@@ -29,10 +29,10 @@
                                         <div class="test-icon me-3">
                                             <i class="fas fa-certificate fa-2x text-primary"></i>
                                         </div>
-                                        <h3 class="h6 mb-0">{{ strtoupper($testType->nom) }}</h3>
+                                        <h3 class="h6 mb-0">{{ strtoupper($testType->abonnement->examen) }}</h3>
                                     </div>
                                     <p class="small text-muted mb-3">
-                                        {{ $testType->description ?? 'Test de langue officiel pour tous niveaux.' }}
+                                        {{ $testType->abonnement->description ?? 'Test de langue officiel pour tous niveaux.' }}
                                     </p>
                                     <button class="btn btn-sm btn-primary w-100" 
                                             data-bs-toggle="modal"
@@ -123,8 +123,7 @@
                 <div class="card-body text-center">
                     <div class="avatar-container mb-3">
                         <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" 
-                             alt="Avatar" 
-                             class="rounded-circle avatar-img">
+                             alt="Avatar" class="rounded-circle avatar-img">
                     </div>
                     <h3 class="h5 mb-1">{{ Auth::user()->name }}</h3>
                     <p class="text-muted small mb-4">{{ Auth::user()->email }}</p>
@@ -135,7 +134,7 @@
                             @foreach ($testTypes as $testType)
                             @php
                                 $modalId = 'modal_' . $testType->id;
-                                $key = $testType->nom;
+                                $key = $testType->abonnement->examen;
                                 $niveaux = $userLevels[$key] ?? null;
                             @endphp
 

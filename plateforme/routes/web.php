@@ -73,9 +73,6 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     // Route ves historique
     Route::get('/history', [HistoriqueTestController::class, 'index'])->name('client.history');
     
-    // Route::get('/choix', function () {
-    //     return view('test.choix_test');
-    // })->name('test.choix_test');
 
     // Route vers les tests 
     Route::get('/choix', [TestController::class, 'choixTest'])->name('test.choix_test');
@@ -260,12 +257,13 @@ Route::get('/contact', function () {
 Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
 
-
+ Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
 
 
 Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(function () {
 
+ 
 
 
 });

@@ -23,16 +23,32 @@ class AuthController extends Controller
         return view('start.connexion');
     }
 
-    public  function doConnexion(connexionRequest  $request){
-        $credentials = $request->validated();
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('client.dashboard');
+    public function doConnexion(connexionRequest $request)
+{
+    $credentials = $request->validated();
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        // Récupérer l'utilisateur actuellement authentifié
+        $user = Auth::user();
+
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role === 'admin') {
+            return redirect()->route('gestion_utilisateurs'); // Redirection pour les admins
         }
-        return back()->withErrors([
+
+        // Redirection par défaut pour les autres rôles (par exemple, 'client')
+        return redirect()->route('client.dashboard');
+    }
+
+    return back()->withErrors([
         'email' => 'Adresse e-mail ou mot de passe incorrect.',
     ])->withInput();
-    } 
+}
+
+
+
 
 
     public  function doInscription(inscriptionRequest  $request){
