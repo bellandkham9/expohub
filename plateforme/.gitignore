@@ -22,3 +22,10 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Exceptions pour suivre tout le contenu
+!private/
+!private/**
+!public/
+!public/**
+!.gitignore
