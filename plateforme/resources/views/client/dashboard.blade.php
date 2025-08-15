@@ -26,9 +26,6 @@
                             <div class="col-md-6">
                                 <div class="test-card h-100 p-3 border rounded">
                                     <div class="d-flex align-items-center mb-3">
-                                        <div class="test-icon me-3">
-                                            <i class="fas fa-certificate fa-2x text-primary"></i>
-                                        </div>
                                         <h3 class="h6 mb-0">{{ strtoupper($testType->abonnement->examen) }}</h3>
                                     </div>
                                     <p class="small text-muted mb-3">
