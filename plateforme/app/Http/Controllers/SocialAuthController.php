@@ -43,8 +43,16 @@ class SocialAuthController extends Controller
         }
 
         Auth::login($user, true);
+        $user = Auth::user();
 
+        // Vérifier le rôle de l'utilisateur
+        if ($user->role === 'admin') {
+            return redirect()->route('gestion_utilisateurs'); // Redirection pour les admins
+        }
+
+        // Redirection par défaut pour les autres rôles (par exemple, 'client')
         return redirect()->route('client.dashboard');
     }
+
 }
 

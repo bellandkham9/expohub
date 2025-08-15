@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB; // N'oubliez pas d'importer la façade DB
 
 class AbonnementSeeder extends Seeder
 {
@@ -12,38 +13,43 @@ class AbonnementSeeder extends Seeder
      */
     public function run(): void
     {
-        $now = now();
-        \DB::table('abonnements')->insert([
+        $now = now(); // Obtient l'heure actuelle pour created_at et updated_at
+
+        // Insertion des données dans la table 'abonnements'
+        DB::table('abonnements')->insert([
             [
-                'user_id' => 1,
-                'nom_du_plan' => 'Annuel',
-                'date_debut' => $now,
-                'date_fin' => $now->copy()->addDays(365),
-                'type_dexamen' => 'TCF',
+                'nom_du_plan' => 'Annuel Premium',
+                'examen' => 'TCF', // Corresponds à 'type_dexamen' de votre ancien seeder
                 'prix' => 99.99,
-                'statut' => 'actif',
+                'duree' => 365, // Nouveau champ 'duree'
+                'description' => 'Accès complet à toutes les ressources de préparation au TCF pendant un an.', // Nouveau champ 'description'
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
-                'user_id' => 2,
-                'nom_du_plan' => 'Mensuel',
-                'date_debut' => $now,
-                'date_fin' => $now->copy()->addDays(30),
-                'type_dexamen' => 'DELF',
+                'nom_du_plan' => 'Mensuel Basique',
+                'examen' => 'DELF',
                 'prix' => 19.99,
-                'statut' => 'expiré',
+                'duree' => 30,
+                'description' => 'Accès limité aux ressources de préparation au DELF pendant un mois.',
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
-                'user_id' => 3,
-                'nom_du_plan' => 'Essai',
-                'date_debut' => $now,
-                'date_fin' => $now->copy()->addDays(7),
-                'type_dexamen' => 'DALF',
+                'nom_du_plan' => 'Essai Découverte',
+                'examen' => 'DALF',
                 'prix' => 0.00,
-                'statut' => 'actif',
+                'duree' => 7,
+                'description' => 'Accès gratuit aux fonctionnalités de base pendant 7 jours.',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'nom_du_plan' => 'Trimestriel Intensif',
+                'examen' => 'TEF',
+                'prix' => 49.99,
+                'duree' => 90,
+                'description' => 'Préparation intensive au TEF sur trois mois avec support dédié.',
                 'created_at' => $now,
                 'updated_at' => $now,
             ],

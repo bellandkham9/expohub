@@ -8,7 +8,7 @@ class abonnement extends Model
 {
     //
    protected $fillable = [
-        'nom', 'prix', 'duree', 'description'
+        'nom_du_plan','examen', 'prix', 'duree', 'description'
     ];
 
     // Un abonnement peut être souscrit par plusieurs utilisateurs

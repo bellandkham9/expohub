@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
-use App\Models\TestType; // ✅ Corrigé : point-virgule ajouté et nom du modèle corrigé
+use App\Models\TestType;
+use App\Models\abonnement;
+use App\Models\Souscription;
 use App\Models\ComprehensionEcriteResultat;
 use App\Models\ComprehensionOraleReponse;
 use App\Models\ExpressionEcriteReponse;
@@ -20,7 +22,25 @@ class TestController extends Controller
         $user = Auth::user();
 
         // Récupérer tous les types de test (ex : TCF Canada, TCF Québec, ...)
-        $testTypes = TestType::all();
+        
+        
+        $tousLesAbonnements = abonnement::all();
+
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+
+          // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
+            $abonnement->paye = $souscriptionActives->contains($abonnement->id);
+
+            return $abonnement;
+        });
+
 
         $userLevels = [];
         foreach ($testTypes as $testType) {
@@ -29,7 +49,7 @@ class TestController extends Controller
                 ->where('test_type', $testType->id)
                 ->first();
 
-            $userLevels[$testType->nom] = $niveau ? [
+            $userLevels[$testType->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,

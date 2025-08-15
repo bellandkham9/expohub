@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class CompteController extends Controller
 {
@@ -54,4 +55,26 @@ class CompteController extends Controller
         // Redirection avec message de succès
         return redirect()->back()->with('success', 'Votre compte a été mis à jour avec succès.');
     }
+
+
+    public function destroy(Request $request)
+{
+    $request->validate([
+        'password' => ['required', 'current_password'],
+    ]);
+
+    $user = $request->user();
+    Auth::logout();
+    
+    // Au lieu de supprimer de manière définitive, Laravel mettra à jour la colonne 'deleted_at'
+    $user->delete();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/')->with('success', 'Votre compte a été désactivé avec succès. Vous pouvez le restaurer en contactant le support.');
+}
+
+
+
 }

@@ -16,11 +16,15 @@ use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistoriqueTestController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\Admin\IAComprehensionEcriteController;
 use App\Http\Controllers\trainCo; 
 use App\Http\Controllers\IAExpressionEcriteController;
 use App\Http\Controllers\IAExpressionOraleController; 
 use App\Http\Controllers\train_dashboardController;
+use App\Http\Controllers\TrainController;
+
+
 
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
@@ -52,9 +56,12 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     Route::get('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
     ->name('client.dashboard');
 
-    // modification du compte client
+    // modification du compte client par le client
     Route::post('/client/compte/update', [CompteController::class, 'update'])->name('client.compte.update');
 
+
+    // Suppresssion du compte client par le client
+    Route::delete('/compte', [CompteController::class, 'destroy'])->name('client.compte.destroy');
 
 
 
@@ -66,9 +73,6 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     // Route ves historique
     Route::get('/history', [HistoriqueTestController::class, 'index'])->name('client.history');
     
-    // Route::get('/choix', function () {
-    //     return view('test.choix_test');
-    // })->name('test.choix_test');
 
     // Route vers les tests 
     Route::get('/choix', [TestController::class, 'choixTest'])->name('test.choix_test');
@@ -123,10 +127,17 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
         return view('admin.gestion_utilisateur');
     })->name('gestion_utilisateurs');
 
-
+    // Modifier un utilisateur
     Route::put('/admin/utilisateurs/{id}', [AdminUserController::class, 'update'])->name('admin.utilisateur.modifier');
     
-    Route::get('/admin/gestion_utilisateur', [UserController::class, 'index'])->name('gestion_utilisateurs');
+    // Ajouter un utilisateur
+    Route::post('/admin/utilisateurs', [AdminUserController::class, 'store'])->name('admin.utilisateur.creer');
+
+    // Recuperé tout les utilisateur
+    Route::get('/admin/gestion_utilisateur', [AdminUserController::class, 'index'])->name('gestion_utilisateurs');
+
+    // Supprimer un utilisateur
+    Route::delete('/admin/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('admin.utilisateur.supprimer');
 
 
     Route::get('/admin/gestion_test', function () {
@@ -137,7 +148,7 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
         return view('admin.statistiques');
     })->name('statistiques');
 
-    Route::get('/admin/statistiques', [UserController::class, 'indexStatistiques'])->name('statistiques');
+    Route::get('/admin/statistiques', [AdminUserController::class, 'indexStatistiques'])->name('statistiques');
 
 
 
@@ -172,7 +183,7 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     // fin partie suggestion
 
 
-    Route::get('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
 
 
     // Les routes pour passer les testes d'expressions orale
@@ -210,6 +221,31 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     Route::get('/expression-ecrite/resultat', [ExpressionEcriteController::class, 'afficherResultat'])->name('test.expression_ecrite_resultat');
     Route::post('/expression_ecrite/reinitialiser', [ExpressionEcriteController::class, 'reinitialiserTest'])->name('expression_ecrite.reinitialiser');
     Route::post('/expression-ecrite/resultat/final', [ExpressionEcriteController::class, 'enregistrerResultatFinal'])->name('expression_ecrite.resultat_final');
+
+
+
+    
+    // ================= Dashboard =================
+    Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
+
+    // ================= Comprehension Ecrite =================
+
+    Route::post('/admin/train/ce/generate', [IAComprehensionEcriteController::class, 'generate'])->name('train.ce.generate');
+
+    // ================= Expression Ecrite =================
+
+    Route::post('/admin/train/ee/generate', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])->name('train.ee.generate');
+
+    // ================= Comprehension Orale =================
+
+    Route::post('/admin/train/co/generate', [trainCo::class, 'genererNouvellesQuestions'])->name('train.co.generate');
+
+    // ================= Expression Orale =================
+
+    Route::post('/admin/train/eo/generate', [IAExpressionOraleController::class, 'genererNouvellesTaches'])->name('train.eo.generate');
+
+    //  Route du chatbot
+    Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
     
 });
 
@@ -221,29 +257,19 @@ Route::get('/contact', function () {
 Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
 
+ Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
 
 
-use App\Http\Controllers\TrainController;
+Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(function () {
 
-// ================= Dashboard =================
-Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
+ 
 
-// ================= Comprehension Ecrite =================
 
-Route::post('/admin/train/ce/generate', [IAComprehensionEcriteController::class, 'generate'])->name('train.ce.generate');
+});
 
-// ================= Expression Ecrite =================
 
-Route::post('/admin/train/ee/generate', [IAExpressionEcriteController::class, 'genererNouvellesTaches'])->name('train.ee.generate');
 
-// ================= Comprehension Orale =================
-
-Route::post('/admin/train/co/generate', [trainCo::class, 'genererNouvellesQuestions'])->name('train.co.generate');
-
-// ================= Expression Orale =================
-
-Route::post('/admin/train/eo/generate', [IAExpressionOraleController::class, 'genererNouvellesTaches'])->name('train.eo.generate');
 
 
 

@@ -7,27 +7,43 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Niveau;
 use App\Models\TestType;
+use App\Models\abonnement;
 use App\Models\ComprehensionEcriteResultat;
 use App\Models\ComprehensionOraleReponse;
 use App\Models\ExpressionEcriteReponse;
 use App\Models\ExpressionOraleReponse;
 use App\Models\HistoriqueTest;
+use App\Models\Souscription;
 
 class StudentDashboardController extends Controller
 {
     public function dashboard()
     {
         $user = Auth::user();
-        $testTypes = TestType::all();
+
+
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActive = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+        // Si aucune souscription active n'est trouvée
+        if (!$souscriptionActive) {
+            return dd('error', 'Votre abonnement est épuisé. Veuillez souscrire à un nouvel abonnement pour accéder à ce contenu.');
+        }
+
+        // Accéder directement aux informations de l'abonnement via la relation
+        $testTypes = $souscriptionActive;
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
         foreach ($testTypes as $testType) {
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testType->id)
+                ->where('test_type', $testType->abonnement->id)
                 ->first();
 
-            $userLevels[$testType->nom] = $niveau ? [
+            $userLevels[$testType->abonnement->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
