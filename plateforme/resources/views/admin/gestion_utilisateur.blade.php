@@ -103,36 +103,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="addUserLabel">Ajouter un utilisateur</h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="">
-                                            <div class="form-floating mb-3">
-                                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                                <label for="floatingInput">mail de l'utilisateur</label>
-                                            </div>
-                                            <select class="form-select form-select-sm" aria-label="Small select example">
-                                                <option selected>Selectionner le role</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                        <button type="button" class="btn btn-primary">Ajouter un utilisateur</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="user-table">
@@ -180,6 +150,54 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addUserLabel">Ajouter un utilisateur</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm" action="{{ route('admin.utilisateur.creer') }}" method="POST">
+                    @csrf
+
+                     @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="userName" name="name" placeholder="Nom de l'utilisateur" required>
+                        <label for="userName">Nom de l'utilisateur</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="userEmail" name="email" placeholder="name@example.com" required>
+                        <label for="userEmail">Email de l'utilisateur</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="userPassword" name="password" placeholder="Mot de passe" required>
+                        <label for="userPassword">Mot de passe</label>
+                    </div>
+                    <select class="form-select form-select-sm" name="role" aria-label="Sélectionner le rôle" required>
+                        <option value="user" selected>Utilisateur</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="addUserForm" class="btn btn-primary">Ajouter un utilisateur</button>
+            </div>
+        </div>
+    </div>
+</div>
+
    
     {{-- Modiier les utilisateurs --}}
 <div class="modal fade" id="modifierUserModal" tabindex="-1" aria-labelledby="modifierUserModalLabel" aria-hidden="true">

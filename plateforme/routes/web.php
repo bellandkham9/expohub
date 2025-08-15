@@ -16,6 +16,8 @@ use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\HistoriqueTestController;
+use App\Http\Controllers\ChatbotController;
+
 
 
 
@@ -49,9 +51,12 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     Route::get('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
     ->name('client.dashboard');
 
-    // modification du compte client
+    // modification du compte client par le client
     Route::post('/client/compte/update', [CompteController::class, 'update'])->name('client.compte.update');
 
+
+    // Suppresssion du compte client par le client
+    Route::delete('/compte', [CompteController::class, 'destroy'])->name('client.compte.destroy');
 
 
 
@@ -120,10 +125,17 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
         return view('admin.gestion_utilisateur');
     })->name('gestion_utilisateurs');
 
-
+    // Modifier un utilisateur
     Route::put('/admin/utilisateurs/{id}', [AdminUserController::class, 'update'])->name('admin.utilisateur.modifier');
     
-    Route::get('/admin/gestion_utilisateur', [UserController::class, 'index'])->name('gestion_utilisateurs');
+    // Ajouter un utilisateur
+    Route::post('/admin/utilisateurs', [AdminUserController::class, 'store'])->name('admin.utilisateur.creer');
+
+    // Recuperé tout les utilisateur
+    Route::get('/admin/gestion_utilisateur', [AdminUserController::class, 'index'])->name('gestion_utilisateurs');
+
+    // Supprimer un utilisateur
+    Route::delete('/admin/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('admin.utilisateur.supprimer');
 
 
     Route::get('/admin/gestion_test', function () {
@@ -134,7 +146,7 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
         return view('admin.statistiques');
     })->name('statistiques');
 
-    Route::get('/admin/statistiques', [UserController::class, 'indexStatistiques'])->name('statistiques');
+    Route::get('/admin/statistiques', [AdminUserController::class, 'indexStatistiques'])->name('statistiques');
 
 
 
@@ -169,7 +181,7 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     // fin partie suggestion
 
 
-    Route::get('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
 
 
     // Les routes pour passer les testes d'expressions orale
@@ -226,17 +238,6 @@ Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'ind
 
 
 
-// partie test
-
-
-
-
-// Expression Écrite
-Route::middleware(['auth'])->group(function () {
-  
-
-
-});
 
 
 
@@ -245,6 +246,10 @@ Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(functi
 
 
 });
+
+//  Route du chatbot
+Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
+
 
 
 

@@ -147,4 +147,5 @@
         </div>
 
     </div>
+    @include('start.chatbot')
 @endsection
