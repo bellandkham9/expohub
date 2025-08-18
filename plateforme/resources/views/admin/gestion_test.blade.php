@@ -33,12 +33,12 @@
                                 <div class="d-flex flex-column align-items-end">
                                     <div>
                                         <div class="text-muted small">Tests effectué</div>
-                                        <div class="h4 mb-0">281</div>
+                                        <div class="h4 mb-0">{{$totalTests}}</div>
                                     </div>
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #707070; font-weight: bold;">+55</span> que la semaine passée
+                                    <span style="color: #707070; font-weight: bold;">{{$testsLastWeek}}</span> que la semaine passée
                                 </div>
                             </div>
                         </div>

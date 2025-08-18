@@ -12,6 +12,7 @@ use App\Http\Controllers\Client\CompteController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Middleware\UpdateLastSeen;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
@@ -62,6 +63,12 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
 
     // Suppresssion du compte client par le client
     Route::delete('/compte', [CompteController::class, 'destroy'])->name('client.compte.destroy');
+
+
+    // Attribution de l'abonnement
+    Route::post('/users/abonnement', [AdminUserController::class, 'attribuerAbonnement'])
+        ->name('users.abonnement');
+
 
 
 
@@ -149,6 +156,8 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     })->name('statistiques');
 
     Route::get('/admin/statistiques', [AdminUserController::class, 'indexStatistiques'])->name('statistiques');
+
+    Route::get('/admin/gestion_test', [AdminUserController::class, 'indexTestStats'])->name('gestion_test');
 
 
 
@@ -254,21 +263,13 @@ Route::get('/contact', function () {
         return view('client.contact');
     })->name('client.contact');
 
-Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
 
- Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
+// Route::middleware(['admin'])->group(function () {
+  
+     Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
 
-
-
-Route::middleware(['web', 'auth', 'admin', UpdateLastSeen::class])->group(function () {
-
- 
-
-
-});
-
-
+// });
 
 
 

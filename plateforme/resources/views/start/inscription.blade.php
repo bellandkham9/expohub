@@ -107,7 +107,7 @@
 
             <div class="contact-form">
 
-                <form action="{{route('register')}}" method="POST">
+                <form action="{{route('auth.inscription')}}" method="POST">
 
                     @csrf
 
@@ -141,7 +141,7 @@
                 <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
             </button>
             <p class=" text-center"> 
-                <a class="link-light" href="{{route('login')}}"> Se Connecter</a>
+                <a class="link-light" href="{{route('auth.connexion')}}"> Se Connecter</a>
             </p>
         </div>
     </div>

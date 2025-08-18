@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Models\abonnement;
+use App\Models\Souscription;
+use App\Models\HistoriqueTest;
 
 class AdminUserController extends Controller
 {
@@ -67,9 +70,12 @@ class AdminUserController extends Controller
     {
         $stats = $this->getUserStats();
         $users = User::all();
+        $abonnements = abonnement::all();
 
-        return view('admin.gestion_utilisateur', array_merge(['users' => $users], $stats));
-    }
+return view('admin.gestion_utilisateur', [
+    'users' => $users,
+    'abonnements' => $abonnements,
+] + $stats);    }
 
     //envoi les donnée dans la page Statistiques
     public function indexStatistiques()
@@ -133,5 +139,69 @@ class AdminUserController extends Controller
     }
 
 
+     protected function checkAdminRole(): ?RedirectResponse
+    {
+        // Vérifie si l'utilisateur est authentifié ET si son rôle n'est PAS 'admin'
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            // Redirige vers la page d'accueil avec un message d'erreur
+            return redirect('/')->with('error', 'Accès non autorisé.')->send();
+        }
 
+        return null; // L'utilisateur est admin, continuez l'exécution de la méthode appelante
+    }
+        
+
+    
+        
+
+        // Attribuer un abonnement 
+           public function attribuerAbonnement(Request $request)
+{
+    // ✅ Validation des données reçues depuis le formulaire ou la requête
+    // Vérifie que l'utilisateur (user_id) existe bien dans la table users
+    // Vérifie aussi que l'abonnement (abonnement_id) existe bien dans la table abonnements
+    $request->validate([
+        'user_id' => 'required|exists:users,id',
+        'abonnement_id' => 'required|exists:abonnements,id',
+    ]);
+
+    // ✅ On récupère l'utilisateur concerné
+    $user = User::findOrFail($request->user_id);
+
+    // ✅ On récupère l'abonnement choisi
+    $abonnement = Abonnement::findOrFail($request->abonnement_id);
+
+    // ✅ Création de la souscription dans la table "souscriptions"
+    // Ici on dit : cet utilisateur a cet abonnement, avec une date de début = maintenant
+    // et une date de fin = maintenant + durée définie dans le modèle Abonnement
+    Souscription::create([
+        'user_id' => $user->id,
+        'abonnement_id' => $abonnement->id,
+        'date_debut' => now(),
+        'date_fin' => now()->addDays($abonnement->duree), // Exemple : si durée = 30 jours
+    ]);
+
+    // ✅ Retourne en arrière avec un message de succès
+    return redirect()->back()->with('success', 'Abonnement attribué avec succès.');
+}
+
+
+    // Statitiques des tests dans la plateforme
+    public function indexTestStats()
+        {
+            // Total de tests passés
+            $totalTests = HistoriqueTest::count();
+
+            // Tests passés la semaine dernière
+            $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
+            $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
+
+            $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
+
+            // Tu peux retourner les données pour ton dashboard ou les passer à une vue
+            return view('admin.gestion_test', [
+                'totalTests' => $totalTests,
+                'testsLastWeek' => $testsLastWeek,
+            ]);        }
+// return view('admin.statistiques', $stats);
 }

@@ -12,6 +12,7 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('start.home') }}">Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('suggestion.suggestion') }}">Stratégie</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('client.paiement') }}">Plans d'abonnements</a></li>
+                    <li class="nav-item"><a class="nav-link" target="blank"  href="https://www.exponentielimmigration.com/">Exponentiel Immigration</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('client.contact') }}">Nous contacter</a></li>
                 </ul>
             </div>

@@ -97,6 +97,7 @@
                         <li><a href="{{ route('start.home') }}" class="text-white text-decoration-none">Accueil</a></li>
                         <li><a href="{{ route('suggestion.suggestion') }}" class="text-white text-decoration-none">Stratégie</a></li>
                         <li><a href="{{ route('client.paiement') }}" class="text-white text-decoration-none">Abonnements</a></li>
+                        <li><a class="text-white text-decoration-none" target="blank"  href="https://www.exponentielimmigration.com/">Exponentiel Immigration</a></li>
                         <li><a href="{{ route('client.contact') }}" class="text-white text-decoration-none">Contact</a></li>
                     </ul>
 
