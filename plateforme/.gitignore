@@ -15,10 +15,26 @@
 /node_modules
 /public/build
 /public/hot
-/public/storage
+#/public/storage
 /storage/*.key
 /storage/pail
 /vendor
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Exceptions pour suivre tout le contenu
+!private/
+!private/**
+!public/
+!public/**
+!.gitignore
+
+
+!storage/app/public/audios/**
+!storage/app/public/audios/eleves/**
+!storage/app/public/audios/eleves/**
+!storage/app/public/audios/ia/**
+!storage/app/public/audios/questions/**
+!storage/app/public/expression_orale/**
+!storage/app/public/comprehension_orale/**
