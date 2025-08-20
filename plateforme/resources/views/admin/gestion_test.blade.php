@@ -97,7 +97,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="row g-3 align-items-center">
-                                <button type="button" class="btn btn-success mx-2 w-80 w-md-auto">
+                                <button type="button" class="btn btn-success mx-2 w-80 w-md-auto" onclick="window.location.href='{{ route('train.dashboard') }}'">
                                     Generate Data
                                 </button>
                             </div>
