@@ -24,6 +24,7 @@ use App\Http\Controllers\IAExpressionEcriteController;
 use App\Http\Controllers\IAExpressionOraleController; 
 use App\Http\Controllers\train_dashboardController;
 use App\Http\Controllers\TrainController;
+use App\Http\Controllers\PaiementController;
 
 
 
@@ -55,6 +56,8 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
 
     // Route vers le dashboard étudiant
     Route::get('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
+    ->name('client.dashboard');
+    Route::post('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
     ->name('client.dashboard');
 
     // modification du compte client par le client
@@ -192,7 +195,8 @@ Route::middleware(['web', 'auth', UpdateLastSeen::class])->group(function () {
     // fin partie suggestion
 
 
-    Route::post('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/notify', [PaiementController::class, 'notify'])->name('paiement.notify');
 
 
     // Les routes pour passer les testes d'expressions orale

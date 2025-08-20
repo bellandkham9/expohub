@@ -116,6 +116,68 @@ return view('admin.gestion_utilisateur', [
 
         $nombreUtilisateursInactifsSemainepassé = $nombreUtilisateursInactifsSemaineDerniere - $nombreUtilisateursActifsCetteSemaine;
 
+
+            // Total de tests passés
+            $totalTests = HistoriqueTest::count();
+
+            $totalAbonnements = Souscription::count();
+
+            // Tests passés la semaine dernière
+            $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
+            $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
+
+
+            // 📌 Abonnements uniquement pour CE MOIS
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
+
+            $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+
+            $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
+
+            // Tests abandonnés (duration null ET score = 0)
+            $testsAbandonnes = HistoriqueTest::whereNull('duration')
+            ->where('score', 0)
+            ->count();
+            
+            // Tests abandonnés cette semaine
+            $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
+            ->where('score', 0)
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->count();
+
+
+            /////////////////////////////////
+            ////Information de la courbe////
+            ///////////////////////////////
+
+            $currentYear = Carbon::now()->year;
+
+            // Tableau des mois
+            $months = collect(range(1, 12))->map(function($m) {
+                return Carbon::createFromDate(null, $m, 1)->format('M');
+            });
+
+            // Total des souscriptions par mois
+            $subscriptionsPerMonth = [];
+            foreach(range(1, 12) as $month) {
+                $subscriptionsPerMonth[] = Souscription::whereYear('created_at', $currentYear)
+                                                    ->whereMonth('created_at', $month)
+                                                    ->count();
+            }
+
+            // Total des utilisateurs inscrits par mois
+            $usersPerMonth = [];
+            foreach(range(1, 12) as $month) {
+                $usersPerMonth[] = User::whereYear('created_at', $currentYear)
+                                    ->whereMonth('created_at', $month)
+                                    ->count();
+            }
+
+
+
+
+
         return [
             'totalUsers' => $totalUsers,
             'usersLastWeek' => $usersLastWeek,
@@ -124,6 +186,14 @@ return view('admin.gestion_utilisateur', [
             'nombreUtilisateursActifsCetteSemaine' => $nombreUtilisateursActifsCetteSemaine,
             'nombreUtilisateursInactifs' => $nombreUtilisateursInactifs,
             'nombreUtilisateursInactifsSemainepassé' => $nombreUtilisateursInactifsSemainepassé,
+            'totalTests' => $totalTests,
+            'testsLastWeek' => $testsLastWeek,
+            'totalAbonnements' => $totalAbonnements,
+            'totalAbonnementsMois' => $totalAbonnementsMois,
+            'testsAbandonnes' => $testsAbandonnes,
+            'testsAbandonnesSemaine' => $testsAbandonnesSemaine,
+            'subscriptionsPerMonth' => $subscriptionsPerMonth,
+            'usersPerMonth' => $usersPerMonth,
         ];
     }
 
@@ -192,16 +262,40 @@ return view('admin.gestion_utilisateur', [
             // Total de tests passés
             $totalTests = HistoriqueTest::count();
 
+            $totalAbonnements = Souscription::count();
+
             // Tests passés la semaine dernière
             $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
             $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
 
+
+            // 📌 Abonnements uniquement pour CE MOIS
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
+
+            $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+
             $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
+
+            // Tests abandonnés (duration null ET score = 0)
+            $testsAbandonnes = HistoriqueTest::whereNull('duration')
+            ->where('score', 0)
+            ->count();
+            
+            // Tests abandonnés cette semaine
+            $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
+            ->where('score', 0)
+            ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
+            ->count();
 
             // Tu peux retourner les données pour ton dashboard ou les passer à une vue
             return view('admin.gestion_test', [
                 'totalTests' => $totalTests,
                 'testsLastWeek' => $testsLastWeek,
+                'totalAbonnements' => $totalAbonnements,
+                'totalAbonnementsMois' => $totalAbonnementsMois,
+                'testsAbandonnes' => $testsAbandonnes,
+                'testsAbandonnesSemaine' => $testsAbandonnesSemaine
             ]);        }
 // return view('admin.statistiques', $stats);
 }
