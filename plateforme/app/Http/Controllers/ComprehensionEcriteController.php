@@ -10,6 +10,8 @@ use App\Models\ComprehensionOraleReponse;
 use App\Models\ExpressionEcriteReponse;
 use App\Models\ExpressionOraleReponse;
 use App\Models\Niveau;
+use App\Models\Souscription;
+use App\Models\abonnement;
 use App\Models\TestType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +24,7 @@ class ComprehensionEcriteController extends Controller
     public function index(Request $request)
     {
         $questions = ComprehensionEcrite::orderBy('numero')->get();
-        $test_type = TestType::where('nom', 'tcf_canada')->firstOrFail();
+        $test_type = abonnement::where('examen', 'TCF')->firstOrFail();
 
         if ($questions->isEmpty()) {
             return view('test.indisponible', [
@@ -44,6 +46,9 @@ class ComprehensionEcriteController extends Controller
         $reponseUtilisateur = strtoupper($request->reponse);
         $isCorrect = $reponseUtilisateur === strtoupper($question->reponse);
 
+       
+        $typeTest = $typeTest['examen'] ?? 'INCONNU'; // tu gardes que "TCF" par ex.
+ 
   
         DB::table('comprehension_ecrite_user_answers')->updateOrInsert(
             [
@@ -53,7 +58,7 @@ class ComprehensionEcriteController extends Controller
             [
                 'reponse' => $reponseUtilisateur,
                 'is_correct' => $isCorrect,
-                'test_type' => $request->input('test_type'), // ici c’est corrigé
+                'test_type' =>  $typeTest,
                 'updated_at' => now(),
                 'created_at' => now()
             ]
@@ -88,7 +93,7 @@ class ComprehensionEcriteController extends Controller
 
         
                 // récupérer test_type_id par exemple 'tcf_canada'
-        $testType = TestType::where('nom', 'tcf_canada')->firstOrFail();
+        $testType = abonnement::where('examen', 'TCF')->firstOrFail();
 
         // calculer le niveau pour la compétence "comprehension_ecrite"
         $niveauComp = $this->determineNiveau($score);
@@ -106,10 +111,30 @@ class ComprehensionEcriteController extends Controller
             ]
         );
 
+                    // Vérifier si l'utilisateur a un abonnement valide
+            $hasActiveSubscription = Souscription::where('user_id', $userId)
+                ->where('date_debut', '<=', now())
+                ->where('date_fin', '>=', now())
+                ->exists();
+
+            // Vérifier le nombre de tests gratuits déjà utilisés
+            $freeTestsUsed = DB::table('historique_tests')
+                ->where('user_id', $userId)
+                ->where('is_free', true)
+                ->count();
+
+            $isFree = false;
+
+            // Si pas d'abonnement actif ET moins de 5 tests gratuits utilisés
+            if (!$hasActiveSubscription && $freeTestsUsed < 5) {
+                $isFree = true;
+            }
+
             // Insertion dans historique_tests
         DB::table('historique_tests')->insert([
             'user_id' => $userId,
-            'test_type' => 'tcf_canada', // champ string, donc on met le nom
+            'is_free' => $isFree, // On marque si c'est un test gratuit
+            'test_type' => 'TCF', // champ string, donc on met le nom
             'skill' => 'comprehension_ecrite',
             'score' => $score,
             'niveau' => $niveauComp,
@@ -220,7 +245,7 @@ class ComprehensionEcriteController extends Controller
         
         $route='test.comprehension_ecrite';
 
-        $testTypes = TestType::all();
+        $testTypes = abonnement::all();
 
         $userLevels = [];
         foreach ($testTypes as $testType) {
@@ -246,7 +271,7 @@ class ComprehensionEcriteController extends Controller
         $completedTests = [];
 
         // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
-        $ceTestType = TestType::where('nom', 'tcf_canada')->first();
+        $ceTestType = abonnement::where('examen', 'TCF')->first();
         if ($ceTestType) {
             foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {
@@ -266,7 +291,7 @@ class ComprehensionEcriteController extends Controller
         }
 
         // Même principe pour Compréhension Orale
-        $coTestType = TestType::where('nom', 'tcf_quebec')->first();
+        $coTestType = abonnement::where('examen', 'TCF')->first();
         if ($coTestType) {
             foreach (ComprehensionOraleReponse::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {

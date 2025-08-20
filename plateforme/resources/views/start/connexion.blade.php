@@ -9,6 +9,37 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Pour afficher les messages flash
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+        });
+    @endif
+
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            html: `<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`,
+            confirmButtonColor: '#d33',
+        });
+    @endif
+</script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -108,34 +139,18 @@
             <div class="contact-form">
 
                 <form action="{{route('auth.connexion')}}" method="POST">
-                    
-                    @csrf
+    @csrf
+    
+    <div class="mb-3">
+        <input type="text" class="form-control" id="email" name="email" required placeholder="E-mail">
+    </div>
 
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
-                    <div class="mb-3">
+    <div class="mb-3">
+        <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
+    </div>
 
-                        <input type="text" class="form-control" id="email" name="email" required placeholder="E-mail">
-                    </div>
-
-                    <div class="mb-3">
-
-                        <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
-                    </div>
-
-                    
-
-
-
-                    <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
-                </form>
+    <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
+</form>
             </div>
             
         </div>
@@ -156,7 +171,7 @@
                 
             </p>
 
-            <p><a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a></p>
+            <p><a class="dropdown-item" href="{{ route('deconnexion') }}" style="color: white;">Se déconnecter</a></p>
         </div>
     </div>
 </body>

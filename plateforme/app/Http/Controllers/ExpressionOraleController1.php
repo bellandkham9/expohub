@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\abonnement;
 use App\Models\ExpressionOrale;
 use App\Models\ExpressionOraleReponse;
 use Illuminate\Http\Request;
@@ -11,9 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use App\Models\Niveau;
-use App\Models\TestType;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Souscription;
 
 class ExpressionOraleController1 extends Controller
 {
@@ -33,7 +33,7 @@ class ExpressionOraleController1 extends Controller
 
     
 
-        $test_type = TestType::where('nom', 'tcf_canada')->firstOrFail();
+        $test_type = abonnement::where('examen', 'TCF')->firstOrFail();
 
         if ($taches->isEmpty()) {
             return back()->with('error', 'Aucune tâche disponible pour le moment.');
@@ -54,7 +54,7 @@ class ExpressionOraleController1 extends Controller
 
 
             $user = Auth::user();
-
+             $testType = abonnement::where('examen', 'TCF')->firstOrFail();
             $request->validate([
                 'expression_orale_id' => 'required|exists:expression_orales,id',
                 'audio_eleve' => 'required|string',
@@ -76,7 +76,7 @@ class ExpressionOraleController1 extends Controller
                     'texte_ia' => $request->texte_ia,
                     'audio_ia' => $request->audio_ia,
                     'score' => $request->score ?? 0,
-                    'test_type' => $request->input('test_type')
+                    'test_type' => $testType->id,
                 ]
             );
 
@@ -366,7 +366,7 @@ class ExpressionOraleController1 extends Controller
         $scoreTotal = $reponses->sum('score');
         $niveau = $this->determineNiveau($scoreTotal);
 
-        $testType = TestType::where('nom', 'tcf_canada')->firstOrFail();
+        $testType = abonnement::where('examen', 'TCF')->firstOrFail();
 
         Niveau::updateOrCreate(
             [
@@ -380,10 +380,34 @@ class ExpressionOraleController1 extends Controller
         );
 
         
+                      // Vérifier si l'utilisateur a un abonnement valide
+            $hasActiveSubscription = Souscription::where('user_id', $userId)
+                ->where('date_debut', '<=', now())
+                ->where('date_fin', '>=', now())
+                ->exists();
+
+            // Vérifier le nombre de tests gratuits déjà utilisés
+            $freeTestsUsed = DB::table('historique_tests')
+                ->where('user_id', $userId)
+                ->where('is_free', true)
+                ->count();
+
+            $isFree = false;
+
+            // Si pas d'abonnement actif ET moins de 5 tests gratuits utilisés
+            if (!$hasActiveSubscription && $freeTestsUsed < 5) {
+                $isFree = true;
+            }
+
+
+
+        
+        
         // Insertion dans historique_tests
         DB::table('historique_tests')->insert([
             'user_id' => $userId,
-            'test_type' => 'tcf_canada', // champ string, donc on met le nom
+            'is_free' => $isFree, // On marque si c'est un test gratuit
+            'test_type' => 'TCF', // champ string, donc on met le nom
             'skill' => 'expression_orale',
             'score' => $scoreTotal,
             'niveau' => $niveau,

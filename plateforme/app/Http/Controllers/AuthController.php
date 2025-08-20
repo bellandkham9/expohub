@@ -23,58 +23,46 @@ class AuthController extends Controller
         return view('start.connexion');
     }
 
-    public function doConnexion(connexionRequest $request)
+ public function doConnexion(connexionRequest $request)
 {
     $credentials = $request->validated();
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-
-        // Récupérer l'utilisateur actuellement authentifié
         $user = Auth::user();
 
-        // Vérifier le rôle de l'utilisateur
         if ($user->role === 'admin') {
-            return redirect()->route('gestion_utilisateurs'); // Redirection pour les admins
+            return redirect()->route('gestion_utilisateurs')->with('success', 'Connexion réussie !');
         }
 
-        // Redirection par défaut pour les autres rôles (par exemple, 'client')
-        return redirect()->route('client.dashboard');
+        return redirect()->route('client.dashboard')->with('success', 'Connexion réussie !');
     }
 
-    return back()->withErrors([
-        'email' => 'Adresse e-mail ou mot de passe incorrect.',
-    ])->withInput();
+    return back()->with('error', 'Adresse e-mail ou mot de passe incorrect.')->withInput();
 }
 
+public function doInscription(inscriptionRequest $request)
+{
+    $data = $request->validated();
 
-
-
-
-    public  function doInscription(inscriptionRequest  $request){
-        $data = $request->validated();
-
-        $user = User::create([
+    $user = User::create([
         'name' => $request->email,
         'email' => $request->email,
         'password' => Hash::make($request->password),
     ]);
+    
     auth()->login($user);
 
-    return redirect()->route('client.dashboard')->with('success', 'Inscription réussie !');
+    return redirect()->route('client.dashboard')->with('success', 'Inscription réussie ! Bienvenue !');
+}
 
-    } 
-
-    public function logout() {
-    auth()->logout(); // Déconnecte l'utilisateur
-
-    // Vide la session si tu en utilises directement
+public function logout() {
+    auth()->logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
 
-    // Redirige vers la page de connexion ou d'accueil
-    return redirect()->route('auth.connexion')->with('success', 'Vous avez été déconnecté.');
-    }
+    return redirect()->route('auth.connexion')->with('success', 'Vous avez été déconnecté avec succès.');
+}
 
 
     public function checkAuthenticatedOrRedirect() {

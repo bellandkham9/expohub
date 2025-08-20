@@ -32,27 +32,24 @@
                                 @foreach ($testTypes as $testType)
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="test-card text-center h-100 p-4">
-                                            
+
                                             <h3 class="test-title h5 mb-3">{{ strtoupper($testType->examen) }}</h3>
                                             <p class="mb-4 text-muted">
                                                 {{-- Assurez-vous que $testType->description existe, sinon vous utilisez $testType->description ?? '...' --}}
                                                 {{ $testType->description ?? 'Test de langue officiel pour tous niveaux.' }}
                                             </p>
-                                            
+
                                             {{-- Le bouton "Commencer" avec la logique payé/non-payé --}}
-                                            <button 
+                                            <button
                                                 class="btn {{ $testType->paye ? 'btn-primary' : 'btn-secondary' }} 
                                                     {{ $testType->paye ? '' : 'disabled' }}"
-                                                @if ($testType->paye) 
-                                                    data-bs-toggle="modal"
+                                                @if ($testType->paye) data-bs-toggle="modal"
                                                     data-type="{{ $testType->nom }}" {{-- Assurez-vous que $testType->nom existe --}}
                                                     data-id="{{ $testType->id }}"
-                                                    data-bs-target="#testModal"
-                                                @endif
-                                            >
+                                                    data-bs-target="#testModal" @endif>
                                                 @if (!$testType->paye)
                                                     {{-- Icône de cadenas si l'abonnement n'est pas payé --}}
-                                                    <i class="fas fa-lock me-2"></i> 
+                                                    <i class="fas fa-lock me-2"></i>
                                                 @endif
                                                 Commencer
                                             </button>
@@ -74,7 +71,7 @@
                                     <div class="modal-body">
                                         <div class="row g-3">
                                             <div class="col-6">
-                                                <a href="{{ route('test.comprehension_ecrite', ['type' => 'tcf-canada', 'skill' => 'comprehension-ecrite']) }}"
+                                                <a href="{{ route('test.comprehension_ecrite') }}"
                                                     class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
                                                     style="background-color: #F8B70D;">
                                                     <img src="{{ asset('images/lecture.png') }}" width="40"
@@ -83,7 +80,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <a href="{{ route('test.comprehension_orale', ['type' => 'tcf-canada', 'skill' => 'comprehension-orale']) }}"
+                                                <a href="{{ route('test.comprehension_orale') }}"
                                                     class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
                                                     style="background-color: #FF3B30;">
                                                     <img src="{{ asset('images/ecoute.png') }}" width="40"
@@ -92,7 +89,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <a href="{{ route('test.expression_ecrite', ['type' => 'tcf-canada', 'skill' => 'expression-ecrite']) }}"
+                                                <a href="{{ route('test.expression_ecrite') }}"
                                                     class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
                                                     style="background-color: #224194;">
                                                     <img src="{{ asset('images/ecrite.png') }}" width="40"
@@ -101,7 +98,7 @@
                                                 </a>
                                             </div>
                                             <div class="col-6">
-                                                <a href="{{ route('test.expression_orale', ['type' => 'tcf-canada', 'skill' => 'expression-orale']) }}"
+                                                <a href="{{ route('test.expression_orale') }}"
                                                     class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
                                                     style="background-color: #249DB8;">
                                                     <img src="{{ asset('images/orale.png') }}" width="40"
@@ -123,7 +120,7 @@
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
                                 <div class="avatar-container mb-3">
-                                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" 
+                                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
                                         alt="Avatar" class="rounded-circle avatar-img" width="80">
                                 </div>
                                 <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
@@ -154,11 +151,10 @@
                                             <button type="button"
                                                 class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
                                                 {{ $testType->paye ? '' : 'disabled' }}"
-                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif
-                                            >
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
                                                 @if (!$testType->paye)
                                                     {{-- Icône de cadenas pour les abonnements non payés --}}
-                                                    <i class="fas fa-lock me-2"></i> 
+                                                    <i class="fas fa-lock me-2"></i>
                                                 @endif
                                                 {{ strtoupper($key) }}
                                             </button>
@@ -170,7 +166,8 @@
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux pour
+                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
+                                                                pour
                                                                 {{ strtoupper($key) }}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Fermer"></button>
@@ -189,14 +186,17 @@
                                                                         @endphp
                                                                         <div class="col-6">
                                                                             <div class="p-2 bg-light rounded">
-                                                                                <small class="d-block text-muted">{{ $label }}</small>
-                                                                                <strong class="text-{{ $color }}">{{ $level }}</strong>
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
                                                                             </div>
                                                                         </div>
                                                                     @endforeach
                                                                 </div>
                                                             @else
-                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
                                                             @endif
                                                         </div>
                                                         <div class="modal-footer">
@@ -208,7 +208,7 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                    </div>
+                                </div>
 
                             </div>
                         </div>

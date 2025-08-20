@@ -156,124 +156,25 @@ class StudentDashboardController extends Controller
             'testTypes'
         ));
     }
-}
 
 
-
-/* 
-namespace App\Http\Controllers;
-
-use App\Models\ComprehensionEcriteResultat;
-use App\Models\ComprehensionOraleReponse;
-use App\Models\ExpressionEcriteReponse;
-use App\Models\ExpressionOraleReponse;
-use App\Models\Niveau;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon;
-
-class StudentDashboardController extends Controller
+   public function verifierAcces()
 {
-    public function dashboard()
-    {
-        $user = Auth::user();
+    $testsGratuits = HistoriqueTest::where('user_id', Auth::id())
+        ->where('is_free', true)
+        ->count();
 
-        // ✅ Récupération des niveaux depuis la table 'niveaux'
-        $userLevels = [
-            'tcf_canada' => $this->getNiveau($user->id, 'tcf_canada'),
-            'tcf_quebec' => $this->getNiveau($user->id, 'tcf_quebec'),
-            'tef' => $this->getNiveau($user->id, 'TEF'),
-            'delf' => $this->getNiveau($user->id, 'DELF'),
-            'dalf' => $this->getNiveau($user->id, 'DALF'),
-            'comprehension_ecrite' => $this->getNiveau($user->id, 'comprehension_ecrite'),
-            'comprehension_orale' => $this->getNiveau($user->id, 'comprehension_orale'),
-            'expression_ecrite' => $this->getNiveau($user->id, 'expression_ecrite'),
-            'expression_orale' => $this->getNiveau($user->id, 'expression_orale'),
-
-        ];
-
-        // ✅ Récupération des 5 derniers tests complétés toutes catégories
-        $completedTests = [];
-
-        // Compréhension écrite
-        foreach (ComprehensionEcriteResultat::where('user_id', $user->id)->latest()->take(5)->get() as $reponse) {
-            $completedTests[] = [
-                'id' => $reponse->id,
-                'test_type' => 'TCF Canada',
-                'skill' => 'Compréhension Écrite',
-                'date' => $reponse->created_at,
-                'duration' => 60,
-                'score' => $reponse->score,
-                'max_score' => 699,
-                'level' => $reponse->niveau,
-                'correct_answers' => $reponse->nb_bonnes_reponses,
-                'total_questions' => $reponse->nb_total_questions,
-            ];
-        }
-
-        // Compréhension orale
-        foreach (ComprehensionOraleReponse::where('user_id', $user->id)->latest()->take(5)->get() as $reponse) {
-            $completedTests[] = [
-                'id' => $reponse->id,
-                'test_type' => 'TCF Québec',
-                'skill' => 'Compréhension Orale',
-                'date' => $reponse->created_at,
-                'duration' => 30,
-                'score' => $reponse->score,
-                'max_score' => 699,
-                'level' => $reponse->niveau,
-                'correct_answers' => $reponse->nb_bonnes_reponses,
-                'total_questions' => $reponse->nb_total_questions,
-            ];
-        }
-
-        // Expression écrite
-        foreach (ExpressionEcriteReponse::where('user_id', $user->id)->latest()->take(5)->get() as $reponse) {
-            $completedTests[] = [
-                'id' => $reponse->id,
-                'test_type' => 'TCF Canada',
-                'skill' => 'Expression Écrite',
-                'date' => $reponse->created_at,
-                'duration' => 60,
-                'score' => $reponse->score,
-                'max_score' => 699,
-                'level' => $reponse->niveau,
-                'correct_answers' => null,
-                'total_questions' => null,
-            ];
-        }
-
-        // Expression orale
-        foreach (ExpressionOraleReponse::where('user_id', $user->id)->latest()->take(5)->get() as $reponse) {
-            $completedTests[] = [
-                'id' => $reponse->id,
-                'test_type' => 'TCF Québec',
-                'skill' => 'Expression Orale',
-                'date' => $reponse->created_at,
-                'duration' => 15,
-                'score' => $reponse->score,
-                'max_score' => 699,
-                'level' => $reponse->niveau,
-                'correct_answers' => null,
-                'total_questions' => null,
-            ];
-        }
-
-        // ✅ Objectif d'apprentissage simulé
-        $learningGoal = [
-            'target_level' => 'C1',
-            'current_progress' => 65,
-            'target_date' => Carbon::now()->addMonths(3)
-        ];
-
-        return view('client.dashboard', compact('userLevels', 'completedTests', 'learningGoal'));
+    if ($testsGratuits >= 4) {
+        return response()->json([
+            'has_free_tests' => false
+        ]);
     }
 
-    // 🔁 Petite méthode privée pour éviter de répéter le code de récupération du niveau
-    private function getNiveau($userId, $testType)
-    {
-        return Niveau::where('user_id', $userId)
-                     ->where('test_type', $testType)
-                     ->value('niveau') ?? 'Non défini';
-    }
+    return response()->json([
+        'has_free_tests' => true
+    ]);
 }
- */
+
+
+}
+

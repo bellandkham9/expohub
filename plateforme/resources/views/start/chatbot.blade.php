@@ -6,7 +6,7 @@
         right: 20px;
         z-index: 1000;
         cursor: pointer;
-        background-color: #0d6efd;
+        background-color: #FEF8E7;;
         color: white;
         border-radius: 50%;
         width: 60px;

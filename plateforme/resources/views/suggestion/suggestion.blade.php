@@ -22,104 +22,59 @@
                     <li class="nav-item"><a class="nav-link" href="#">Exercices</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Recommandations</a></li>
                 </ul>
+                <form method="POST" action="{{ route('suggestions.generate') }}">
+                    @csrf
+                    <button type="submit">Obtenir des suggestions</button>
+                </form>
+
 
                 <!-- Section title -->
                 <h6 class="section-title">Astuces écrites</h6>
 
                 <div class="overflow-y-auto" style="max-height: 400px;">
-                    <!-- Tips grid -->
+               {{--      <!-- Tips grid -->
                     <div class="row g-3 m-2">
                         <!-- Tip Card -->
                         <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
+                           @foreach($suggestions as $suggestion)
+                                <div class="col-md-4">
+                                    <div class="card card-tip p-3 h-100">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <span class="badge badge-tip me-2">💡 {{ ucfirst($suggestion->type) }}</span>
+                                        </div>
+                                        <p class="tip-text mb-0">
+                                            {{ $suggestion->content }}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
+                            @endforeach
 
-                        <!-- Duplicate more cards as needed -->
-                        <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
-                                </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
-                                </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row g-3 m-2">
-                        <!-- Tip Card -->
-                        <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
-                                </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Duplicate more cards as needed -->
-                        <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
-                                </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card card-tip p-3 h-100">
-                                <div class="d-flex align-items-center mb-2">
-                                    <span class="badge badge-tip me-2">💡 Digital Marketing</span>
-                                </div>
-                                <p class="tip-text mb-0">
-                                    Sed porttitor lectus nibh. Curabitur non nulla sit amet nisl tempus convallis quis ac
-                                    lectus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor
-                                    accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                    Curabitur aliquet quam id dui posuere blandit.
-                                </p>
-                            </div>
-                        </div>
+              
+                </div> --}}
+                <div class="container mt-4">
+    <div class="row">
+        @foreach($suggestions as $index => $suggestion)
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">💡 {{ ucfirst($suggestion->type) }}</h5>
+                        <p class="card-text">{{ $suggestion->content }}</p>
+                        <small class="text-muted">
+                            {{ $suggestion->created_at->diffForHumans() }}
+                        </small>
                     </div>
-
                 </div>
+            </div>
+
+            {{-- Après chaque 3 cartes, on ferme et rouvre une nouvelle row --}}
+            @if(($index + 1) % 3 == 0)
+                </div><div class="row">
+            @endif
+        @endforeach
+    </div>
+</div>
+
                 <!-- Another Section title if needed -->
                 <h6 class="section-title">📺 Astuces vidéo</h6>
                 <!-- ... more cards below -->

@@ -2,13 +2,12 @@
 
 @section('content')
     <div class="">
-
-        @if(auth()->check())
+        @if (auth()->check())
             @include('client.partials.navbar-client')
         @else
             @include('client.partials.navbar')
         @endif
-   
+
         <!-- Hero Banner -->
         <div class="container my-4">
             <section id="hero">
@@ -18,10 +17,60 @@
                         </h1>
                         <p>Préparez le TCF Canada, TCF Quebec, DALF, DELF ou TEF en toute confiance. Évaluez vos compétences
                             à tout moment, en ligne.</p>
-                        <a id="btn-commencer" class="btn " href="#">Commencez gratuitement</a>
+                        <button class="btn" id="btn-commencer" data-user-id="{{ auth()->id() ?? '' }}">Commencez
+                            gratuitement</button>
                     </div>
                 </div>
             </section>
+        </div>
+
+        <!-- Test Modal -->
+
+        <div class="modal fade" id="matiereModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Choisissez une compétence</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <a href="{{ route('test.comprehension_ecrite') }}"
+                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
+                                    style="background-color: #F8B70D;">
+                                    <img src="{{ asset('images/lecture.png') }}" width="40" class="mb-2 mx-auto">
+                                    <h6 class="mb-0">Compréhension Écrite</h6>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('test.comprehension_orale') }}"
+                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
+                                    style="background-color: #FF3B30;">
+                                    <img src="{{ asset('images/ecoute.png') }}" width="40" class="mb-2 mx-auto">
+                                    <h6 class="mb-0">Compréhension Orale</h6>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('test.expression_ecrite') }}"
+                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
+                                    style="background-color: #224194;">
+                                    <img src="{{ asset('images/ecrite.png') }}" width="40" class="mb-2 mx-auto">
+                                    <h6 class="mb-0">Expression Écrite</h6>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{{ route('test.expression_orale') }}"
+                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
+                                    style="background-color: #249DB8;">
+                                    <img src="{{ asset('images/orale.png') }}" width="40" class="mb-2 mx-auto">
+                                    <h6 class="mb-0">Expression Orale</h6>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Exam Cards -->
@@ -131,7 +180,7 @@
                     <p class="text-muted">Lorem ipsum is simply dummy text of the printing and typesetting industry...</p>
                 </div>
                 <div class="col-md-3 testimonial-card text-center">
-                    <img src="{{ asset('images/femme.png') }}"alt="Emmanuelle" class="rounded-circle mb-3"
+                    <img src="{{ asset('images/femme.png') }}" alt="Emmanuelle" class="rounded-circle mb-3"
                         width="80">
                     <h6>Emmanuelle</h6>
                     <p class="text-muted">Lorem ipsum is simply dummy text of the printing and typesetting industry...</p>
@@ -146,6 +195,80 @@
 
         </div>
 
-    </div>
-    @include('start.chatbot')
-@endsection
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const btnCommencer = document.getElementById('btn-commencer');
+
+
+                 if (btnCommencer) {
+                    btnCommencer.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const userId = this.getAttribute('data-user-id');
+
+                        if (!userId) {
+                            window.location.href = "{{ route('auth.connexion') }}";
+                            return;
+                        }
+
+                        fetch("{{ route('tests.verifierAcces') }}")
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.has_free_tests) {
+                                // ✅ L'élève a encore des tests gratuits → ouvrir le modal
+                                const modal = new bootstrap.Modal(document.getElementById('matiereModal'));
+                                modal.show();
+                            } else {
+                                // ❌ Plus de tests gratuits → afficher SweetAlert
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Vos tests gratuits sont terminés!',
+                                    html: 'Vous avez utilisé tous vos tests gratuits. Pour continuer, veuillez souscrire à un abonnement.',
+                                    showConfirmButton: true,
+                                    confirmButtonText: "Voir les abonnements",
+                                    showCancelButton: true,
+                                    cancelButtonText: "Fermer",
+                                    customClass: {
+                                        confirmButton: 'btn btn-warning px-4 py-2',
+                                        cancelButton: 'btn btn-outline-secondary px-4 py-2'
+                                    },
+                                    buttonsStyling: false
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "{{ route('client.paiement') }}";
+                                    }
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Erreur',
+                                text: 'Une erreur est survenue lors de la vérification de vos tests gratuits.',
+                                confirmButtonText: 'OK',
+                                background: '#f8f9fa'
+                            });
+                        });
+
+});
+                }
+
+
+                // Gestion des clics sur les tests
+     /*            document.querySelectorAll('.start-test-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const testType = this.getAttribute('data-test-type');
+                        window.location.href = `/test/${testType}`;
+                    });
+                }); */
+            });
+        </script>
+
+        @include('start.chatbot')
+    @endsection

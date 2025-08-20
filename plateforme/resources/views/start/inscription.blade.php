@@ -9,7 +9,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Pour afficher les messages flash
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+        });
+    @endif
+
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            html: `<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`,
+            confirmButtonColor: '#d33',
+        });
+    @endif
+</script>
+
+<style>
         body {
             font-family: Arial, sans-serif;
             background-color: #224194;
@@ -106,26 +138,20 @@
             </div>
 
             <div class="contact-form">
-
-                <form action="{{route('register')}}" method="POST">
-
+                <form action="{{route('auth.inscription')}}" method="POST">
                     @csrf
-
+                    
                     <div class="mb-3">
-
                         <input type="text" class="form-control" id="email" required name="email" placeholder="E-mail">
                     </div>
 
                     <div class="mb-3">
-
                         <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
                     </div>
 
                     <div class="mb-3">
-
                         <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required placeholder="Repéter le mot de passe">
                     </div>
-
 
                     <button id="sendmessage" type="submit" class="btn btn-send">Inscription</button>
                 </form>
@@ -141,7 +167,7 @@
                 <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
             </button>
             <p class=" text-center"> 
-                <a class="link-light" href="{{route('login')}}"> Se Connecter</a>
+                <a class="link-light" href="{{route('auth.connexion')}}"> Se Connecter</a>
             </p>
         </div>
     </div>

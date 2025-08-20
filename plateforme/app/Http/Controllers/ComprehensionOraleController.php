@@ -10,8 +10,9 @@ use App\Models\ExpressionEcriteReponse;
 use App\Models\ComprehensionEcriteResultat;
 use App\Models\ExpressionOraleReponse;
 use App\Models\Niveau;
-use App\Models\TestType;
+use App\Models\abonnement;
 use Illuminate\Support\Carbon;
+use App\Models\Souscription;
 
 class ComprehensionOraleController extends Controller
 {
@@ -86,7 +87,7 @@ class ComprehensionOraleController extends Controller
         ]);
 
                 // récupérer test_type_id par exemple 'tcf_canada'
-        $testType = TestType::where('nom', 'tcf_canada')->firstOrFail();
+         $testType = abonnement::where('examen', 'TCF')->firstOrFail();
 
         // calculer le niveau pour la compétence "comprehension_ecrite"
         $niveauComp = $this->determineNiveau($score);
@@ -104,10 +105,31 @@ class ComprehensionOraleController extends Controller
             ]
         );
 
+                      // Vérifier si l'utilisateur a un abonnement valide
+            $hasActiveSubscription = Souscription::where('user_id', $userId)
+                ->where('date_debut', '<=', now())
+                ->where('date_fin', '>=', now())
+                ->exists();
+
+            // Vérifier le nombre de tests gratuits déjà utilisés
+            $freeTestsUsed = DB::table('historique_tests')
+                ->where('user_id', $userId)
+                ->where('is_free', true)
+                ->count();
+
+            $isFree = false;
+
+            // Si pas d'abonnement actif ET moins de 5 tests gratuits utilisés
+            if (!$hasActiveSubscription && $freeTestsUsed < 5) {
+                $isFree = true;
+            }
+
+
         // Insertion dans historique_tests
         DB::table('historique_tests')->insert([
             'user_id' => $userId,
-            'test_type' => 'tcf_canada', // champ string, donc on met le nom
+            'is_free' => $isFree, // On marque si c'est un test gratuit
+            'test_type' => 'TCF', // champ string, donc on met le nom
             'skill' => 'comprehension_orale',
             'score' => $score,
             'niveau' => $niveauComp,
@@ -194,7 +216,7 @@ class ComprehensionOraleController extends Controller
 
         $route = 'test.comprehension_orale';
       
-        $testTypes = TestType::all();
+        $testTypes = abonnement::all();
 
         $userLevels = [];
         foreach ($testTypes as $testType) {
@@ -221,7 +243,7 @@ class ComprehensionOraleController extends Controller
         $completedTests = [];
 
         // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
-        $ceTestType = TestType::where('nom', 'tcf_canada')->first();
+        $ceTestType = abonnement::where('examen', 'TCF')->firstOrFail();
         if ($ceTestType) {
             foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {
@@ -241,7 +263,7 @@ class ComprehensionOraleController extends Controller
         }
 
         // Même principe pour Compréhension Orale
-        $coTestType = TestType::where('nom', 'tcf_quebec')->first();
+        $coTestType = abonnement::where('examen', 'TCF')->firstOrFail();
         if ($coTestType) {
             foreach (ComprehensionOraleReponse::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {
