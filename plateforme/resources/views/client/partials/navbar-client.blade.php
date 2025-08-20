@@ -13,6 +13,7 @@
                  <li class="nav-item"><a class="nav-link" href="{{ route('test.choix_test') }}">Tests</a></li>
                  <li class="nav-item"><a class="nav-link" href="{{ route('client.history') }}">Historique</a></li>
                  <li class="nav-item"><a class="nav-link" href="{{ route('suggestion.suggestion') }}">Stratégie</a></li>
+                 <li class="nav-item"><a class="nav-link" target="blank" href="https://www.exponentielimmigration.com/">Exponentiel Immigration</a></li>
              </ul>
          </div>
          <!-- Droite : notif + avatar -->

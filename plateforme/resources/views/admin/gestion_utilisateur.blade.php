@@ -18,6 +18,17 @@
             </div>
 
             <div class="col-md-9 col-lg-10 main-content">
+                {{-- Validation de suppression de l'utilisateur --}}
+        <div class="main-content">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            ...
+        </div>
 
                 <div class="row g-5 m-3">
                     <div class="col-12 col-sm-6 col-lg-4">
@@ -114,7 +125,8 @@
                                     <th class="text-light">Utilisateur</th>
                                     <th class="text-light">Adresse email</th>
                                     <th class="text-light">Rôle</th>
-                                    <th class="text-light">Statut</th>
+                                    <th class="text-light">Statut</th>Abonnement
+                                    <th class="text-light">Abonnement</th>
                                     <th class="text-light">Actions</th>
                                 </tr>
                             </thead>
@@ -131,6 +143,14 @@
                                         @else
                                             Hors ligne
                                         @endif
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#abonnementModal"
+                                            data-user-id="{{ $user->id }}">
+                                            Abonnement
+                                        </button>
                                     </td>
                                     <td>
                                         <button class="btn btn-sm btn-outline-primary action-btn me-1" type="button" data-bs-toggle="modal" data-bs-target="#modifierUserModal" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-email="{{ $user->email }}" data-user-role="{{ $user->role }}">
@@ -259,17 +279,42 @@
             </div>
         </div>
 
-        {{-- Validation de suppression de l'utilisateur --}}
-        <div class="main-content">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+        
 
-            ...
-        </div>
+
+            <!-- Modal modification de l'abonnement -->
+            <div class="modal fade" id="abonnementModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="POST" action="{{ route('users.abonnement') }}">
+                    @csrf
+                    <input type="hidden" name="user_id" id="modal_user_id">
+
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Attribuer un abonnement</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select name="abonnement_id" class="form-select">
+                            @foreach($abonnements as $abonnement)
+                                <option value="{{ $abonnement->id }}">
+                                    {{ $abonnement->examen }} ({{ $abonnement->duree }} jours)
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Attribuer</button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+            </div>
+        
+            
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -326,6 +371,18 @@
             });
         }
     });
+
+        //Script pour déclecnché le modal de l'abonnement
+        document.addEventListener('DOMContentLoaded', function () {
+        var abonnementModal = document.getElementById('abonnementModal');
+        abonnementModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; 
+            var userId = button.getAttribute('data-user-id');
+            document.getElementById('modal_user_id').value = userId;
+        });
+    });
+
+
 
         // // Gérer la modale de suppression
         // document.addEventListener('DOMContentLoaded', function() {

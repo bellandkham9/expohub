@@ -2,6 +2,7 @@ import './bootstrap';
 
 import * as bootstrap from 'bootstrap';
 
+
 document.addEventListener('DOMContentLoaded', function () {
     const dropdownTrigger = document.querySelector('[data-bs-toggle="dropdown"]');
     const dropdown = new bootstrap.Dropdown(dropdownTrigger);

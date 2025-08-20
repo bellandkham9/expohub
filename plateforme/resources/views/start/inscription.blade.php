@@ -139,6 +139,7 @@
 
             <div class="contact-form">
                 <form action="{{route('auth.inscription')}}" method="POST">
+
                     @csrf
                     
                     <div class="mb-3">

@@ -167,8 +167,7 @@
 </a>
             </p>
             <p class="text-center"> 
-                <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>
-                
+                <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>  
             </p>
 
             <p><a class="dropdown-item" href="{{ route('deconnexion') }}" style="color: white;">Se déconnecter</a></p>

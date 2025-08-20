@@ -23,6 +23,7 @@ use App\Http\Controllers\IAExpressionEcriteController;
 use App\Http\Controllers\IAExpressionOraleController; 
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\PaiementController;
 
 
 
@@ -50,6 +51,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     // Route vers le dashboard étudiant
     Route::get('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
     ->name('client.dashboard');
+    Route::post('/dashboard-student', [StudentDashboardController::class, 'dashboard'])
+    ->name('client.dashboard');
 
 
     // route pour verifier si l'utilisateur a encore des tests gratuits disponible
@@ -63,6 +66,19 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     // Suppresssion du compte client par le client
     Route::delete('/compte', [CompteController::class, 'destroy'])->name('client.compte.destroy');
+
+
+    // Attribution de l'abonnement
+    Route::post('/users/abonnement', [AdminUserController::class, 'attribuerAbonnement'])
+        ->name('users.abonnement');
+
+
+
+
+
+    // Route::get('/history', function () {
+    //     return view('client.history');
+    // })->name('client.history');
 
     // Route ves historique
     Route::get('/history', [HistoriqueTestController::class, 'index'])->name('client.history');
@@ -118,7 +134,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     // fin partie suggestion
 
 
-    Route::post('/paiement/process/{abonnement}', [\App\Http\Controllers\PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
 
 
     //  Route du chatbot
@@ -169,6 +185,8 @@ Route::get('/admin/gestion_utilisateur', function () {
 
     Route::get('/admin/statistiques', [AdminUserController::class, 'indexStatistiques'])->name('statistiques');
 
+    Route::get('/admin/gestion_test', [AdminUserController::class, 'indexTestStats'])->name('gestion_test');
+
 
 
 
@@ -191,6 +209,61 @@ Route::get('/admin/gestion_utilisateur', function () {
 
 
         
+
+
+    
+    // partie suggestion
+
+    Route::get('/suggestion', function () {
+        return view('suggestion.suggestion');
+    })->name('suggestion.suggestion');
+
+    // fin partie suggestion
+
+
+    Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
+    Route::post('/paiement/notify', [PaiementController::class, 'notify'])->name('paiement.notify');
+
+
+    // Les routes pour passer les testes d'expressions orale
+    Route::post('/expression-orale/repondre', [ExpressionOraleController1::class, 'repondre'])->name('expression_orale.repondre');
+    Route::post('/expression-orale/handle-message', [ExpressionOraleController1::class, 'handleMessage'])->name('expression_orale.handleMessage');
+    Route::post('/expression-orale/changer-tache', [ExpressionOraleController1::class, 'changerTache'])->name('expression_orale.changer_tache');
+    Route::get('/expression-orale', [ExpressionOraleController1::class, 'afficherTest'])->name('test.expression_orale');
+    Route::get('/expression-orale/resultat', [ExpressionOraleController1::class, 'afficherResultat'])->name('test.expression_orale_resultat');
+    Route::post('/expression-orale/reinitialiser', [ExpressionOraleController1::class, 'reinitialiserTest'])->name('expression_orale.reinitialiser');
+    Route::post('/expression-orale/resultat/final', [ExpressionOraleController1::class, 'enregistrerResultatFinal'])->name('expression_orale.resultat_final');
+
+
+
+    // Les routes pour passer les testes de compréhension écrite
+    Route::get('/comprehension_ecrite', [ComprehensionEcriteController::class, 'index'])->name('test.comprehension_ecrite');
+    Route::get('/comprehension_ecrite/resultat', [ComprehensionEcriteController::class, 'resultat'])->name('test.comprehension_ecrite_resultat');
+    Route::post('/comprehension_ecrite/repondre', [ComprehensionEcriteController::class, 'enregistrerReponse']);
+    Route::post('/comprehension_ecrite/reinitialiser', [ComprehensionEcriteController::class, 'reinitialiserTest'])->name('comprehension_ecrite.reinitialiser');
+    Route::post('/comprehension_ecrite/resultat/final', [ComprehensionEcriteController::class, 'enregistrerResultatFinal'])->name('comprehension_ecrite.resultat_final');
+
+
+    // Les routes pour passer les testes de compréhension orale
+    Route::get('/comprehension_orale', [ComprehensionOraleController::class, 'index'])->name('test.comprehension_orale');
+    Route::post('/comprehension_orale/repondre', [ComprehensionOraleController::class, 'enregistrerReponse']);
+    Route::get('/comprehension_orale/resultat', [ComprehensionOraleController::class, 'resultat'])->name('test.dashboard_details');
+    Route::post('/comprehension_orale/resultat/final', [ComprehensionOraleController::class, 'enregistrerResultatFinal'])->name('comprehension_orale.resultat_final');
+    Route::post('/comprehension_orale/reinitialiser', [ComprehensionEcriteController::class, 'reinitialiserTest'])->name('comprehension_orale.reinitialiser');
+
+
+
+    // Les routes pour passer les testes d'expressions écrites
+    Route::get('/expression-ecrite', [ExpressionEcriteController::class, 'afficherTest'])->name('test.expression_ecrite');
+    Route::post('/expression_ecrite/repondre', [ExpressionEcriteController::class, 'submitReponse'])->name('expression_ecrite.repondre');
+    Route::post('/expression-ecrite/changer-tache', [ExpressionEcriteController::class, 'changerTache'])->name('expression_ecrite.changer_tache');
+    Route::get('/expression-ecrite/resultat', [ExpressionEcriteController::class, 'afficherResultat'])->name('test.expression_ecrite_resultat');
+    Route::post('/expression_ecrite/reinitialiser', [ExpressionEcriteController::class, 'reinitialiserTest'])->name('expression_ecrite.reinitialiser');
+    Route::post('/expression-ecrite/resultat/final', [ExpressionEcriteController::class, 'enregistrerResultatFinal'])->name('expression_ecrite.resultat_final');
+
+
+
+    
     // ================= Dashboard =================
     Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
 
@@ -261,4 +334,20 @@ Route::middleware(['web', 'auth', CheckFreeTests::class])->group(function () {
   
     
 });
+
+
+Route::get('/contact', function () {
+        return view('client.contact');
+    })->name('client.contact');
+
+
+
+// Route::middleware(['admin'])->group(function () {
+  
+     Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
+
+// });
+
+
+
 
