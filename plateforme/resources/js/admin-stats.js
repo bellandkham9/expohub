@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // ===========================
 // Graphique Chart.js
 // ===========================
-import Chart from 'chart.js/auto';
 
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("statisticsChart");

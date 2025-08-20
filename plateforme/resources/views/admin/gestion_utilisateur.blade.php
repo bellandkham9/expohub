@@ -26,8 +26,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-
-            ...
         </div>
 
                 <div class="row g-5 m-3">
@@ -94,7 +92,9 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-8 col-md-8 col-lg-8">
+                        
                 <div class="header-card d-flex justify-content-between align-items-center">
                     <div class="row justify-between" style="width: 100%">
                         <div class="col-md-6">
@@ -167,6 +167,24 @@
                         </table>
                     </div>
                 </div>
+                    </div>
+                    <div class="col-4 col-md-4 col-lg-4">
+                        <form action="{{ route('notifications.send') }}" method="POST">
+                            @csrf
+                            <input type="text" name="title" placeholder="Titre" required>
+                            <textarea name="message" placeholder="Message" required></textarea>
+                            <select name="user_id">
+                                <option value="">Tous les utilisateurs</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            <button type="submit">Envoyer</button>
+                        </form>
+
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

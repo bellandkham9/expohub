@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class TestType extends Model
 {
     //
-     protected $fillable = ['nom', 'description'];
+     protected $fillable = ['examen', 'description'];
 }
