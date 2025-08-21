@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
     <title>ExpoHub</title>
@@ -102,7 +103,7 @@
                     </ul>
 
                     <div class="">
-                        <p class="mt-2 fw-bold">Suivez nous sur : <a href=""><i class="bi bi-facebook m-2"></i></a> <a href=""><i class="bi bi-linkedin m-2"></i></a> <a href=""><i class="bi bi-instagram m-2"></i></a></p>
+                        <p class="mt-2 fw-bold">Suivez nous sur : <a href="https://www.facebook.com/immigrationforus?mibextid=ZbWKwL"><i class="bi bi-facebook m-2"></i></a> <a href="https://youtube.com/@exponentielimmigration?si=TpZ2KjA7mdJYpay2"><i class="bi bi-youtube m-2"></i></a></p>
                     </div>
 
 

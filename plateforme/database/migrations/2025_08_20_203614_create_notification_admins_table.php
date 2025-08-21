@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('test_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('examen')->unique(); // tcf_canada, tef, etc.
-            $table->string('description')->nullable();
-            $table->timestamps();
-        });
+       Schema::create('notification_admins', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->nullable(); // null = pour tous
+    $table->string('title');
+    $table->text('message');
+    $table->boolean('read')->default(false);
+    $table->timestamps();
+});
 
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('test_types');
+        Schema::dropIfExists('notification_admins');
     }
 };

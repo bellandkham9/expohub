@@ -10,15 +10,14 @@ class TestTypesSeeder extends Seeder
     public function run()
     {
         $types = [
-            ['nom' => 'tcf_canada', 'description' => 'description TCF Canada'],
-            ['nom' => 'tcf_quebec', 'description' => 'description TCF Québec'],
-            ['nom' => 'delf', 'description' => 'description DELF'],
-            ['nom' => 'dalf', 'description' => 'description DALF'],
-            ['nom' => 'tef', 'description' => 'description TEF'],
+            ['examen' => 'TCF', 'description' => 'description TCF'],
+            ['examen' => 'DELF', 'description' => 'description DELF Québec'],
+            ['examen' => 'DALF', 'description' => 'description DALF'],
+            ['examen' => 'TEF', 'description' => 'description TEF'],
         ];
 
         foreach ($types as $type) {
-            TestType::updateOrCreate(['nom' => $type['nom']], $type);
+            TestType::updateOrCreate(['examen' => $type['examen']], $type);
         }
     }
 }

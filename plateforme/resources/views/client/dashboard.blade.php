@@ -436,4 +436,91 @@ Nous vous proposons aujourd'hui de continuer avec le test : ${testPropose}.`;
 });
 </script>
 
+
+{{-- script concernant la notification user-person --}}
+
+<script>
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('.notification-link');
+    if (!link) return;
+
+    e.preventDefault();
+
+    const url = link.dataset.url;
+    const li = link.closest('li');
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: '{}' // corps vide
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) throw new Error('Erreur serveur');
+
+        // Effet disparition
+        if (li) {
+            li.style.transition = 'opacity .25s ease';
+            li.style.opacity = '0';
+            setTimeout(() => li.remove(), 250);
+        }
+
+        // Mise à jour compteur
+        const badge = document.getElementById('notifCount');
+        if (badge) {
+            let n = parseInt(badge.textContent || '0', 10);
+            n = Math.max(0, n - 1);
+            badge.textContent = n;
+            if (n === 0) badge.classList.add('d-none');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Impossible de marquer la notification comme lue.');
+    });
+});
+</script>
+<script>
+document.addEventListener('click', function(e) {
+    // Suppression
+    const removeBtn = e.target.closest('.notif-remove');
+    if (removeBtn) {
+        e.stopPropagation(); // empêche le clic sur le lien parent
+        const notifId = removeBtn.dataset.id;
+        const li = removeBtn.closest('li');
+
+        fetch(`/admin/notifications/${notifId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && li) {
+                li.style.transition = 'opacity .25s ease';
+                li.style.opacity = '0';
+                setTimeout(() => li.remove(), 250);
+
+                // Mise à jour du compteur
+                const badge = document.getElementById('notifCount');
+                if (badge) {
+                    let n = parseInt(badge.textContent || '0', 10);
+                    n = Math.max(0, n - 1);
+                    badge.textContent = n;
+                    if (n === 0) badge.classList.add('d-none');
+                }
+            }
+        })
+        .catch(err => console.error("Impossible de supprimer la notification", err));
+    }
+});
+
+</script>
+
+
 @endsection

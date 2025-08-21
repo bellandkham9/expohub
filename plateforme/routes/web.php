@@ -23,7 +23,9 @@ use App\Http\Controllers\IAExpressionEcriteController;
 use App\Http\Controllers\IAExpressionOraleController; 
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\SuggestionController;
-use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\PaiementController; 
+use App\Http\Controllers\AbonnementController; 
+use App\Http\Controllers\TestTypeController;
 
 
 
@@ -147,7 +149,7 @@ Route::get('/contact', function () {
         return view('client.contact');
     })->name('client.contact');
 
-Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
+Route::get('/paiement', [AbonnementController::class, 'index'])->name('client.paiement');
 
 
 
@@ -174,11 +176,11 @@ Route::get('/admin/gestion_utilisateur', function () {
     // Supprimer un utilisateur
     Route::delete('/admin/utilisateurs/{user}', [AdminUserController::class, 'destroy'])->name('admin.utilisateur.supprimer');
 
-
+/* 
     Route::get('/admin/gestion_test', function () {
         return view('admin.gestion_test');
     })->name('gestion_test');
-
+ */
     Route::get('/admin/statistiques', function () {
         return view('admin.statistiques');
     })->name('statistiques');
@@ -208,6 +210,19 @@ Route::get('/admin/gestion_utilisateur', function () {
     // fin partie test
 
 
+    //la gestion des abonnements
+   Route::resource('abonnements', AbonnementController::class);
+    //la gestion des type de tests
+   Route::resource('tests', TestTypeController::class)->except(['show']);
+
+
+   //envoyer un message au users
+
+
+
+Route::post('/notifications/send', [AdminUserController::class, 'sendMessage'])->name('notifications.send');
+
+
         
 
 
@@ -225,7 +240,7 @@ Route::get('/admin/gestion_utilisateur', function () {
     Route::post('/paiement/notify', [PaiementController::class, 'notify'])->name('paiement.notify');
 
 
-    // Les routes pour passer les testes d'expressions orale
+/*     // Les routes pour passer les testes d'expressions orale
     Route::post('/expression-orale/repondre', [ExpressionOraleController1::class, 'repondre'])->name('expression_orale.repondre');
     Route::post('/expression-orale/handle-message', [ExpressionOraleController1::class, 'handleMessage'])->name('expression_orale.handleMessage');
     Route::post('/expression-orale/changer-tache', [ExpressionOraleController1::class, 'changerTache'])->name('expression_orale.changer_tache');
@@ -260,7 +275,7 @@ Route::get('/admin/gestion_utilisateur', function () {
     Route::get('/expression-ecrite/resultat', [ExpressionEcriteController::class, 'afficherResultat'])->name('test.expression_ecrite_resultat');
     Route::post('/expression_ecrite/reinitialiser', [ExpressionEcriteController::class, 'reinitialiserTest'])->name('expression_ecrite.reinitialiser');
     Route::post('/expression-ecrite/resultat/final', [ExpressionEcriteController::class, 'enregistrerResultatFinal'])->name('expression_ecrite.resultat_final');
-
+ */
 
 
     
@@ -344,10 +359,14 @@ Route::get('/contact', function () {
 
 // Route::middleware(['admin'])->group(function () {
   
-     Route::get('/paiement', [\App\Http\Controllers\AbonnementController::class, 'index'])->name('client.paiement');
+     Route::get('/paiement', [AbonnementController::class, 'index'])->name('client.paiement');
 
 // });
 
 
 
 
+Route::post('admin/notifications/{notification}/read', [AdminUserController::class, 'markAsRead'])
+     ->name('admin.notifications.read');
+Route::delete('/admin/notifications/{id}', [AdminUserController::class, 'supprimer'])
+    ->name('notifications.supprimer');

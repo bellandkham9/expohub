@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
@@ -12,6 +13,9 @@ use App\Models\abonnement;
 use App\Models\Souscription;
 use App\Models\HistoriqueTest;
 use Illuminate\Support\Facades\DB;
+use App\Models\TestType;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminUserController extends Controller
 {
@@ -36,47 +40,46 @@ class AdminUserController extends Controller
         $user->save();
 
         // 4. Redirection avec un message de succès
-            return redirect()->route('admin.gestion_utilisateurs')->with('success', 'L\'utilisateur a été modifié avec succès.');
+        return redirect()->route('admin.gestion_utilisateurs')->with('success', 'L\'utilisateur a été modifié avec succès.');
 
     }
 
 
-
     public function store(Request $request)
-{
-    // 1. Validation des données du formulaire
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8',
-        'role' => ['required', Rule::in(['admin', 'user'])],
-    ]);
+    {
+        // 1. Validation des données du formulaire
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => ['required', Rule::in(['admin', 'user'])],
+        ]);
 
-    // 2. Création de l'utilisateur
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password), // Crypte le mot de passe
-        'role' => $request->role,
-    ]);
+        // 2. Création de l'utilisateur
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Crypte le mot de passe
+            'role' => $request->role,
+        ]);
 
-    // 3. Redirection avec un message de succès
-    return redirect()->route('admin.gestion_utilisateurs')->with('success', 'Utilisateur ajouté avec succès !');
-}
+        // 3. Redirection avec un message de succès
+        return redirect()->route('admin.gestion_utilisateurs')->with('success', 'Utilisateur ajouté avec succès !');
+    }
 
 
-
-//envoi les donnée dans la page Gestions d'utilisateurs
+    //envoi les donnée dans la page Gestions d'utilisateurs
     public function index()
     {
         $stats = $this->getUserStats();
         $users = User::all();
         $abonnements = abonnement::all();
 
-return view('admin.gestion_utilisateur', [
-    'users' => $users,
-    'abonnements' => $abonnements,
-] + $stats);    }
+        return view('admin.gestion_utilisateur', [
+            'users' => $users,
+            'abonnements' => $abonnements,
+        ] + $stats);
+    }
 
     //envoi les donnée dans la page Statistiques
     public function indexStatistiques()
@@ -118,64 +121,46 @@ return view('admin.gestion_utilisateur', [
         $nombreUtilisateursInactifsSemainepassé = $nombreUtilisateursInactifsSemaineDerniere - $nombreUtilisateursActifsCetteSemaine;
 
 
-            // Total de tests passés
-            $totalTests = HistoriqueTest::count();
+        // Total de tests passés
+        $totalTests = HistoriqueTest::count();
 
-            $totalAbonnements = Souscription::count();
+        $totalAbonnements = Souscription::count();
 
-            // Tests passés la semaine dernière
-            $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
-            $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
+        // Tests passés la semaine dernière
+        $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
+        $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
 
 
-            // 📌 Abonnements uniquement pour CE MOIS
-            $startOfMonth = Carbon::now()->startOfMonth();
-            $endOfMonth = Carbon::now()->endOfMonth();
+        // 📌 Abonnements uniquement pour CE MOIS
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
 
-            $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+        $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
 
-            $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
+        $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
 
-            // Tests abandonnés (duration null ET score = 0)
-            $testsAbandonnes = HistoriqueTest::whereNull('duration')
+        // Tests abandonnés (duration null ET score = 0)
+        $testsAbandonnes = HistoriqueTest::whereNull('duration')
             ->where('score', 0)
             ->count();
-            
-            // Tests abandonnés cette semaine
-            $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
+
+        // Tests abandonnés cette semaine
+        $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
             ->where('score', 0)
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
             ->count();
 
 
-            /////////////////////////////////
-            ////Information de la courbe////
-            ///////////////////////////////
+        /////////////////////////////////
+        ////Information de la courbe////
+        ///////////////////////////////
 
-            $currentYear = Carbon::now()->year;
+        $currentYear = Carbon::now()->year;
 
-            // Tableau des mois
-            $months = collect(range(1, 12))->map(function($m) {
-                return Carbon::createFromDate(null, $m, 1)->format('M');
-            });
-
-            // Total des souscriptions par mois
-            $subscriptionsPerMonth = [];
-            foreach(range(1, 12) as $month) {
-                $subscriptionsPerMonth[] = Souscription::whereYear('created_at', $currentYear)
-                                                    ->whereMonth('created_at', $month)
-                                                    ->count();
-            }
-
-            // Total des utilisateurs inscrits par mois
-            $usersPerMonth = [];
-            foreach(range(1, 12) as $month) {
-                $usersPerMonth[] = User::whereYear('created_at', $currentYear)
-                                    ->whereMonth('created_at', $month)
-                                    ->count();
-            }
-
-
+        // Tableau des mois
+        $months = collect(range(1, 12))->map(function ($m) {
+            return Carbon::createFromDate(null, $m, 1)->format('M');
+        });
 
              // Récupérer l'année en cours et l'année précédente de manière dynamique
         $currentYear = date('Y');
@@ -215,7 +200,21 @@ return view('admin.gestion_utilisateur', [
 
 
 
+        // Total des souscriptions par mois
+        $subscriptionsPerMonth = [];
+        foreach (range(1, 12) as $month) {
+            $subscriptionsPerMonth[] = Souscription::whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $month)
+                ->count();
+        }
 
+        // Total des utilisateurs inscrits par mois
+        $usersPerMonth = [];
+        foreach (range(1, 12) as $month) {
+            $usersPerMonth[] = User::whereYear('created_at', $currentYear)
+                ->whereMonth('created_at', $month)
+                ->count();
+        }
 
         return [
             'totalUsers' => $totalUsers,
@@ -241,7 +240,6 @@ return view('admin.gestion_utilisateur', [
     }
 
 
-
     // Supprimer un utilisateur
     public function destroy($id)
     {
@@ -252,7 +250,7 @@ return view('admin.gestion_utilisateur', [
     }
 
 
-     protected function checkAdminRole(): ?RedirectResponse
+    protected function checkAdminRole(): ?RedirectResponse
     {
         // Vérifie si l'utilisateur est authentifié ET si son rôle n'est PAS 'admin'
         if (!Auth::check() || Auth::user()->role !== 'admin') {
@@ -262,83 +260,119 @@ return view('admin.gestion_utilisateur', [
 
         return null; // L'utilisateur est admin, continuez l'exécution de la méthode appelante
     }
-        
 
-    
-        
+    // Attribuer un abonnement 
+    public function attribuerAbonnement(Request $request)
+    {
+        // ✅ Validation des données reçues depuis le formulaire ou la requête
+        // Vérifie que l'utilisateur (user_id) existe bien dans la table users
+        // Vérifie aussi que l'abonnement (abonnement_id) existe bien dans la table abonnements
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'abonnement_id' => 'required|exists:abonnements,id',
+        ]);
 
-        // Attribuer un abonnement 
-           public function attribuerAbonnement(Request $request)
-{
-    // ✅ Validation des données reçues depuis le formulaire ou la requête
-    // Vérifie que l'utilisateur (user_id) existe bien dans la table users
-    // Vérifie aussi que l'abonnement (abonnement_id) existe bien dans la table abonnements
-    $request->validate([
-        'user_id' => 'required|exists:users,id',
-        'abonnement_id' => 'required|exists:abonnements,id',
-    ]);
+        // ✅ On récupère l'utilisateur concerné
+        $user = User::findOrFail($request->user_id);
 
-    // ✅ On récupère l'utilisateur concerné
-    $user = User::findOrFail($request->user_id);
+        // ✅ On récupère l'abonnement choisi
+        $abonnement = Abonnement::findOrFail($request->abonnement_id);
 
-    // ✅ On récupère l'abonnement choisi
-    $abonnement = Abonnement::findOrFail($request->abonnement_id);
+        // ✅ Création de la souscription dans la table "souscriptions"
+        // Ici on dit : cet utilisateur a cet abonnement, avec une date de début = maintenant
+        // et une date de fin = maintenant + durée définie dans le modèle Abonnement
+        Souscription::create([
+            'user_id' => $user->id,
+            'abonnement_id' => $abonnement->id,
+            'date_debut' => now(),
+            'date_fin' => now()->addDays($abonnement->duree), // Exemple : si durée = 30 jours
+        ]);
 
-    // ✅ Création de la souscription dans la table "souscriptions"
-    // Ici on dit : cet utilisateur a cet abonnement, avec une date de début = maintenant
-    // et une date de fin = maintenant + durée définie dans le modèle Abonnement
-    Souscription::create([
-        'user_id' => $user->id,
-        'abonnement_id' => $abonnement->id,
-        'date_debut' => now(),
-        'date_fin' => now()->addDays($abonnement->duree), // Exemple : si durée = 30 jours
-    ]);
-
-    // ✅ Retourne en arrière avec un message de succès
-    return redirect()->back()->with('success', 'Abonnement attribué avec succès.');
-}
-
-
+        // ✅ Retourne en arrière avec un message de succès
+        return redirect()->back()->with('success', 'Abonnement attribué avec succès.');
+    }
     // Statitiques des tests dans la plateforme
     public function indexTestStats()
-        {
-            // Total de tests passés
-            $totalTests = HistoriqueTest::count();
+    {
+        // Total de tests passés
+        $totalTests = HistoriqueTest::count();
 
-            $totalAbonnements = Souscription::count();
+        $totalAbonnements = Souscription::count();
 
-            // Tests passés la semaine dernière
-            $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
-            $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
+        // Tests passés la semaine dernière
+        $startOfLastWeek = Carbon::now()->subWeek()->startOfWeek();
+        $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
 
 
-            // 📌 Abonnements uniquement pour CE MOIS
-            $startOfMonth = Carbon::now()->startOfMonth();
-            $endOfMonth = Carbon::now()->endOfMonth();
+        // 📌 Abonnements uniquement pour CE MOIS
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
 
-            $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+        $totalAbonnementsMois = Souscription::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
 
-            $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
+        $testsLastWeek = HistoriqueTest::whereBetween('completed_at', [$startOfLastWeek, $endOfLastWeek])->count();
 
-            // Tests abandonnés (duration null ET score = 0)
-            $testsAbandonnes = HistoriqueTest::whereNull('duration')
+        // Tests abandonnés (duration null ET score = 0)
+        $testsAbandonnes = HistoriqueTest::whereNull('duration')
             ->where('score', 0)
             ->count();
-            
-            // Tests abandonnés cette semaine
-            $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
+
+        // Tests abandonnés cette semaine
+        $testsAbandonnesSemaine = HistoriqueTest::whereNull('duration')
             ->where('score', 0)
             ->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])
             ->count();
 
-            // Tu peux retourner les données pour ton dashboard ou les passer à une vue
-            return view('admin.gestion_test', [
-                'totalTests' => $totalTests,
-                'testsLastWeek' => $testsLastWeek,
-                'totalAbonnements' => $totalAbonnements,
-                'totalAbonnementsMois' => $totalAbonnementsMois,
-                'testsAbandonnes' => $testsAbandonnes,
-                'testsAbandonnesSemaine' => $testsAbandonnesSemaine
-            ]);        }
-// return view('admin.statistiques', $stats);
+
+
+        $listAbonnement=abonnement::with('testType')->get();
+        $tests = TestType::all();
+        // Tu peux retourner les données pour ton dashboard ou les passer à une vue
+        return view('admin.gestion_test', [
+            'totalTests' => $totalTests,
+            'testsLastWeek' => $testsLastWeek,
+            'totalAbonnements' => $totalAbonnements,
+            'totalAbonnementsMois' => $totalAbonnementsMois,
+            'testsAbandonnes' => $testsAbandonnes,
+            'testsAbandonnesSemaine' => $testsAbandonnesSemaine,
+            'abonnements' => $listAbonnement,
+            'tests' =>  $tests
+        ]);
+    }
+    // envoyer un message à un utilisateur ou tout les users
+
+
+    public function sendMessage(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string',
+        'message' => 'required|string',
+        'user_id' => 'nullable|exists:users,id',
+    ]);
+
+    \App\Models\NotificationAdmin::create($request->only('title', 'message', 'user_id'));
+
+    return back()->with('success', 'Notification envoyée');
+}
+public function markAsRead(Request $request, \App\Models\NotificationAdmin $notification)
+    {
+        $notification->read = true;
+        $notification->save();
+
+        return response()->json([
+            'success' => true,
+            'id' => $notification->id
+        ]);
+    
+    
+}
+public function supprimer($id)
+{
+    $notif = \App\Models\NotificationAdmin::findOrFail($id);
+    $notif->delete();
+
+    return response()->json(['success' => true]);
+}
+
+
 }
