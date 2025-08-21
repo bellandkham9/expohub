@@ -6,8 +6,7 @@
         right: 20px;
         z-index: 1000;
         cursor: pointer;
-        background-color: #FEF8E7;;
-        color: white;
+        background-color: #FEF8E7;
         border-radius: 50%;
         width: 60px;
         height: 60px;
@@ -17,7 +16,6 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    /* Styles pour l'icône dans la bulle */
     .chat-bubble img {
         width: 40px;
         height: 40px;
@@ -30,7 +28,7 @@
         100% { transform: scale(1); }
     }
 
-    /* Styles pour la fenêtre de chat */
+    /* Fenêtre de chat */
     .chat-window {
         position: fixed;
         bottom: 90px;
@@ -41,13 +39,13 @@
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        display: none; /* Cachée par défaut */
+        display: none;
         flex-direction: column;
     }
 
     .chat-header {
-        background-color: #0d6efd;
-        color: white;
+        background-color: #FEF8E7;
+        color: black;
         padding: 15px;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -63,13 +61,21 @@
         background-color: #f9f9f9;
         display: flex;
         flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Messages */
+    .message-wrapper {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
     }
 
     .message {
         border-radius: 15px;
         padding: 10px 15px;
-        margin-bottom: 10px;
-        max-width: 80%;
+        max-width: 70%;
+        word-wrap: break-word;
     }
 
     .user-message {
@@ -84,6 +90,13 @@
         align-self: flex-start;
     }
 
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
     .chat-footer {
         padding: 15px;
         border-top: 1px solid #eee;
@@ -95,31 +108,30 @@
 </div>
 
 <div class="chat-window" id="chatWindow">
-    <div class="chat-header">
-        <span>Assistant</span>
-        <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size:1.5rem;">&times;</button>
+    <div class="chat-header shadow-2xl">
+        <a href="/" class="d-flex align-items-center text-decoration-none">
+            <img src="{{ asset('images/chatbot.png') }}" 
+                 alt="Chatbot Icon" 
+                 width="40" height="40" 
+                 class="me-2 rounded-circle shadow-sm">
+            <span class="fw-bold fs-5 text-primary">Expohub</span>
+        </a>
+        <button onclick="toggleChat()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
     </div>
-    <div class="chat-body" id="chatBody">
-        </div>
+
+    <div class="chat-body" id="chatBody"></div>
+
     <div class="chat-footer">
-        <input type="text" id="userInput" placeholder="Écrivez votre message..." style="width:100%; padding:10px; border:1px solid #ccc; border-radius:20px;">
+        <input type="text" id="userInput" placeholder="Écrivez votre message..." 
+               style="width:100%; padding:10px; border:1px solid #ccc; border-radius:20px;">
     </div>
 </div>
 
-
-
-
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    // Fonction pour ouvrir/fermer la fenêtre de chat
     function toggleChat() {
-        var chatWindow = document.getElementById('chatWindow');
-        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
-            chatWindow.style.display = 'flex';
-        } else {
-            chatWindow.style.display = 'none';
-        }
+        let chatWindow = document.getElementById('chatWindow');
+        chatWindow.style.display = (chatWindow.style.display === 'flex') ? 'none' : 'flex';
     }
 
     document.getElementById('userInput').addEventListener('keypress', function(e) {
@@ -129,22 +141,33 @@
     });
 
     function sendMessage() {
-        var userInput = document.getElementById('userInput');
-        var message = userInput.value;
-        if (message.trim() === '') return;
+        let userInput = document.getElementById('userInput');
+        let message = userInput.value.trim();
+        if (message === '') return;
 
-        // Affiche le message de l'utilisateur
-        var chatBody = document.getElementById('chatBody');
-        var userMessageElement = document.createElement('div');
+        let chatBody = document.getElementById('chatBody');
+
+        // Afficher message utilisateur avec avatar
+        let userWrapper = document.createElement('div');
+        userWrapper.classList.add('message-wrapper');
+        userWrapper.style.justifyContent = "flex-end";
+
+        let userMessageElement = document.createElement('div');
         userMessageElement.classList.add('message', 'user-message');
         userMessageElement.textContent = message;
-        chatBody.appendChild(userMessageElement);
-        userInput.value = '';
 
-        // Fait défiler le chat
+        let userAvatar = document.createElement('img');
+        userAvatar.src = "{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}";
+        userAvatar.classList.add('avatar');
+
+        userWrapper.appendChild(userMessageElement);
+        userWrapper.appendChild(userAvatar);
+
+        chatBody.appendChild(userWrapper);
+        userInput.value = '';
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Envoie le message au serveur (Laravel)
+        // Envoyer au serveur
         $.ajax({
             url: '{{ route('chatbot.send') }}',
             method: 'POST',
@@ -153,11 +176,22 @@
                 message: message
             },
             success: function(response) {
-                // Affiche la réponse du bot
-                var botMessageElement = document.createElement('div');
+                // Afficher message du bot avec avatar
+                let botWrapper = document.createElement('div');
+                botWrapper.classList.add('message-wrapper');
+
+                let botAvatar = document.createElement('img');
+                botAvatar.src = "{{ asset('images/chatbot.png') }}";
+                botAvatar.classList.add('avatar');
+
+                let botMessageElement = document.createElement('div');
                 botMessageElement.classList.add('message', 'bot-message');
                 botMessageElement.textContent = response.reply;
-                chatBody.appendChild(botMessageElement);
+
+                botWrapper.appendChild(botAvatar);
+                botWrapper.appendChild(botMessageElement);
+
+                chatBody.appendChild(botWrapper);
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
         });

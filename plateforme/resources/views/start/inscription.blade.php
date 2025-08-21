@@ -159,17 +159,23 @@
             </div>
             
         </div>
-        <div>
-            <button class="social-btn google-btn">
-                <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
-            </button>
-
-            <button class="social-btn facebook-btn">
-                <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
-            </button>
-            <p class=" text-center"> 
-                <a class="link-light" href="{{route('auth.connexion')}}"> Se Connecter</a>
+       <div>
+            <p class="">
+                <a href="{{ route('social.redirect', 'google') }}" class="d-block btn btn-light  btn-google">
+                    <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
+                </a>
             </p>
+
+            <p class="">
+<a href="{{ route('social.redirect', 'facebook') }}" class="d-block btn btn-light btn-facebook">
+                    <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
+</a>
+            </p>
+            <p class="text-center"> 
+                <a class="link-light" href="{{route('auth.connexion')}}"> Connexion</a>  
+            </p>
+
+            <p><a class="dropdown-item" href="{{ route('deconnexion') }}" style="color: white;">Se déconnecter</a></p>
         </div>
     </div>
 </body>

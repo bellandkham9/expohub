@@ -218,12 +218,15 @@
                             return response.json();
                         })
                         .then(data => {
+                            if (data.error) {
+                                window.location.href = "{{ route('auth.connexion') }}";
+                                return;
+                            }
+
                             if (data.has_free_tests) {
-                                // ✅ L'élève a encore des tests gratuits → ouvrir le modal
                                 const modal = new bootstrap.Modal(document.getElementById('matiereModal'));
                                 modal.show();
                             } else {
-                                // ❌ Plus de tests gratuits → afficher SweetAlert
                                 Swal.fire({
                                     icon: 'info',
                                     title: 'Vos tests gratuits sont terminés!',
@@ -244,6 +247,7 @@
                                 });
                             }
                         })
+
                         .catch(error => {
                             console.error('Error:', error);
                             Swal.fire({

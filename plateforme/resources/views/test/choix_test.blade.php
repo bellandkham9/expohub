@@ -119,11 +119,24 @@
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
-                                <div class="avatar-container mb-3">
-                                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                        alt="Avatar" class="rounded-circle avatar-img" width="80">
-                                </div>
-                                <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
+                                <div class="row align-items-center">
+                                        <!-- Avatar -->
+                                        <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
+                                            <div class="avatar-container text-center text-md-start">
+                                                <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                                                    alt="Avatar" class="rounded-circle avatar-img img-fluid"
+                                                    width="150" height="150">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Nom utilisateur -->
+                                        <div class="col-6 col-sm-7 col-md-7 col-lg-7">
+                                            <h5 class="card-title mb-0 text-center text-md-start">
+                                                {{ Auth::user()->name }}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                
                                 @php
                                     $skills = [
                                         'Compréhension Écrite' => 'comprehension_ecrite',
@@ -148,7 +161,7 @@
                                             @endphp
 
                                             {{-- Le bouton principal --}}
-                                            <button type="button"
+                                            <button style="width: 130px; height: 50px; border-radius: 8px;"  type="button"
                                                 class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
                                                 {{ $testType->paye ? '' : 'disabled' }}"
                                                 @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
@@ -219,4 +232,16 @@
             </section>
         </div>
     </div>
+
+    <style>
+        .btn-primary{
+            border-radius: 20px;
+            background-color: #224194;
+            color: white;
+        }
+        .btn-secondary{
+            border-radius: 20px;
+            color: white;
+        }
+    </style>
 @endsection

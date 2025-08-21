@@ -1,6 +1,22 @@
 {{-- filepath: c:\wamp64\www\Expo\expohub\plateforme\resources\views\client\compte.blade.php --}}
 @extends('layouts.app')
+<style>
+.custom-box {
+    width: 50%;  /* Desktop */
+}
 
+@media (max-width: 992px) {  /* Tablette */
+    .custom-box {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {  /* Mobile */
+    .custom-box {
+        width: 100%;
+    }
+}
+</style>
 @section('content')
     <div class="">
         {{-- Inclusion de la barre de navigation du client --}}
@@ -9,7 +25,7 @@
         @else
             @include('client.partials.navbar')
         @endif
-        <div class="container my-5">
+        <div class=" my-5 custom-box mx-auto p-4 rounded-3 shadow">
             <h2 class="mb-4">Mon compte</h2>
             <form action="{{ route('client.compte.update') }}" method="POST" enctype="multipart/form-data">
                 {{-- Utilisez @csrf pour protéger le formulaire contre les failles CSRF --}}
@@ -99,7 +115,4 @@
         </div>
     </div>
 
-    <script>
-        {{-- Votre script pour le drag-and-drop de l'avatar --}}
-    </script>
 @endsection

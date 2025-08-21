@@ -23,14 +23,14 @@
                                                         </div>
                                                         <div class="text-md-end text-muted small">
                                                             <div><strong>60 min</strong></div>
-                                                            <div>{{ now()->format('d M Y') }}</div>
+                                                           <div>{{ now()->addMonth()->format('d M Y') }}</div>
                                                         </div>
                                                     </div>
 
                                                     <hr class="my-2">
                                                     <div class="row">
                                                         <div class="col-md-8">
-                                                            <strong>Niveau :</strong> {{ $niveau }}
+                                                            
                                                         </div>
                                                         <div class="col-md-4 text-md-end">
                                                             <a href="{{ route($route) }}" class="btn"
@@ -62,8 +62,7 @@
                         <section class="container mb-5" style="padding-right: 45px; padding-left: 45px;">
 
                             <div class="text-start">
-                                <a href="#" class="btn-show-more" style="color: black">Toutes les réponses <i
-                                        class="fas fa-chevron-down"></i></a>
+                                <a href="#" class="btn-show-more" style="color: black">Toutes les réponses</a>
                             </div>
 
                             @foreach ($reponses as $reponse)
@@ -124,94 +123,142 @@
 
                     </div>
                     <!-- Sidebar Profil -->
-                     <div class="col-lg-3">
-                    <!-- Profil -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-body text-center">
-                            <img src="{{ asset('images/avatar.png') }}" alt="Profil" class="rounded-circle mb-3"
-                                width="80">
-                            <h5 class="card-title mb-1">{{ Auth::user()->name }}</h5>
+                      <!-- Sidebar -->
+                    <!-- Sidebar Profil -->
+ <div class="col-lg-3">
+                        <!-- Profil -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <div class="row align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
+                                        <div class="avatar-container text-center text-md-start">
+                                            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="150"
+                                                height="150">
+                                        </div>
+                                    </div>
 
-                            @php
-                                $skills = [
-                                    'Compréhension Écrite' => 'comprehension_ecrite',
-                                    'Compréhension Orale' => 'comprehension_orale',
-                                    'Expression Écrite' => 'expression_ecrite',
-                                    'Expression Orale' => 'expression_orale',
-                                ];
-                            @endphp
+                                    <!-- Nom utilisateur -->
+                                    <div class="col-6 col-sm-7 col-md-7 col-lg-7">
+                                        <h5 class="card-title mb-0 text-center text-md-start">
+                                            {{ Auth::user()->name }}
+                                        </h5>
+                                    </div>
+                                </div>
 
-                            <div class="mt-4">
-                                <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
+                                @php
+                                    $skills = [
+                                        'Compréhension Écrite' => 'comprehension_ecrite',
+                                        'Compréhension Orale' => 'comprehension_orale',
+                                        'Expression Écrite' => 'expression_ecrite',
+                                        'Expression Orale' => 'expression_orale',
+                                    ];
+                                @endphp
 
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach ($testTypes as $testType)
-                                        @php
-                                            $modalId = 'modal_' . $testType->id;
-                                            $key = $testType->nom;
-                                            $niveaux = $userLevels[$key] ?? null;
-                                        @endphp
+                                <div class="mt-4">
+                                    <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
 
-                                        <!-- Bouton -->
-                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#{{ $modalId }}">
-                                            {{ strtoupper($key) }}
-                                        </button>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
+                                        @foreach ($testTypes as $testType)
+                                            @php
+                                                $modalId = 'modal_' . $testType->id;
+                                                $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
+                                                // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
+                                                // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
+                                                $niveaux = $userLevels[$key] ?? null;
+                                            @endphp
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
-                                            aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux pour
-                                                            {{ strtoupper($key) }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Fermer"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        @if ($niveaux)
-                                                            <div class="row g-2">
-                                                                @foreach ($skills as $label => $champ)
-                                                                    @php
-                                                                        $level = $niveaux[$champ] ?? 'Non défini';
-                                                                        $color = match ($level) {
-                                                                            'C2', 'C1', 'B2' => 'success',
-                                                                            'B1', 'A2', 'A1' => 'warning',
-                                                                            default => 'secondary',
-                                                                        };
-                                                                    @endphp
-                                                                    <div class="col-6">
-                                                                        <div class="p-2 bg-light rounded">
-                                                                            <small
-                                                                                class="d-block text-muted">{{ $label }}</small>
-                                                                            <strong
-                                                                                class="text-{{ $color }}">{{ $level }}</strong>
+                                            {{-- Le bouton principal --}}
+                                            <button style="width: 130px; height: 50px; border-radius: 8px;" type="button"
+                                                class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
+                                                {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$testType->paye)
+                                                    {{-- Icône de cadenas pour les abonnements non payés --}}
+                                                    <i class="fas fa-lock me-2"></i>
+                                                @endif
+                                                {{ strtoupper($key) }}
+                                            </button>
+
+
+                                            {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
+                                                                pour
+                                                                {{ strtoupper($key) }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-                                                        @else
-                                                            <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
-                                                        @endif
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Fermer</button>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
+                                                            @endif
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Fermer</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
+
                     </div>
-                </div>
 
                 </div>
             </section>
         </div>
     </div>
+     <style>
+        .btn-primary{
+            border-radius: 20px;
+            background-color: #224194;
+            color: white;
+        }
+        .btn-secondary{
+            border-radius: 20px;
+            color: white;
+        }
+         .card:hover{
+            color: black;
+            background-color: transparent;
+        }
+        .card-body:hover{
+            color: black;
+            background-color: transparent;
+        }
+    </style>
 @endsection

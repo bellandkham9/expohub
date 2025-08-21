@@ -22,21 +22,14 @@
                                                         </div>
                                                         <div class="text-md-end text-muted small">
                                                             <div><strong>60 min</strong></div>
-                                                            <div>{{ now()->format('d M Y') }}</div>
+                                                            <div>{{ now()->addMonth()->format('d M Y') }}</div>
                                                         </div>
                                                     </div>
 
                                                     <hr class="my-2">
                                                     <div class="row align-items-center">
                                                         <div class="col-md-8">
-                                                            <div class="row g-2 mb-3">
-                                                                <div class="col-12 col-md-6">
-                                                                    <strong>Niveau :</strong> {{ $niveau }}
-                                                                </div>
-                                                                <div class="col-12 col-md-6">
-                                                                    <strong>Score total :</strong> {{ $note }} / 600
-                                                                </div>
-                                                            </div>
+
                                                         </div>
                                                         <div class="col-md-4 text-md-end">
                                                             <a href="{{ route($route) }}" class="btn"
@@ -91,7 +84,7 @@
                                             </div>
                                         </div>
 
-                                       <div class="col-12 col-lg-6 mb-4">
+                                        <div class="col-12 col-lg-6 mb-4">
                                             <div class="card h-100 shadow-sm border-0 rounded-3">
                                                 <div class="card-body">
                                                     <h5 class="card-title fw-semibold text-success mb-3">
@@ -99,18 +92,22 @@
                                                     </h5>
 
                                                     @php
-                                                        $userReponse = $reponses->firstWhere('expression_orale_id', $tache->id);
+                                                        $userReponse = $reponses->firstWhere(
+                                                            'expression_orale_id',
+                                                            $tache->id,
+                                                        );
                                                     @endphp
 
                                                     @if ($userReponse && $userReponse->audio_eleve)
                                                         <audio controls class="w-100">
-                                                            <source src="{{ asset($userReponse->audio_eleve) }}" type="audio/mp3">
+                                                            <source src="{{ asset($userReponse->audio_eleve) }}"
+                                                                type="audio/mp3">
                                                             Votre navigateur ne prend pas en charge la lecture audio.
                                                         </audio>
 
                                                         <button class="btn btn-outline-primary btn-sm mt-2"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#responseModal{{ $tache->id }}">
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#responseModal{{ $tache->id }}">
                                                             Voir les détails
                                                         </button>
                                                     @else
@@ -125,61 +122,126 @@
                             @else
                                 <div class="alert alert-warning">Aucune tâche disponible pour afficher les détails.</div>
                             @endisset
-                       <div class="justify-items-center mt-4">
-                        <a href="{{ route('client.dashboard') }}" class="btn btn-outline-secondary">🏠 Retour à l’accueil</a>
-                       </div>
+                            <div class="justify-items-center mt-4">
+                                <a href="{{ route('client.dashboard') }}" class="btn btn-outline-secondary">🏠 Retour à
+                                    l’accueil</a>
+                            </div>
                         </section>
                     </div>
 
-                    <!-- Sidebar Profil -->
-                    <div class="col-lg-3">
-                        <div class="card text-center p-3 rounded-4 "
-                            style="border: none; box-shadow: 2px 2px 2px 2px gainsboro; background-color: #fef8e7;">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
-                                    <img src="{{ asset('images/beautiful-woman.png') }}" alt="Profil"
-                                        class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                    <h6 class="fw-bold mb-0">Emmanuelle</h6>
+                   <div class="col-lg-3">
+                        <!-- Profil -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <div class="row align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
+                                        <div class="avatar-container text-center text-md-start">
+                                            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="150"
+                                                height="150">
+                                        </div>
+                                    </div>
+
+                                    <!-- Nom utilisateur -->
+                                    <div class="col-6 col-sm-7 col-md-7 col-lg-7">
+                                        <h5 class="card-title mb-0 text-center text-md-start">
+                                            {{ Auth::user()->name }}
+                                        </h5>
+                                    </div>
                                 </div>
 
-                                <hr class="my-2">
-                                <h6 class="fw-semibold text-start mb-3">Niveaux de langue</h6>
+                                @php
+                                    $skills = [
+                                        'Compréhension Écrite' => 'comprehension_ecrite',
+                                        'Compréhension Orale' => 'comprehension_orale',
+                                        'Expression Écrite' => 'expression_ecrite',
+                                        'Expression Orale' => 'expression_orale',
+                                    ];
+                                @endphp
 
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <div class="p-2 rounded shadow-sm bg-white">
-                                            <small class="fw-semibold">TCF CANADA</small>
-                                            <div class="badge bg-primary mt-1">{{ $niveau }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-2 rounded shadow-sm bg-white">
-                                            <small class="fw-semibold">TCF QUEBEC</small>
-                                            <div class="badge bg-secondary mt-1">A1</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-2 rounded shadow-sm bg-white">
-                                            <small class="fw-semibold">TEF</small>
-                                            <div class="badge bg-info mt-1">A1</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-2 rounded shadow-sm bg-white">
-                                            <small class="fw-semibold">DELF</small>
-                                            <div class="badge bg-success mt-1">A1</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-2 rounded shadow-sm bg-white">
-                                            <small class="fw-semibold">DALF</small>
-                                            <div class="badge bg-warning mt-1">A1</div>
-                                        </div>
+                                <div class="mt-4">
+                                    <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
+                                        @foreach ($testTypes as $testType)
+                                            @php
+                                                $modalId = 'modal_' . $testType->id;
+                                                $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
+                                                // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
+                                                // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
+                                                $niveaux = $userLevels[$key] ?? null;
+                                            @endphp
+
+                                            {{-- Le bouton principal --}}
+                                            <button style="width: 130px; height: 50px; border-radius: 8px;" type="button"
+                                                class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
+                                                {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$testType->paye)
+                                                    {{-- Icône de cadenas pour les abonnements non payés --}}
+                                                    <i class="fas fa-lock me-2"></i>
+                                                @endif
+                                                {{ strtoupper($key) }}
+                                            </button>
+
+
+                                            {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
+                                                                pour
+                                                                {{ strtoupper($key) }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
+                                                            @endif
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Fermer</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
+
                             </div>
                         </div>
+
                     </div>
+
                 </div>
             </section>
         </div>
@@ -214,4 +276,14 @@
         @endif
     @endforeach
 
+    <style>
+        .card:hover{
+            color: black;
+            background-color: transparent;
+        }
+        .card-body:hover{
+            color: black;
+            background-color: transparent;
+        }
+    </style>
 @endsection

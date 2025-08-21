@@ -66,7 +66,7 @@ class TestController extends Controller
         $completedTests = [];
 
         // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
-        $ceTestType = TestType::where('nom', 'tcf_canada')->first();
+        $ceTestType = TestType::where('examen', 'TCF')->first();
         if ($ceTestType) {
             foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {
@@ -86,7 +86,7 @@ class TestController extends Controller
         }
 
         // Même principe pour Compréhension Orale
-        $coTestType = TestType::where('nom', 'tcf_quebec')->first();
+        $coTestType = TestType::where('examen', 'TCF')->first();
         if ($coTestType) {
             foreach (ComprehensionOraleReponse::where('user_id', $user->id)
                 ->latest()->take(5)->get() as $reponse) {

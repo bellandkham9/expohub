@@ -62,9 +62,9 @@
                     <div id="social-part" class="mb-3">
                         <h5 class="fw-bold mb-2">Réseaux sociaux</h5>
                         <div class="social-icons">
-                            <div class="social-icon btn"><i class="bi bi-facebook text-white fs-4"></i></div>
-                            <div class="social-icon btn"><i class="bi bi-linkedin text-white fs-4"></i></div>
-                            <div class="social-icon btn"><i class="bi bi-instagram text-white fs-4"></i></div>
+                            <a href="https://www.facebook.com/immigrationforus?mibextid=ZbWKwL"><i class="bi bi-facebook m-2"></i></a>
+                             <a href="https://youtube.com/@exponentielimmigration?si=TpZ2KjA7mdJYpay2"><i class="bi bi-youtube m-2"></i></a>
+
                         </div>
                     </div>
 
@@ -108,7 +108,7 @@
                             <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-send">Envoyer le message</button>
+                        <button style="border-radius: 30px; background-color: #224194; color: white;" type="submit" class="btn btn-send">Envoyer le message</button>
                     </form>
                 </div>
             </div>

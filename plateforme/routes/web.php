@@ -229,10 +229,10 @@ Route::post('/notifications/send', [AdminUserController::class, 'sendMessage'])-
     
     // partie suggestion
 
-    Route::get('/suggestion', function () {
+ /*    Route::get('/suggestion', function () {
         return view('suggestion.suggestion');
     })->name('suggestion.suggestion');
-
+ */
     // fin partie suggestion
 
 

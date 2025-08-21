@@ -149,11 +149,14 @@ class StudentDashboardController extends Controller
             'target_date' => Carbon::now()->addMonths(3)
         ];
 
+         $testTypes1 = abonnement::all();
+
         return view('client.dashboard', compact(
             'userLevels',
             'completedTests',
             'learningGoal',
-            'testTypes'
+            'testTypes',
+            'testTypes1'
         ));
     }
 
