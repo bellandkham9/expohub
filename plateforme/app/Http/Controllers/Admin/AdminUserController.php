@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Models\abonnement;
 use App\Models\Souscription;
 use App\Models\HistoriqueTest;
+use Illuminate\Support\Facades\DB;
 
 class AdminUserController extends Controller
 {
@@ -176,6 +177,44 @@ return view('admin.gestion_utilisateur', [
 
 
 
+             // Récupérer l'année en cours et l'année précédente de manière dynamique
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+
+        // Récupérer les souscriptions de l'année en cours
+        $subscriptionsCurrentYear = Souscription::select(
+                DB::raw('MONTH(date_debut) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('date_debut', $currentYear)
+            ->groupBy(DB::raw('MONTH(date_debut)'))
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Récupérer les souscriptions de l'année précédente
+        $subscriptionsPreviousYear = Souscription::select(
+                DB::raw('MONTH(date_debut) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('date_debut', $previousYear)
+            ->groupBy(DB::raw('MONTH(date_debut)'))
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Créer des tableaux avec 12 mois, en remplissant les mois sans données avec 0
+        $dataCurrentYear = array_fill(1, 12, 0);
+        foreach ($subscriptionsCurrentYear as $month => $count) {
+            $dataCurrentYear[$month] = $count;
+        }
+
+        $dataPreviousYear = array_fill(1, 12, 0);
+        foreach ($subscriptionsPreviousYear as $month => $count) {
+            $dataPreviousYear[$month] = $count;
+        }
+
+
+
+
 
 
         return [
@@ -194,6 +233,10 @@ return view('admin.gestion_utilisateur', [
             'testsAbandonnesSemaine' => $testsAbandonnesSemaine,
             'subscriptionsPerMonth' => $subscriptionsPerMonth,
             'usersPerMonth' => $usersPerMonth,
+            'dataCurrentYear' => array_values($dataCurrentYear),
+            'dataPreviousYear' => array_values($dataPreviousYear),
+            'currentYear' => $currentYear,
+            'previousYear' => $previousYear,
         ];
     }
 
