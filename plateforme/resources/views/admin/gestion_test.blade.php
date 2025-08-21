@@ -183,6 +183,7 @@
                                             <td>{{ $abonnement->duree }}</td>
                                             <td>{{ $abonnement->description }}</td>
                                             <td>
+                                                
                                                 <button class="btn btn-sm btn-warning edit-abonnement-btn"
                                                     data-bs-toggle="modal" data-bs-target="#editAbonnementModal"
                                                     data-id="{{ $abonnement->id }}"
@@ -191,13 +192,13 @@
                                                     data-duree="{{ $abonnement->duree }}"
                                                     data-desc="{{ $abonnement->description }}"
                                                     data-test="{{ $abonnement->examen }}">
-                                                    Modifier
+                                                    <i class="fas fa-edit"></i>
                                                 </button>
 
                                                 <button class="btn btn-sm btn-danger delete-abonnement-btn"
                                                     data-bs-toggle="modal" data-bs-target="#deleteAbonnementModal"
                                                     data-id="{{ $abonnement->id }}">
-                                                    Supprimer
+                                                    <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </td>
                                         </tr>

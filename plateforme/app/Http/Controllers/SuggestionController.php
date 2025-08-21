@@ -14,12 +14,12 @@ class SuggestionController extends Controller
         $user = Auth::user();
 
         // Suggestions pour lui + générales
-        $suggestions = Suggestion::whereNull('user_id')
+        $LesSuggestion = Suggestion::whereNull('user_id')
             ->orWhere('user_id', $user->id)
             ->latest()
             ->get();
 
-        return view('suggestion.suggestion', compact('suggestions'));
+        return view('suggestion.suggestion', compact('LesSuggestion'));
     }
 
     public function generate()

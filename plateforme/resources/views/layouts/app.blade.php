@@ -103,7 +103,7 @@
                     </ul>
 
                     <div class="">
-                        <p class="mt-2 fw-bold">Suivez nous sur : <a href=""><i class="bi bi-facebook m-2"></i></a> <a href=""><i class="bi bi-linkedin m-2"></i></a> <a href=""><i class="bi bi-instagram m-2"></i></a></p>
+                        <p class="mt-2 fw-bold">Suivez nous sur : <a href="https://www.facebook.com/immigrationforus?mibextid=ZbWKwL"><i class="bi bi-facebook m-2"></i></a> <a href="https://youtube.com/@exponentielimmigration?si=TpZ2KjA7mdJYpay2"><i class="bi bi-youtube m-2"></i></a></p>
                     </div>
 
 

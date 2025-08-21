@@ -8,6 +8,91 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/admin-gestion-user.css'])
+
+
+    <style>
+        .card {
+    border-radius: 12px;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #198754, #20c997);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #157347, #1aa179);
+    transform: translateY(-1px);
+}
+.header-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+}
+
+.input-group-text {
+    border-radius: 8px 0 0 8px !important;
+    border-right: none !important;
+}
+
+.form-control {
+    border-radius: 0 8px 8px 0 !important;
+    border-left: none !important;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+.btn-primary {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+/* Responsivité améliorée */
+@media (max-width: 576px) {
+    .header-card {
+        padding: 1rem;
+    }
+    
+    .input-group-text {
+        padding: 0.5rem;
+    }
+    
+    .btn-primary {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-card {
+        margin: 0.5rem;
+    }
+}
+    </style>
 </head>
 
 <body>
@@ -95,26 +180,40 @@
                 <div class="row">
                     <div class="col-8 col-md-8 col-lg-8">
                         
-                <div class="header-card d-flex justify-content-between align-items-center">
-                    <div class="row justify-between" style="width: 100%">
-                        <div class="col-md-6">
-                            <h2 class="h4 m-4">Liste des utilisateurs</h2>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row g-3 align-items-center">
-                                <div class="col-md-5">
-                                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher...">
-                                </div>
+                <div class="header-card">
+    <div class="row align-items-center">
+        <!-- Titre -->
+        <div class="col-12 col-md-6 col-lg-5 mb-3 mb-md-0">
+            <h2 class="h4 mb-0">
+                <i class="fas fa-users me-2 text-primary"></i>Utilisateurs
+            </h2>
+        </div>
 
-                                <div class="col-md-7">
-                                    <button type="button" class="btn btn-primary mx-2 w-80 w-md-auto" data-bs-toggle="modal" data-bs-target="#addUser">
-                                        Ajouter un utilisateur
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+        <!-- Recherche et bouton -->
+        <div class="col-12 col-md-6 col-lg-7">
+            <div class="row g-2 align-items-center">
+                <!-- Champ recherche -->
+                <div class="col-8 col-sm-7 col-md-7 col-lg-6">
+                    <div class="input-group">
+                        
+                        <input type="text" id="searchInput" class="form-control border-start-0" 
+                               placeholder="Rechercher..." aria-label="Rechercher">
                     </div>
                 </div>
+
+                <!-- Bouton ajouter -->
+                <div class="col-4 col-sm-5 col-md-5 col-lg-6">
+                    <button type="button" class="btn btn-primary w-100" 
+                            data-bs-toggle="modal" data-bs-target="#addUser">
+                        <i class="fas fa-plus-circle me-1 d-none d-sm-inline"></i>
+                        <span class="d-none d-md-inline">Ajouter</span>
+                        <span class="d-md-none">+</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <div class="user-table">
                     <div class="table-responsive">
@@ -168,20 +267,48 @@
                     </div>
                 </div>
                     </div>
-                    <div class="col-4 col-md-4 col-lg-4">
-                        <form action="{{ route('notifications.send') }}" method="POST">
-                            @csrf
-                            <input type="text" name="title" placeholder="Titre" required>
-                            <textarea name="message" placeholder="Message" required></textarea>
-                            <select name="user_id">
-                                <option value="">Tous les utilisateurs</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                            <button type="submit">Envoyer</button>
-                        </form>
+                    <div class="col-12 col-md-8 col-lg-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h6 class="mb-0">
+                <i class="fas fa-bell me-2"></i>Envoyer une notification
+            </h6>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('notifications.send') }}" method="POST">
+                @csrf
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-semibold">Titre *</label>
+                    <input type="text" class="form-control" id="title" name="title" 
+                           placeholder="Titre de la notification" required>
+                </div>
 
+                <div class="mb-3">
+                    <label for="message" class="form-label fw-semibold">Message *</label>
+                    <textarea class="form-control" id="message" name="message" 
+                              rows="3" placeholder="Contenu du message" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="user_id" class="form-label fw-semibold">Destinataire</label>
+                    <select class="form-select" id="user_id" name="user_id">
+                        <option value="">Tous les utilisateurs</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                    <div class="form-text">Laissez vide pour envoyer à tous les utilisateurs</div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane me-2"></i>Envoyer la notification
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
                     </div>
                 </div>
 
