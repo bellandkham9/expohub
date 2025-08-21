@@ -1,7 +1,5 @@
 // admin-stats.js
 
-
-
 // ===========================
 // Menu mobile
 // ===========================
@@ -20,27 +18,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// admin-stats.js
+
+// ... (votre code existant pour le menu mobile) ...
+
 // ===========================
 // Graphique Chart.js
 // ===========================
 
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("statisticsChart");
-    if (!canvas) return; // Si le canvas n'existe pas, on quitte
+    if (!canvas) return;
 
-    // Assurez-vous que le canvas a une hauteur
     canvas.style.height = "400px";
 
     const ctx = canvas.getContext("2d");
 
     const data = {
         labels: [
-            "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ],
         datasets: [
             {
-                label: "2025",
-                data: [1200, 1900, 1700, 2200, 2500, 2100, 1800, 1500, 2000, 2300, 2400, 1500],
+                label: currentYear, // Utilisation de l'année en cours
+                data: monthlyDataCurrentYear, // Utilisation des données dynamiques
                 borderColor: "#4e73df",
                 backgroundColor: "rgba(78, 115, 223, 0.2)",
                 tension: 0.4,
@@ -50,8 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 borderWidth: 3
             },
             {
-                label: "2024",
-                data: [1000, 1600, 1400, 1800, 2000, 1700, 1500, 1300, 1600, 1900, 2100, 1600],
+                label: previousYear, // Utilisation de l'année précédente
+                data: monthlyDataPreviousYear, // Utilisation des données dynamiques
                 borderColor: "#1cc88a",
                 backgroundColor: "rgba(28, 200, 138, 0.2)",
                 tension: 0.4,
@@ -95,15 +96,22 @@ document.addEventListener("DOMContentLoaded", function () {
         data: data,
         options: options,
     });
+});
 
-    // Gestion du tri (change les données aléatoirement pour l'exemple)
-    const sortSelect = document.querySelector(".sort-select");
-    if (sortSelect) {
-        sortSelect.addEventListener("change", function () {
-            statisticsChart.data.datasets.forEach((dataset) => {
-                dataset.data = dataset.data.map(() => Math.floor(Math.random() * 2500));
-            });
-            statisticsChart.update();
+
+
+
+// Impresion de la page
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Récupérer le bouton d'impression
+    const printButton = document.getElementById("btn-print");
+
+    // S'assurer que le bouton existe avant d'ajouter l'écouteur d'événement
+    if (printButton) {
+        printButton.addEventListener("click", function() {
+            // Appeler la fonction d'impression du navigateur
+            window.print();
         });
     }
-});
+})

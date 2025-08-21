@@ -306,8 +306,6 @@
         </div>
     </div>
 
-
-
     <!-- Modal Ajout -->
     <div class="modal fade" id="ajoutAbonnementModal" tabindex="-1" aria-labelledby="ajoutAbonnementLabel"
         aria-hidden="true">

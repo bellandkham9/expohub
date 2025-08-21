@@ -12,8 +12,11 @@ use Carbon\Carbon;
 use App\Models\abonnement;
 use App\Models\Souscription;
 use App\Models\HistoriqueTest;
+use Illuminate\Support\Facades\DB;
 use App\Models\TestType;
 use Illuminate\Support\Facades\Auth;
+
+
 class AdminUserController extends Controller
 {
     // ... vos autres méthodes (index, destroy, etc.)
@@ -159,6 +162,44 @@ class AdminUserController extends Controller
             return Carbon::createFromDate(null, $m, 1)->format('M');
         });
 
+             // Récupérer l'année en cours et l'année précédente de manière dynamique
+        $currentYear = date('Y');
+        $previousYear = $currentYear - 1;
+
+        // Récupérer les souscriptions de l'année en cours
+        $subscriptionsCurrentYear = Souscription::select(
+                DB::raw('MONTH(date_debut) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('date_debut', $currentYear)
+            ->groupBy(DB::raw('MONTH(date_debut)'))
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Récupérer les souscriptions de l'année précédente
+        $subscriptionsPreviousYear = Souscription::select(
+                DB::raw('MONTH(date_debut) as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('date_debut', $previousYear)
+            ->groupBy(DB::raw('MONTH(date_debut)'))
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Créer des tableaux avec 12 mois, en remplissant les mois sans données avec 0
+        $dataCurrentYear = array_fill(1, 12, 0);
+        foreach ($subscriptionsCurrentYear as $month => $count) {
+            $dataCurrentYear[$month] = $count;
+        }
+
+        $dataPreviousYear = array_fill(1, 12, 0);
+        foreach ($subscriptionsPreviousYear as $month => $count) {
+            $dataPreviousYear[$month] = $count;
+        }
+
+
+
+
         // Total des souscriptions par mois
         $subscriptionsPerMonth = [];
         foreach (range(1, 12) as $month) {
@@ -191,6 +232,10 @@ class AdminUserController extends Controller
             'testsAbandonnesSemaine' => $testsAbandonnesSemaine,
             'subscriptionsPerMonth' => $subscriptionsPerMonth,
             'usersPerMonth' => $usersPerMonth,
+            'dataCurrentYear' => array_values($dataCurrentYear),
+            'dataPreviousYear' => array_values($dataPreviousYear),
+            'currentYear' => $currentYear,
+            'previousYear' => $previousYear,
         ];
     }
 

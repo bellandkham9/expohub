@@ -529,24 +529,7 @@
 
 
 
-        // // Gérer la modale de suppression
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const supprimerModal = document.getElementById('supprimerUserModal');
-        //     supprimerModal.addEventListener('show.bs.modal', event => {
-        //         const button = event.relatedTarget;
-        //         const userId = button.getAttribute('data-user-id');
-        //         const form = supprimerModal.querySelector('#deleteUserForm');
-        //         const userIdInput = supprimerModal.querySelector('#deleteUserId');
-                
-        //         form.action = `/admin/users/${userId}`; // Mettez à jour avec votre route
-        //         userIdInput.value = userId;
-        //     });
-        // });
-
-
-
     document.addEventListener('DOMContentLoaded', function() {
-    // ... votre autre code JavaScript ...
 
     // Gérer la modale de suppression
     const supprimerModal = document.getElementById('supprimerUserModal');
