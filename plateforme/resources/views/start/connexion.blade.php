@@ -139,18 +139,18 @@
             <div class="contact-form">
 
                 <form action="{{route('auth.connexion')}}" method="POST">
-    @csrf
-    
-    <div class="mb-3">
-        <input type="text" class="form-control" id="email" name="email" required placeholder="E-mail">
-    </div>
+                    @csrf
+                    
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="email" name="email" required placeholder="E-mail">
+                    </div>
 
-    <div class="mb-3">
-        <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
-    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Mot de passe">
+                    </div>
 
-    <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
-</form>
+                    <button id="sendmessage" type="submit" class="btn btn-send">Connexion</button>
+                </form>
             </div>
             
         </div>
@@ -160,11 +160,10 @@
                     <img src="{{ asset('images/google.png') }}" class="m-2" alt="Logo"> Continuer avec Google
                 </a>
             </p>
-
             <p class="">
-<a href="{{ route('social.redirect', 'facebook') }}" class="d-block btn btn-light btn-facebook">
-                    <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
-</a>
+                <a href="{{ route('social.redirect', 'facebook') }}" class="d-block btn btn-light btn-facebook">
+                                    <img src="{{ asset('images/facebook.png') }}" class="m-2" alt="Logo"> Continuer avec Facebook
+                </a>
             </p>
             <p class="text-center"> 
                 <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>  

@@ -258,15 +258,6 @@
 });
                 }
 
-
-                // Gestion des clics sur les tests
-     /*            document.querySelectorAll('.start-test-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const testType = this.getAttribute('data-test-type');
-                        window.location.href = `/test/${testType}`;
-                    });
-                }); */
             });
         </script>
 

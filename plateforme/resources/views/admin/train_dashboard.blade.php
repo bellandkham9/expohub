@@ -359,7 +359,6 @@
     </div>
 
 
-
     <script>
         // Handle success/error messages with beautiful SweetAlert dialogs
         document.addEventListener("DOMContentLoaded", function() {
