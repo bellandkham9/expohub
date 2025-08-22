@@ -19,6 +19,13 @@ class ComprehensionOraleController extends Controller
     public function index()
     {
         $questions = ComprehensionOrale::inRandomOrder()->get();
+
+         if ($questions->isEmpty()) {
+            return view('test.indisponible', [
+                'test' => 'Comprehension Ecrite'
+            ]);
+        }
+        
         return view('test.comprehension_orale', compact('questions'));
     }
 

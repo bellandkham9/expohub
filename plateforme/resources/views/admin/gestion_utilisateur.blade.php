@@ -12,86 +12,88 @@
 
     <style>
         .card {
-    border-radius: 12px;
-    transition: transform 0.2s ease;
-}
+            border-radius: 12px;
+            transition: transform 0.2s ease;
+        }
 
-.card:hover {
-    transform: translateY(-2px);
-}
+        .card:hover {
+            transform: translateY(-2px);
+        }
 
-.form-control:focus, .form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
 
-.btn-success {
-    background: linear-gradient(45deg, #198754, #20c997);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 600;
-}
+        .btn-success {
+            background: linear-gradient(45deg, #198754, #20c997);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
 
-.btn-success:hover {
-    background: linear-gradient(45deg, #157347, #1aa179);
-    transform: translateY(-1px);
-}
-.header-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 1.5rem;
-}
+        .btn-success:hover {
+            background: linear-gradient(45deg, #157347, #1aa179);
+            transform: translateY(-1px);
+        }
 
-.input-group-text {
-    border-radius: 8px 0 0 8px !important;
-    border-right: none !important;
-}
+        .header-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
 
-.form-control {
-    border-radius: 0 8px 8px 0 !important;
-    border-left: none !important;
-}
+        .input-group-text {
+            border-radius: 8px 0 0 8px !important;
+            border-right: none !important;
+        }
 
-.form-control:focus {
-    box-shadow: none;
-    border-color: #dee2e6;
-}
+        .form-control {
+            border-radius: 0 8px 8px 0 !important;
+            border-left: none !important;
+        }
 
-.btn-primary {
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #dee2e6;
+        }
 
-.btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-}
+        .btn-primary {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
 
-/* Responsivité améliorée */
-@media (max-width: 576px) {
-    .header-card {
-        padding: 1rem;
-    }
-    
-    .input-group-text {
-        padding: 0.5rem;
-    }
-    
-    .btn-primary {
-        padding: 0.5rem;
-    }
-}
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
 
-@media (max-width: 768px) {
-    .header-card {
-        margin: 0.5rem;
-    }
-}
+        /* Responsivité améliorée */
+        @media (max-width: 576px) {
+            .header-card {
+                padding: 1rem;
+            }
+
+            .input-group-text {
+                padding: 0.5rem;
+            }
+
+            .btn-primary {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-card {
+                margin: 0.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -104,20 +106,25 @@
 
             <div class="col-md-9 col-lg-10 main-content">
                 {{-- Validation de suppression de l'utilisateur --}}
-        <div class="main-content">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="main-content">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
                 </div>
-            @endif
-        </div>
 
                 <div class="row g-5 m-3">
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/user.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
+                        <div
+                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span
+                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
+                                style="background-color: #707070; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/user.png') }}" alt="Logo"
+                                    style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
@@ -129,16 +136,21 @@
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #707070; font-weight: bold;">{{ $usersLastWeek }}</span> que la semaine passée
+                                    <span style="color: #707070; font-weight: bold;">{{ $usersLastWeek }}</span> que la
+                                    semaine passée
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/house.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
+                        <div
+                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span
+                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
+                                style="background-color: #0DF840; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/house.png') }}" alt="Logo"
+                                    style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
@@ -150,298 +162,334 @@
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #0DF840; font-weight: bold;">{{ $nombreUtilisateursActifsCetteSemaine }}</span> cette semaine
+                                    <span
+                                        style="color: #0DF840; font-weight: bold;">{{ $nombreUtilisateursActifsCetteSemaine }}</span>
+                                    cette semaine
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12 col-sm-6 col-lg-4">
-                        <div class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
-                            <span class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2" style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
-                                <img src="{{ asset('images/chart.png') }}" alt="Logo" style="max-width: 70%; max-height: 70%;">
+                        <div
+                            class="stat-card position-relative d-flex flex-column align-items-end bg-white rounded-3 p-3 shadow-sm h-100">
+                            <span
+                                class="position-absolute top-0 start-0 translate-middle badge d-flex align-items-center justify-content-center p-2"
+                                style="background-color: #BB1C1E; width: 45px; height: 45px; border-radius: 8px; margin-left: 40px;">
+                                <img src="{{ asset('images/chart.png') }}" alt="Logo"
+                                    style="max-width: 70%; max-height: 70%;">
                             </span>
 
                             <div class="w-100">
                                 <div class="d-flex flex-column align-items-end">
                                     <div>
                                         <div class="text-muted small">Utilisateurs inactifs</div>
-                                        <div class="h4 mb-0">{{$nombreUtilisateursInactifs}}</div>
+                                        <div class="h4 mb-0">{{ $nombreUtilisateursInactifs }}</div>
                                     </div>
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #BB1C1E; font-weight: bold;">{{$nombreUtilisateursInactifsSemainepassé}}</span> par rapport à la semaine passée
+                                    <span
+                                        style="color: #BB1C1E; font-weight: bold;">{{ $nombreUtilisateursInactifsSemainepassé }}</span>
+                                    par rapport à la semaine passée
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-8 col-md-8 col-lg-8">
-                        
-                <div class="header-card">
-    <div class="row align-items-center">
-        <!-- Titre -->
-        <div class="col-12 col-md-6 col-lg-5 mb-3 mb-md-0">
-            <h2 class="h4 mb-0">
-                <i class="fas fa-users me-2 text-primary"></i>Utilisateurs
-            </h2>
-        </div>
+                <div class="row g-5 m-3">
+                    <div class="col-12">
 
-        <!-- Recherche et bouton -->
-        <div class="col-12 col-md-6 col-lg-7">
-            <div class="row g-2 align-items-center">
-                <!-- Champ recherche -->
-                <div class="col-8 col-sm-7 col-md-7 col-lg-6">
-                    <div class="input-group">
-                        
-                        <input type="text" id="searchInput" class="form-control border-start-0" 
-                               placeholder="Rechercher..." aria-label="Rechercher">
-                    </div>
-                </div>
+                        <div class="header-card">
+                            <div class="row align-items-center">
+                                <!-- Titre -->
+                                <div class="col-12 col-md-6 col-lg-5 mb-3 mb-md-0">
+                                    <h2 class="h4 mb-0">
+                                        <i class="fas fa-users me-2 "></i>Utilisateurs
+                                    </h2>
+                                </div>
 
-                <!-- Bouton ajouter -->
-                <div class="col-4 col-sm-5 col-md-5 col-lg-6">
-                    <button type="button" class="btn btn-primary w-100" 
-                            data-bs-toggle="modal" data-bs-target="#addUser">
-                        <i class="fas fa-plus-circle me-1 d-none d-sm-inline"></i>
-                        <span class="d-none d-md-inline">Ajouter</span>
-                        <span class="d-md-none">+</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                                <!-- Recherche et bouton -->
+                                <div class="col-12 col-md-6 col-lg-7">
+                                    <div class="row g-2 align-items-center">
+                                        <!-- Champ recherche -->
+                                        <div class="col-8 col-sm-7 col-md-7 col-lg-6">
+                                            <div class="input-group">
 
-                <div class="user-table">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="userTable">
-                            <thead>
-                                <tr class="table-dark">
-                                    <th><input type="checkbox" class="form-check-input"></th>
-                                    <th class="text-light">Utilisateur</th>
-                                    <th class="text-light">Adresse email</th>
-                                    <th class="text-light">Rôle</th>
-                                    <th class="text-light">Statut</th>Abonnement
-                                    <th class="text-light">Abonnement</th>
-                                    <th class="text-light">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($users as $user)
-                                <tr>
-                                    <td><input type="checkbox" class="form-check-input"></td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td><span class="role-badge admin-badge">{{ $user->role }}</span></td>
-                                    <td class="status-text">
-                                        @if($user->isOnline())
-                                            En ligne
-                                        @else
-                                            Hors ligne
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-primary btn-sm"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#abonnementModal"
-                                            data-user-id="{{ $user->id }}">
-                                            Abonnement
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary action-btn me-1" type="button" data-bs-toggle="modal" data-bs-target="#modifierUserModal" data-user-id="{{ $user->id }}" data-user-name="{{ $user->name }}" data-user-email="{{ $user->email }}" data-user-role="{{ $user->role }}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                        
-                                        <button class="btn btn-sm btn-outline-danger action-btn" type="button" data-bs-toggle="modal" data-bs-target="#supprimerUserModal" data-user-id="{{ $user->id }}">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                <input type="text" id="searchInput"
+                                                    class="form-control border-start-0" placeholder="Rechercher..."
+                                                    aria-label="Rechercher">
+                                            </div>
+                                        </div>
+
+                                        <!-- Bouton ajouter -->
+                                        <div class="col-4 col-sm-5 col-md-5 col-lg-6">
+                                            <button style="background-color: #224194; color: white; " type="button" class="btn  w-100" data-bs-toggle="modal"
+                                                data-bs-target="#addUser">
+                                                <i class="fas fa-plus-circle me-1 d-none d-sm-inline"></i>
+                                                <span class="d-none d-md-inline">Ajouter</span>
+                                                <span class="d-md-none">+</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="user-table">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0" id="userTable">
+                                    <thead>
+                                        <tr class="table-dark">
+                                            <th><input type="checkbox" class="form-check-input"></th>
+                                            <th class="text-light">Utilisateur</th>
+                                            <th class="text-light">Adresse email</th>
+                                            <th class="text-light">Rôle</th>
+                                            <th class="text-light">Statut</th>
+                                            <th class="text-light">Abonnement</th>
+                                            <th class="text-light">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($users as $user)
+                                            <tr>
+                                                <td><input type="checkbox" class="form-check-input"></td>
+                                                <td>{{ $user->name }}</td>
+                                                <td>{{ $user->email }}</td>
+                                                <td><span class="role-badge admin-badge">{{ $user->role }}</span>
+                                                </td>
+                                                <td class="status-text">
+                                                    @if ($user->isOnline())
+                                                        En ligne
+                                                    @else
+                                                        Hors ligne
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <button style="background-color: #224194; color: white;" class="btn  btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#abonnementModal"
+                                                        data-user-id="{{ $user->id }}">
+                                                        Abonnement
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary action-btn me-1"
+                                                        type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#modifierUserModal"
+                                                        data-user-id="{{ $user->id }}"
+                                                        data-user-name="{{ $user->name }}"
+                                                        data-user-email="{{ $user->email }}"
+                                                        data-user-role="{{ $user->role }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-outline-danger action-btn"
+                                                        type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#supprimerUserModal"
+                                                        data-user-id="{{ $user->id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
-                    </div>
-                    <div class="col-12 col-md-8 col-lg-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
+                <!-- Bouton flottant -->
+<button id="btnNotif" class="btn position-fixed" 
+        style="bottom: 30px; right: 30px; border-radius:50%; width:60px; height:60px; z-index:1050; background-color: #224194;">
+    <i class="fas fa-bell" style="color: #FEF8E7;"></i>
+</button>
+
+
+<div id="notifCard" class="d-none position-fixed shadow-sm border-0"
+     style="bottom: 100px; right: 30px; width: 320px; z-index:1050;">
+    <div class="card">
+        <div class="card-header  text-white" style="background-color: #224194;">
             <h6 class="mb-0">
                 <i class="fas fa-bell me-2"></i>Envoyer une notification
             </h6>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
             <form action="{{ route('notifications.send') }}" method="POST">
                 @csrf
-                
                 <div class="mb-3">
                     <label for="title" class="form-label fw-semibold">Titre *</label>
-                    <input type="text" class="form-control" id="title" name="title" 
-                           placeholder="Titre de la notification" required>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Titre de la notification" required>
                 </div>
-
                 <div class="mb-3">
                     <label for="message" class="form-label fw-semibold">Message *</label>
-                    <textarea class="form-control" id="message" name="message" 
-                              rows="3" placeholder="Contenu du message" required></textarea>
+                    <textarea class="form-control" id="message" name="message" rows="3" placeholder="Contenu du message" required></textarea>
                 </div>
-
                 <div class="mb-3">
                     <label for="user_id" class="form-label fw-semibold">Destinataire</label>
                     <select class="form-select" id="user_id" name="user_id">
                         <option value="">Tous les utilisateurs</option>
-                        @foreach($users as $user)
+                        @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                     <div class="form-text">Laissez vide pour envoyer à tous les utilisateurs</div>
                 </div>
-
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn" style="background-color: #224194; color: white;">
                         <i class="fas fa-paper-plane me-2"></i>Envoyer la notification
                     </button>
                 </div>
             </form>
         </div>
     </div>
-                    </div>
-                </div>
+</div>
+<script>
+    const btnNotif = document.getElementById('btnNotif');
+    const notifCard = document.getElementById('notifCard');
+
+    btnNotif.addEventListener('click', () => {
+        notifCard.classList.toggle('d-none'); // Affiche ou cache la carte
+    });
+</script>
 
             </div>
         </div>
     </div>
 
     <div class="modal fade" id="addUser" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addUserLabel">Ajouter un utilisateur</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addUserForm" action="{{ route('admin.utilisateur.creer') }}" method="POST">
-                    @csrf
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addUserLabel">Ajouter un utilisateur</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUserForm" action="{{ route('admin.utilisateur.creer') }}" method="POST">
+                        @csrf
 
-                     @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="userName" name="name"
+                                placeholder="Nom de l'utilisateur" required>
+                            <label for="userName">Nom de l'utilisateur</label>
                         </div>
-                    @endif
-                    
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="userName" name="name" placeholder="Nom de l'utilisateur" required>
-                        <label for="userName">Nom de l'utilisateur</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="userEmail" name="email" placeholder="name@example.com" required>
-                        <label for="userEmail">Email de l'utilisateur</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="userPassword" name="password" placeholder="Mot de passe" required>
-                        <label for="userPassword">Mot de passe</label>
-                    </div>
-                    <select class="form-select form-select-sm" name="role" aria-label="Sélectionner le rôle" required>
-                        <option value="user" selected>Utilisateur</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" form="addUserForm" class="btn btn-primary">Ajouter un utilisateur</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-   
-    {{-- Modiier les utilisateurs --}}
-<div class="modal fade" id="modifierUserModal" tabindex="-1" aria-labelledby="modifierUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="modifierUserModalLabel">Modifier un utilisateur</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editUserForm" action="" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="hidden" name="user_id" id="editUserId">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="editUserName" name="name" placeholder="Nom">
-                        <label for="editUserName">Nom</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="editUserEmail" name="email" placeholder="name@example.com">
-                        <label for="editUserEmail">Email de l'utilisateur</label>
-                    </div>
-                    <select class="form-select form-select-sm" name="role" id="editUserRole" aria-label="Sélectionner le rôle">
-                        <option value="">Sélectionner le rôle</option>
-                        <option value="admin">Admin</option>
-                        <option value="user">Utilisateur</option>
-                    </select>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="submit" form="editUserForm" class="btn btn-primary">Sauvegarder les modifications</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-    {{-- Supprimer les utilisateurs --}}
-        <div class="modal fade" id="supprimerUserModal" tabindex="-1" aria-labelledby="supprimerUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="supprimerUserModalLabel">Supprimer un utilisateur</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Voulez-vous vraiment supprimer cet utilisateur ? Cette action est irréversible.</p>
-                        <form id="deleteUserForm" action="" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="user_id" id="deleteUserId">
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" form="deleteUserForm" class="btn btn-danger">Supprimer l'utilisateur</button>
-                    </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="userEmail" name="email"
+                                placeholder="name@example.com" required>
+                            <label for="userEmail">Email de l'utilisateur</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="userPassword" name="password"
+                                placeholder="Mot de passe" required>
+                            <label for="userPassword">Mot de passe</label>
+                        </div>
+                        <select class="form-select form-select-sm" name="role" aria-label="Sélectionner le rôle"
+                            required>
+                            <option value="user" selected>Utilisateur</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" form="addUserForm" class="btn btn-primary">Ajouter un utilisateur</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        
+    {{-- Modiier les utilisateurs --}}
+    <div class="modal fade" id="modifierUserModal" tabindex="-1" aria-labelledby="modifierUserModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modifierUserModalLabel">Modifier un utilisateur</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm" action="" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="user_id" id="editUserId">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="editUserName" name="name"
+                                placeholder="Nom">
+                            <label for="editUserName">Nom</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="editUserEmail" name="email"
+                                placeholder="name@example.com">
+                            <label for="editUserEmail">Email de l'utilisateur</label>
+                        </div>
+                        <select class="form-select form-select-sm" name="role" id="editUserRole"
+                            aria-label="Sélectionner le rôle">
+                            <option value="">Sélectionner le rôle</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">Utilisateur</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" form="editUserForm" class="btn btn-primary">Sauvegarder les
+                        modifications</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    {{-- Supprimer les utilisateurs --}}
+    <div class="modal fade" id="supprimerUserModal" tabindex="-1" aria-labelledby="supprimerUserModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="supprimerUserModalLabel">Supprimer un utilisateur</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Voulez-vous vraiment supprimer cet utilisateur ? Cette action est irréversible.</p>
+                    <form id="deleteUserForm" action="" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="user_id" id="deleteUserId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" form="deleteUserForm" class="btn btn-danger">Supprimer
+                        l'utilisateur</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <!-- Modal modification de l'abonnement -->
-            <div class="modal fade" id="abonnementModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form method="POST" action="{{ route('users.abonnement') }}">
-                    @csrf
-                    <input type="hidden" name="user_id" id="modal_user_id">
+    <!-- Modal modification de l'abonnement -->
+    <div class="modal fade" id="abonnementModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('users.abonnement') }}">
+                @csrf
+                <input type="hidden" name="user_id" id="modal_user_id">
 
-                    <div class="modal-content">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Attribuer un abonnement</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
                         <select name="abonnement_id" class="form-select">
-                            @foreach($abonnements as $abonnement)
+                            @foreach ($abonnements as $abonnement)
                                 <option value="{{ $abonnement->id }}">
                                     {{ $abonnement->examen }} ({{ $abonnement->duree }} jours)
                                 </option>
@@ -451,15 +499,10 @@
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Attribuer</button>
                     </div>
-                    </div>
-                </form>
-            </div>
-            </div>
-        
-            
-
-
-
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -489,69 +532,64 @@
                 });
             }
         });
-        
-// Gérer la modale de modification
-    document.addEventListener('DOMContentLoaded', function() {
-        const modifierModal = document.getElementById('modifierUserModal');
-        if (modifierModal) {
-            modifierModal.addEventListener('show.bs.modal', event => {
-                const button = event.relatedTarget;
-                const userId = button.getAttribute('data-user-id');
-                const userName = button.getAttribute('data-user-name');
-                const userEmail = button.getAttribute('data-user-email');
-                const userRole = button.getAttribute('data-user-role');
 
-                const form = modifierModal.querySelector('#editUserForm');
-                const nameInput = modifierModal.querySelector('#editUserName');
-                const emailInput = modifierModal.querySelector('#editUserEmail');
-                const roleSelect = modifierModal.querySelector('#editUserRole');
+        // Gérer la modale de modification
+        document.addEventListener('DOMContentLoaded', function() {
+            const modifierModal = document.getElementById('modifierUserModal');
+            if (modifierModal) {
+                modifierModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-user-id');
+                    const userName = button.getAttribute('data-user-name');
+                    const userEmail = button.getAttribute('data-user-email');
+                    const userRole = button.getAttribute('data-user-role');
 
-                // Mise à jour de l'action du formulaire pour cibler la bonne route
-                form.action = `/admin/utilisateurs/${userId}`;
-                
-                // Pré-remplissage des champs avec les données récupérées
-                nameInput.value = userName;
-                emailInput.value = userEmail;
-                roleSelect.value = userRole; // Le script remplit le select
-            });
-        }
-    });
+                    const form = modifierModal.querySelector('#editUserForm');
+                    const nameInput = modifierModal.querySelector('#editUserName');
+                    const emailInput = modifierModal.querySelector('#editUserEmail');
+                    const roleSelect = modifierModal.querySelector('#editUserRole');
+
+                    // Mise à jour de l'action du formulaire pour cibler la bonne route
+                    form.action = `/admin/utilisateurs/${userId}`;
+
+                    // Pré-remplissage des champs avec les données récupérées
+                    nameInput.value = userName;
+                    emailInput.value = userEmail;
+                    roleSelect.value = userRole; // Le script remplit le select
+                });
+            }
+        });
 
         //Script pour déclecnché le modal de l'abonnement
-        document.addEventListener('DOMContentLoaded', function () {
-        var abonnementModal = document.getElementById('abonnementModal');
-        abonnementModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; 
-            var userId = button.getAttribute('data-user-id');
-            document.getElementById('modal_user_id').value = userId;
+        document.addEventListener('DOMContentLoaded', function() {
+            var abonnementModal = document.getElementById('abonnementModal');
+            abonnementModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var userId = button.getAttribute('data-user-id');
+                document.getElementById('modal_user_id').value = userId;
+            });
         });
-    });
 
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
 
-    // Gérer la modale de suppression
-    const supprimerModal = document.getElementById('supprimerUserModal');
-    if (supprimerModal) {
-        supprimerModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
-            const userId = button.getAttribute('data-user-id');
-            const form = supprimerModal.querySelector('#deleteUserForm');
-            const userIdInput = supprimerModal.querySelector('#deleteUserId');
+            // Gérer la modale de suppression
+            const supprimerModal = document.getElementById('supprimerUserModal');
+            if (supprimerModal) {
+                supprimerModal.addEventListener('show.bs.modal', event => {
+                    const button = event.relatedTarget;
+                    const userId = button.getAttribute('data-user-id');
+                    const form = supprimerModal.querySelector('#deleteUserForm');
+                    const userIdInput = supprimerModal.querySelector('#deleteUserId');
 
-            // Mise à jour de l'action du formulaire avec la route correcte
-            form.action = `/admin/utilisateurs/${userId}`;
-            userIdInput.value = userId;
+                    // Mise à jour de l'action du formulaire avec la route correcte
+                    form.action = `/admin/utilisateurs/${userId}`;
+                    userIdInput.value = userId;
+                });
+            }
         });
-    }
-});
-
-
     </script>
 </body>
 
 </html>
-
-
-

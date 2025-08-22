@@ -39,6 +39,12 @@ class ExpressionOraleController1 extends Controller
             return back()->with('error', 'Aucune tâche disponible pour le moment.');
         }
 
+        if ($taches->isEmpty()) {
+            return view('test.indisponible', [
+                'test' => 'Comprehension Ecrite'
+            ]);
+        }
+        
         $tacheActive = $taches->first();
 
         $reponses = ExpressionOraleReponse::where('user_id', $user->id)

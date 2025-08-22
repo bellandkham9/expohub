@@ -1,20 +1,22 @@
 <nav class="navbar navbar-expand-lg bg-white sticky-top">
     <div class="container">
+        <!-- Logo -->
         <a class="navbar-brand fw-bold text-primary" href="{{ route('start.home') }}">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
         </a>
 
+        <!-- Menu central -->
         <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
             <ul class="navbar-nav gap-3">
                 <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Tableau de bord</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('test.choix_test') }}">Tests</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('client.history') }}">Historique</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('suggestion.suggestion') }}">Stratégie</a></li>
-                <li class="nav-item"><a class="nav-link" target="blank"
-                        href="https://www.exponentielimmigration.com/">Exponentiel Immigration</a></li>
+                <li class="nav-item"><a class="nav-link" target="_blank" href="https://www.exponentielimmigration.com/">Exponentiel Immigration</a></li>
             </ul>
         </div>
 
+        <!-- Droits -->
         <div class="d-flex align-items-center gap-3">
 
             @php
@@ -22,79 +24,146 @@
                     ->orWhere('user_id', auth()->id())
                     ->orderBy('created_at', 'desc')
                     ->get();
+                $unreadCount = $notifications->where('read', false)->count();
             @endphp
 
+            <!-- Bouton notifications -->
+            <button class="btn position-relative" id="btnNotifications">
+            <i class="bi bi-bell " style="font-size: 1.5rem;"></i>
+            @if($unreadCount > 0)
+                <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ $unreadCount }}
+                    <span class="visually-hidden">notifications non lues</span>
+                </span>
+            @endif
+        </button>
+
+            <!-- Dropdown utilisateur -->
             <div class="dropdown">
-                @php
-                    $unreadCount = $notifications->where('read', false)->count();
-                    $iconClass = $unreadCount > 0 ? 'text-success' : 'text-secondary';
-                @endphp
-
-                <button class="btn dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="dropdownNotif">
-                    <i class="bi bi-bell {{ $iconClass }}" style="font-size: 1.5rem;"></i>
-                    @if($unreadCount > 0)
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{ $unreadCount }}
-                            <span class="visually-hidden">notifications non lues</span>
-                        </span>
-                    @endif
-                </button>
-                
-                <ul class="dropdown-menu" aria-labelledby="dropdownNotif">
-                    @foreach ($notifications as $notif)
-                        <li class="position-relative">
-                            <a href="#" class="dropdown-item notification-link d-flex flex-column py-2 border-bottom"
-                                data-id="{{ $notif->id }}" data-url="{{ route('admin.notifications.read', $notif) }}"
-                                style="white-space: normal;">
-                                <div style="width: 300px;">
-                                    <div style="width: 250px;">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <strong class="{{ $notif->read ? 'text-muted' : 'text-dark' }}">
-                                                {{ $notif->title }}
-                                            </strong>
-                                            <small class="text-secondary">
-                                                {{ $notif->created_at->format('d/m H:i') }}
-                                            </small>
-                                        </div>
-                                        <span class="{{ $notif->read ? 'text-muted' : 'text-body' }}">
-                                            {{ $notif->message }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-1 notif-remove"
-                                    data-id="{{ $notif->id }}" style="line-height:1; font-weight:bold;">×</button>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <div class="dropdown text-end"> 
-                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-                    data-bs-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="d-flex link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="d-flex align-items-center">
                         <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                            alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                             alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
                         <div class="fw-bold ms-2">{{ auth()->user()->name ?? 'Utilisateur' }}</div>
                     </div>
                 </a>
-
-                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('client.mon-compte') }}">Mon compte</a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a>
-                    </li>
+                <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" href="{{ route('client.mon-compte') }}">Mon compte</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a></li>
                 </ul>
             </div>
         </div>
+
+        <!-- Bouton mobile -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+    const notifications = @json($notifications);
+    const btn = document.getElementById('btnNotifications');
+    const badge = document.getElementById('notifBadge');
+
+    btn.addEventListener('click', function(){
+
+        if(notifications.length === 0){
+            Swal.fire('Aucune notification');
+            return;
+        }
+
+        // Créer la liste scrollable
+        let content = '<div style="max-height: 300px; overflow-y:auto;">';
+        notifications.forEach(notif => {
+            const readClass = notif.read ? 'text-muted' : 'text-dark';
+            content += `
+                <div class="notif-item d-flex justify-content-between align-items-start p-2 border-bottom" data-id="${notif.id}" style="position:relative; cursor:pointer;">
+                    <div>
+                        <strong class="${readClass}">${notif.title}</strong><br>
+                        <small class="text-secondary">${notif.created_at}</small><br>
+                        <span class="${readClass}">${notif.message}</span>
+                    </div>
+                    <button class="btn-close  btn-sm" data-id="${notif.id}" style="position:absolute; top:5px; right:5px; color:red;"></button>
+                </div>
+            `;
+        });
+        content += '</div>';
+
+        Swal.fire({
+            title: 'Notifications',
+            html: content,
+            showCloseButton: true,
+            showConfirmButton: false,
+            width: 400,
+            didOpen: () => {
+
+                // Marquer comme lu au clic sur la notification
+                document.querySelectorAll('.notif-item').forEach(item => {
+                    item.addEventListener('click', function(e){
+                        if(e.target.classList.contains('btn-close')) return; // Ignorer le bouton supprimer
+                        const id = this.dataset.id;
+                        fetch(`/admin/notifications/${id}/read`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        }).then(res => res.json())
+                          .then(data => {
+                              if(data.success){
+                                  this.querySelectorAll('strong, span').forEach(el => el.classList.replace('text-dark','text-muted'));
+                                  // Mettre à jour badge
+                                  if(badge){
+                                      let count = parseInt(badge.innerText);
+                                      count = count > 0 ? count - 1 : 0;
+                                      badge.innerText = count;
+                                      if(count===0) badge.remove();
+                                  }
+                              }
+                          });
+                    });
+                });
+
+                // Supprimer notification
+                document.querySelectorAll('.btn-close').forEach(btnClose => {
+                    btnClose.addEventListener('click', function(e){
+                        e.stopPropagation(); // éviter clic parent
+                        const id = this.dataset.id;
+                        const item = this.closest('.notif-item');
+
+                        fetch(`/admin/notifications/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.success){
+                                item.remove();
+                                // mettre à jour le badge
+                                if(badge){
+                                    let count = parseInt(badge.innerText);
+                                    count = count > 0 ? count - 1 : 0;
+                                    badge.innerText = count;
+                                    if(count===0) badge.remove();
+                                }
+                            }
+                        });
+
+                    });
+                });
+            
+            
+            }
+        });
+
+    });
+});
+</script>

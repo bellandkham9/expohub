@@ -98,20 +98,26 @@
                 <div class="header-card d-flex justify-content-between align-items-center">
                     <div class="row justify-between" style="width: 100%">
                         <div class="col-md-5">
-                            <h2 class="h4 m-4">Liste des Tests</h2>
+                            <h2 class="h4">Liste des Tests</h2>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="row g-3 align-items-center">
-                                <div class="col-md-5">
+                                <div class="d-flex col-md-12">
                                     <input type="text" id="searchInput" class="form-control"
                                         placeholder="Rechercher...">
-                                </div>
-                                <div class="col-md-7">
-                                    <button type="button" class="btn btn-primary mx-2 w-80 w-md-auto"
-                                        data-bs-toggle="modal" data-bs-target="#ajoutTestModal">
+                                        <button style="background-color:#224194; color: white;" type="button"
+                                        class="btn  mx-2 w-80 w-md-auto" data-bs-toggle="modal"
+                                        data-bs-target="#ajoutTestModal">
                                         Ajouter un test
                                     </button>
                                 </div>
+                               {{--  <div class="col-md-5">
+                                    <button style="background-color:#224194; color: white;" type="button"
+                                        class="btn  mx-2 w-80 w-md-auto" data-bs-toggle="modal"
+                                        data-bs-target="#ajoutTestModal">
+                                        Ajouter un test
+                                    </button>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -154,61 +160,61 @@
                         <div class="">
                             <h3>Liste des abonnements</h3>
                             <!-- Bouton pour ouvrir modal d'ajout -->
-                            <button class="btn btn-primary mb-3 mt-3" data-bs-toggle="modal"
-                                data-bs-target="#ajoutAbonnementModal">
+                            <button style="background-color:#224194; color: white;" class="btn  mb-3 mt-3"
+                                data-bs-toggle="modal" data-bs-target="#ajoutAbonnementModal">
                                 + Ajouter Abonnement
                             </button>
 
                             @if (session('success'))
                                 <div class="alert alert-success">{{ session('success') }}</div>
                             @endif
-
-                            <table id="tableAbonnement" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Nom du plan</th>
-                                        <th>Examen</th>
-                                        <th>Prix</th>
-                                        <th>Durée (jours)</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($abonnements as $abonnement)
-                                        <tr>
-                                            <td>{{ $abonnement->nom_du_plan }}</td>
-                                            <td>{{ $abonnement->examen ?? '-' }}</td>
-                                            <td>{{ $abonnement->prix }} FCFA</td>
-                                            <td>{{ $abonnement->duree }}</td>
-                                            <td>{{ $abonnement->description }}</td>
-                                            <td>
-                                                
-                                                <button class="btn btn-sm btn-warning edit-abonnement-btn"
-                                                    data-bs-toggle="modal" data-bs-target="#editAbonnementModal"
-                                                    data-id="{{ $abonnement->id }}"
-                                                    data-nom="{{ $abonnement->nom_du_plan }}"
-                                                    data-prix="{{ $abonnement->prix }}"
-                                                    data-duree="{{ $abonnement->duree }}"
-                                                    data-desc="{{ $abonnement->description }}"
-                                                    data-test="{{ $abonnement->examen }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-
-                                                <button class="btn btn-sm btn-danger delete-abonnement-btn"
-                                                    data-bs-toggle="modal" data-bs-target="#deleteAbonnementModal"
-                                                    data-id="{{ $abonnement->id }}">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </td>
+                            <div class="table-responsive">
+                                <table id="tableAbonnement" class="table table-hover mb-0">
+                                    <thead>
+                                        <tr class="table-dark white">
+                                            <th><input type="checkbox" class="form-check-input"></th>
+                                            <th>Nom du plan</th>
+                                            <th>Examen</th>
+                                            <th>Prix</th>
+                                            <th>Durée (jours)</th>
+                                            <th>Description</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($abonnements as $abonnement)
+                                            <tr>
+                                                <td><input type="checkbox" class="form-check-input"></td>
+                                                <td>{{ $abonnement->nom_du_plan }}</td>
+                                                <td>{{ $abonnement->examen ?? '-' }}</td>
+                                                <td>{{ $abonnement->prix }} FCFA</td>
+                                                <td>{{ $abonnement->duree }}</td>
+                                                <td>{{ $abonnement->description }}</td>
+                                                <td>
+
+                                                    <button class="btn btn-sm btn-warning edit-abonnement-btn"
+                                                        data-bs-toggle="modal" data-bs-target="#editAbonnementModal"
+                                                        data-id="{{ $abonnement->id }}"
+                                                        data-nom="{{ $abonnement->nom_du_plan }}"
+                                                        data-prix="{{ $abonnement->prix }}"
+                                                        data-duree="{{ $abonnement->duree }}"
+                                                        data-desc="{{ $abonnement->description }}"
+                                                        data-test="{{ $abonnement->examen }}">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-danger delete-abonnement-btn"
+                                                        data-bs-toggle="modal" data-bs-target="#deleteAbonnementModal"
+                                                        data-id="{{ $abonnement->id }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-
-
-
                     </div>
                 </div>
 
@@ -273,7 +279,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                            <button type="submit" class="btn btn-primary" id="saveEditBtn">Enregistrer</button>
+                            <button style="background-color:#224194; color: white;" type="submit" class="btn "
+                                id="saveEditBtn">Enregistrer</button>
                         </div>
                     </form>
                 </div>

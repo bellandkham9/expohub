@@ -10,13 +10,13 @@
 <hr style="background-color: black; height: 2px;">
 
 <div class="dropdown d-flex align-items-center mb-4">
-    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+    <a href="#" class="d-flex link-dark text-decoration-none m-2 dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
         <div class="d-flex justify-content-center align-items-center">
             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" 
                  alt="Avatar" 
                  class="rounded-circle" 
                  style="width: 35px; height: 35px; object-fit: cover;">
-            <div class="fw-bold ms-2">{{ auth()->user()->name ?? 'Utilisateur' }}</div>
+            <div class="fw-bold  ms-2">{{ auth()->user()->name ?? 'Utilisateur' }}</div>
         </div>
     </a>
 

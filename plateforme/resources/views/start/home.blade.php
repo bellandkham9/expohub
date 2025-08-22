@@ -17,7 +17,7 @@
                         </h1>
                         <p>Préparez le TCF Canada, TCF Quebec, DALF, DELF ou TEF en toute confiance. Évaluez vos compétences
                             à tout moment, en ligne.</p>
-                        <button class="btn" id="btn-commencer" data-user-id="{{ auth()->id() ?? '' }}">Commencez
+                        <button class="btn start-test-btn" id="btn-commencer" data-user-id="{{ auth()->id() ?? '' }}">Commencez
                             gratuitement</button>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
 
         <!-- Test Modal -->
 
-        <div class="modal fade" id="matiereModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="testModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -36,34 +36,34 @@
                     <div class="modal-body">
                         <div class="row g-3">
                             <div class="col-6">
-                                <a href="{{ route('test.comprehension_ecrite') }}"
-                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
-                                    style="background-color: #F8B70D;">
-                                    <img src="{{ asset('images/lecture.png') }}" width="40" class="mb-2 mx-auto">
+                                <a href="#"
+                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-yellow start-test-btn"
+                                    data-test-type="comprehension_ecrite" data-test-name="Compréhension Écrite">
+                                    <img src="{{ asset('images/lecture.png') }}" width="40" class="mb-2">
                                     <h6 class="mb-0">Compréhension Écrite</h6>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="{{ route('test.comprehension_orale') }}"
-                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
-                                    style="background-color: #FF3B30;">
-                                    <img src="{{ asset('images/ecoute.png') }}" width="40" class="mb-2 mx-auto">
+                                <a href="#"
+                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-red start-test-btn"
+                                    data-test-type="comprehension_orale" data-test-name="Compréhension Orale">
+                                    <img src="{{ asset('images/ecoute.png') }}" width="40" class="mb-2">
                                     <h6 class="mb-0">Compréhension Orale</h6>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="{{ route('test.expression_ecrite') }}"
-                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
-                                    style="background-color: #224194;">
-                                    <img src="{{ asset('images/ecrite.png') }}" width="40" class="mb-2 mx-auto">
+                                <a href="#"
+                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-blue start-test-btn"
+                                    data-test-type="expression_ecrite" data-test-name="Expression Écrite">
+                                    <img src="{{ asset('images/ecrite.png') }}" width="40" class="mb-2">
                                     <h6 class="mb-0">Expression Écrite</h6>
                                 </a>
                             </div>
                             <div class="col-6">
-                                <a href="{{ route('test.expression_orale') }}"
-                                    class="card h-100 text-decoration-none text-center p-3 border-0 shadow-sm"
-                                    style="background-color: #249DB8;">
-                                    <img src="{{ asset('images/orale.png') }}" width="40" class="mb-2 mx-auto">
+                                <a href="#"
+                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-teal start-test-btn"
+                                    data-test-type="expression_orale" data-test-name="Expression Orale">
+                                    <img src="{{ asset('images/orale.png') }}" width="40" class="mb-2">
                                     <h6 class="mb-0">Expression Orale</h6>
                                 </a>
                             </div>
@@ -264,6 +264,107 @@
 
             });
         </script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des clics sur les boutons de test
+            document.querySelectorAll('.start-test-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const testType = this.dataset.testType;
+                    const testName = this.dataset.testName;
+
+                    // Consignes personnalisées par type de test
+                    const consignes = {
+                        'comprehension_ecrite': `Bienvenue au test de Compréhension Écrite.
+
+                        Durée : 60 minutes
+                        Nombre de questions : 30
+
+                        Instructions :
+                        1. Lisez attentivement chaque texte
+                        2. Répondez aux questions associées
+                        3. Vous ne pouvez pas revenir en arrière`,
+
+                        'comprehension_orale': `Bienvenue au test de Compréhension Orale.
+
+                        Durée : 45 minutes
+                        Nombre d'extraits audio : 20
+
+                        Instructions :
+                        1. Écoutez chaque extrait une seule fois
+                        2. Prenez des notes si nécessaire
+                        3. Répondez aux questions`,
+
+                        'expression_ecrite': `Bienvenue au test d'Expression Écrite.
+
+                        Durée : 60 minutes
+                        Nombre de sujets : 2
+
+                        Instructions :
+                        1. Structurez clairement vos réponses
+                        2. Vérifiez votre grammaire et orthographe
+                        3. Respectez le nombre de mots demandé`,
+
+                        'expression_orale': `Bienvenue au test d'Expression Orale.
+
+                        Durée : 15 minutes
+                        Nombre de sujets : 3
+
+                        Instructions :
+                        1. Parlez clairement et distinctement
+                        2. Structurez vos idées
+                        3. Utilisez un vocabulaire varié`
+                    };
+
+                    Swal.fire({
+                        title: `Consignes - ${testName}`,
+                        html: `<div style="text-align: left; white-space: pre-line;">${consignes[testType]}</div>`,
+                        icon: 'info',
+                        confirmButtonText: 'Commencer le test',
+                        showCancelButton: true,
+                        cancelButtonText: 'Annuler',
+                        customClass: {
+                            popup: 'consignes-popup'
+                        },
+                        allowOutsideClick: false,
+                        willOpen: () => {
+                            // Option: lire les consignes à haute voix
+                            if ('speechSynthesis' in window) {
+                                const speech = new SpeechSynthesisUtterance(consignes[
+                                    testType]);
+                                speech.lang = 'fr-FR';
+                                window.speechSynthesis.speak(speech);
+                            }
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirection vers le test correspondant
+                            switch (testType) {
+                                case 'comprehension_ecrite':
+                                    window.location.href =
+                                        "{{ route('test.comprehension_ecrite') }}";
+                                    break;
+                                case 'comprehension_orale':
+                                    window.location.href =
+                                        "{{ route('test.comprehension_orale') }}";
+                                    break;
+                                case 'expression_ecrite':
+                                    window.location.href =
+                                        "{{ route('test.expression_ecrite') }}";
+                                    break;
+                                case 'expression_orale':
+                                    window.location.href =
+                                        "{{ route('test.expression_orale') }}";
+                                    break;
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
         @include('start.chatbot')
     @endsection

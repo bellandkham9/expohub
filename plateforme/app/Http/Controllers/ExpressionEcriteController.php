@@ -41,6 +41,13 @@ class ExpressionEcriteController extends Controller
             return back()->with('error', 'Aucune tâche disponible pour le moment.');
         }
 
+         if ($taches->isEmpty()) {
+            return view('test.indisponible', [
+                'test' => 'Comprehension Ecrite'
+            ]);
+        }
+
+
         return view('test.expression_ecrite', [
             'taches' => $taches,
             'tacheActive' => $taches->first(),
