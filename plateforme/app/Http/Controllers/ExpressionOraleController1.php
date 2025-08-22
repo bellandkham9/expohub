@@ -343,6 +343,9 @@ class ExpressionOraleController1 extends Controller
         $niveau = $this->determineNiveau($noteTotale);
         // Ajoutez cette ligne pour récupérer les tâches
         $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
+
+         $testTypes = abonnement::all();
+         
         return view('test.expression_orale_resultat', [
             'titre' => 'TCF CANADA, Expression écrite',
             'niveau' => $niveau,
@@ -351,6 +354,7 @@ class ExpressionOraleController1 extends Controller
             'reponses' => $reponses,
             'taches' => $taches, // Ajout de la variable taches
             'route' => 'test.expression_orale',
+            'testTypes' => $testTypes,
         ]);
     }
 

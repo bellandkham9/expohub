@@ -212,152 +212,6 @@ class ExpressionEcriteController extends Controller
     }
 
 
-    public function afficherResultat()
-    {
-        $user = Auth::user();
-        
-        $reponses = ExpressionEcriteReponse::with('question')
-            ->where('user_id', $user->id)
-            ->orderByDesc('created_at')
-            ->take(3)
-            ->get();
-
-        $noteTotale = $reponses->sum('score');
-
-        $niveau = $this->determineNiveau($noteTotale);
-         // Ajoutez cette ligne pour récupérer les tâches
-        $taches = ExpressionEcrite::orderBy('numero_tache')->take(3)->get();
-        
-        $route='test.expression_ecrite';
-
-        $testTypes = abonnement::all();
-
-        $userLevels = [];
-        foreach ($testTypes as $testType) {
-            // Récupérer le niveau global pour ce test (en tenant compte des compétences)
-            $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testType->id)
-                ->first();
-
-            $userLevels[$testType->nom] = $niveau ? [
-                'comprehension_ecrite' => $niveau->comprehension_ecrite,
-                'comprehension_orale' => $niveau->comprehension_orale,
-                'expression_ecrite' => $niveau->expression_ecrite,
-                'expression_orale' => $niveau->expression_orale,
-            ] : [
-                'comprehension_ecrite' => 'Non défini',
-                'comprehension_orale' => 'Non défini',
-                'expression_ecrite' => 'Non défini',
-                'expression_orale' => 'Non défini',
-            ];
-        }
-
-
-         // Récupérer les 5 derniers tests complétés par type et compétence
-        $completedTests = [];
-
-        // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
-        $ceTestType = abonnement::where('examen', 'TCF')->firstOrFail();
-        if ($ceTestType) {
-            foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
-                ->latest()->take(5)->get() as $reponse) {
-                $completedTests[] = [
-                    'id' => $reponse->id,
-                    'test_type' => $ceTestType->label,
-                    'skill' => 'Compréhension Écrite',
-                    'date' => $reponse->created_at,
-                    'duration' => 60,
-                    'score' => $reponse->score,
-                    'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => $reponse->nb_bonnes_reponses,
-                    'total_questions' => $reponse->nb_total_questions,
-                ];
-            }
-        }
-
-        // Même principe pour Compréhension Orale
-        $coTestType = abonnement::where('examen', 'TCF')->firstOrFail();
-        if ($coTestType) {
-            foreach (ComprehensionOraleReponse::where('user_id', $user->id)
-                ->latest()->take(5)->get() as $reponse) {
-                $completedTests[] = [
-                    'id' => $reponse->id,
-                    'test_type' => $coTestType->label,
-                    'skill' => 'Compréhension Orale',
-                    'date' => $reponse->created_at,
-                    'duration' => 30,
-                    'score' => $reponse->score,
-                    'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => $reponse->nb_bonnes_reponses,
-                    'total_questions' => $reponse->nb_total_questions,
-                ];
-            }
-        }
-
-        // Expression Ecrite (TCF Canada)
-        if ($ceTestType) {
-            foreach (ExpressionEcriteReponse::where('user_id', $user->id)
-                ->latest()->take(5)->get() as $reponse) {
-                $completedTests[] = [
-                    'id' => $reponse->id,
-                    'test_type' => $ceTestType->label,
-                    'skill' => 'Expression Écrite',
-                    'date' => $reponse->created_at,
-                    'duration' => 60,
-                    'score' => $reponse->score,
-                    'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => null,
-                    'total_questions' => null,
-                ];
-            }
-        }
-
-        // Expression Orale (TCF Québec)
-        if ($coTestType) {
-            foreach (ExpressionOraleReponse::where('user_id', $user->id)
-                ->latest()->take(5)->get() as $reponse) {
-                $completedTests[] = [
-                    'id' => $reponse->id,
-                    'test_type' => $coTestType->label,
-                    'skill' => 'Expression Orale',
-                    'date' => $reponse->created_at,
-                    'duration' => 15,
-                    'score' => $reponse->score,
-                    'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => null,
-                    'total_questions' => null,
-                ];
-            }
-        }
-
-
-
-        
-        $learningGoal = [
-            'target_level' => 'C1',
-            'current_progress' => 65,
-            'target_date' => Carbon::now()->addMonths(3)
-        ];
-        
-        return view('test.expression_ecrite_resultat', [
-            'titre' => 'TCF CANADA, Expression écrite',
-            'niveau' => $niveau,
-            'note' => $noteTotale,
-            'commentaire' => $this->generateGlobalComment($noteTotale),
-            'reponses' => $reponses,
-            'taches' => $taches, // Ajout de la variable taches
-            'route' =>$route,
-            'userLevels' => $userLevels,
-            'completedTests' => $completedTests,
-            'learningGoal' => $learningGoal,
-            'testTypes' => $testTypes,
-        ]);
-    }
-    
     public function reinitialiserTest()
     {
         $user = Auth::user();
@@ -516,9 +370,154 @@ class ExpressionEcriteController extends Controller
 
 
     return response()->json(['message' => 'Résultat enregistré', 'score' => $scoreTotal]);
-}
+  }
+
+    public function afficherResultat()
+    {
+        $user = Auth::user();
+        
+        $reponses = ExpressionEcriteReponse::with('question')
+            ->where('user_id', $user->id)
+            ->orderByDesc('created_at')
+            ->take(3)
+            ->get();
+
+        $noteTotale = $reponses->sum('score');
+
+        $niveau = $this->determineNiveau($noteTotale);
+         // Ajoutez cette ligne pour récupérer les tâches
+        $taches = ExpressionEcrite::orderBy('numero_tache')->take(3)->get();
+        
+        $route='test.expression_ecrite';
+
+        $testTypes = abonnement::all();
+
+        $userLevels = [];
+        foreach ($testTypes as $testType) {
+            // Récupérer le niveau global pour ce test (en tenant compte des compétences)
+            $niveau = Niveau::where('user_id', $user->id)
+                ->where('test_type', $testType->id)
+                ->first();
+
+            $userLevels[$testType->nom] = $niveau ? [
+                'comprehension_ecrite' => $niveau->comprehension_ecrite,
+                'comprehension_orale' => $niveau->comprehension_orale,
+                'expression_ecrite' => $niveau->expression_ecrite,
+                'expression_orale' => $niveau->expression_orale,
+            ] : [
+                'comprehension_ecrite' => 'Non défini',
+                'comprehension_orale' => 'Non défini',
+                'expression_ecrite' => 'Non défini',
+                'expression_orale' => 'Non défini',
+            ];
+        }
 
 
+         // Récupérer les 5 derniers tests complétés par type et compétence
+        $completedTests = [];
+
+        // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
+        $ceTestType = abonnement::where('examen', 'TCF')->firstOrFail();
+        if ($ceTestType) {
+            foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
+                ->latest()->take(5)->get() as $reponse) {
+                $completedTests[] = [
+                    'id' => $reponse->id,
+                    'test_type' => $ceTestType->label,
+                    'skill' => 'Compréhension Écrite',
+                    'date' => $reponse->created_at,
+                    'duration' => 60,
+                    'score' => $reponse->score,
+                    'max_score' => 699,
+                    'level' => $reponse->niveau,
+                    'correct_answers' => $reponse->nb_bonnes_reponses,
+                    'total_questions' => $reponse->nb_total_questions,
+                ];
+            }
+        }
+
+        // Même principe pour Compréhension Orale
+        $coTestType = abonnement::where('examen', 'TCF')->firstOrFail();
+        if ($coTestType) {
+            foreach (ComprehensionOraleReponse::where('user_id', $user->id)
+                ->latest()->take(5)->get() as $reponse) {
+                $completedTests[] = [
+                    'id' => $reponse->id,
+                    'test_type' => $coTestType->label,
+                    'skill' => 'Compréhension Orale',
+                    'date' => $reponse->created_at,
+                    'duration' => 30,
+                    'score' => $reponse->score,
+                    'max_score' => 699,
+                    'level' => $reponse->niveau,
+                    'correct_answers' => $reponse->nb_bonnes_reponses,
+                    'total_questions' => $reponse->nb_total_questions,
+                ];
+            }
+        }
+
+        // Expression Ecrite (TCF Canada)
+        if ($ceTestType) {
+            foreach (ExpressionEcriteReponse::where('user_id', $user->id)
+                ->latest()->take(5)->get() as $reponse) {
+                $completedTests[] = [
+                    'id' => $reponse->id,
+                    'test_type' => $ceTestType->label,
+                    'skill' => 'Expression Écrite',
+                    'date' => $reponse->created_at,
+                    'duration' => 60,
+                    'score' => $reponse->score,
+                    'max_score' => 699,
+                    'level' => $reponse->niveau,
+                    'correct_answers' => null,
+                    'total_questions' => null,
+                ];
+            }
+        }
+
+        // Expression Orale (TCF Québec)
+        if ($coTestType) {
+            foreach (ExpressionOraleReponse::where('user_id', $user->id)
+                ->latest()->take(5)->get() as $reponse) {
+                $completedTests[] = [
+                    'id' => $reponse->id,
+                    'test_type' => $coTestType->label,
+                    'skill' => 'Expression Orale',
+                    'date' => $reponse->created_at,
+                    'duration' => 15,
+                    'score' => $reponse->score,
+                    'max_score' => 699,
+                    'level' => $reponse->niveau,
+                    'correct_answers' => null,
+                    'total_questions' => null,
+                ];
+            }
+        }
+
+
+
+        
+        $learningGoal = [
+            'target_level' => 'C1',
+            'current_progress' => 65,
+            'target_date' => Carbon::now()->addMonths(3)
+        ];
+        
+        return view('test.expression_ecrite_resultat', [
+            'titre' => 'TCF CANADA, Expression écrite',
+            'niveau' => $niveau,
+            'note' => $noteTotale,
+            'commentaire' => $this->generateGlobalComment($noteTotale),
+            'reponses' => $reponses,
+            'taches' => $taches, // Ajout de la variable taches
+            'route' =>$route,
+            'userLevels' => $userLevels,
+            'completedTests' => $completedTests,
+            'learningGoal' => $learningGoal,
+            'testTypes' => $testTypes,
+        ]);
+    }
+    
 
 
 }
