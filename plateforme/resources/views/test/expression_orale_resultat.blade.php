@@ -97,22 +97,22 @@
                                                             $tache->id,
                                                         );
                                                     @endphp
+                                                  @if ($userReponse && $userReponse->audio_eleve)
+                                                    <audio controls class="w-100">
+    <source src="{{ asset('storage/' . $userReponse->audio_eleve) }}" type="audio/mp3">
+    Votre navigateur ne prend pas en charge la lecture audio.
+</audio>
 
-                                                    @if ($userReponse && $userReponse->audio_eleve)
-                                                        <audio controls class="w-100">
-                                                            <source src="{{ asset($userReponse->audio_eleve) }}"
-                                                                type="audio/mp3">
-                                                            Votre navigateur ne prend pas en charge la lecture audio.
-                                                        </audio>
 
-                                                        <button class="btn btn-outline-primary btn-sm mt-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#responseModal{{ $tache->id }}">
-                                                            Voir les détails
-                                                        </button>
-                                                    @else
-                                                        <p class="text-muted fst-italic">Aucune réponse enregistrée</p>
-                                                    @endif
+                                                    <button class="btn btn-outline-primary btn-sm mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#responseModal{{ $tache->id }}">
+                                                        Voir les détails
+                                                    </button>
+                                                @else
+                                                    <p class="text-muted fst-italic">Aucun enregistrement disponible</p>
+                                                @endif
+
                                                 </div>
                                             </div>
                                         </div>
@@ -134,7 +134,7 @@
                                     <div class="col-6">
                                         <div class="avatar-container">
                                             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="80"
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
                                                 height="80">
                                         </div>
                                     </div>

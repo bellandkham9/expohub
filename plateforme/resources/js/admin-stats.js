@@ -25,41 +25,64 @@ document.addEventListener("DOMContentLoaded", function () {
 // ===========================
 // Graphique Chart.js
 // ===========================
-
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("statisticsChart");
     if (!canvas) return;
 
     canvas.style.height = "400px";
-
     const ctx = canvas.getContext("2d");
 
     const data = {
         labels: [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         ],
         datasets: [
             {
-                label: currentYear, // Utilisation de l'année en cours
-                data: monthlyDataCurrentYear, // Utilisation des données dynamiques
-                borderColor: "#4e73df",
-                backgroundColor: "rgba(78, 115, 223, 0.2)",
+                label: `Utilisateurs ${currentYear}`,
+                data: monthlyDataCurrentYear,
+                borderColor: "#4e73df",           // bleu
+                backgroundColor: "rgba(78, 115, 223, 0.1)",
                 tension: 0.4,
                 fill: false,
-                pointRadius: 5,
+                pointRadius: 4,
                 pointHoverRadius: 7,
-                borderWidth: 3
+                borderWidth: 2
             },
             {
-                label: previousYear, // Utilisation de l'année précédente
-                data: monthlyDataPreviousYear, // Utilisation des données dynamiques
-                borderColor: "#1cc88a",
-                backgroundColor: "rgba(28, 200, 138, 0.2)",
+                label: `Utilisateurs ${previousYear}`,
+                data: monthlyDataPreviousYear,
+                borderColor: "#1cc88a",           // vert
+                backgroundColor: "rgba(28, 200, 138, 0.1)",
                 tension: 0.4,
                 fill: false,
-                pointRadius: 5,
+                pointRadius: 4,
                 pointHoverRadius: 7,
-                borderWidth: 3
+                borderWidth: 2,
+                borderDash: [5, 5]                // tirets
+            },
+            {
+                label: `Tests ${currentYear}`,
+                data: monthlyDataCurrentYearTests,
+                borderColor: "#e74a3b",           // rouge
+                backgroundColor: "rgba(231, 74, 59, 0.1)",
+                tension: 0.4,
+                fill: false,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                borderWidth: 2
+            },
+            {
+                label: `Tests ${previousYear}`,
+                data: monthlyDataPreviousYearTests,
+                borderColor: "#f6c23e",           // jaune
+                backgroundColor: "rgba(246, 194, 62, 0.1)",
+                tension: 0.4,
+                fill: false,
+                pointRadius: 4,
+                pointHoverRadius: 7,
+                borderWidth: 2,
+                borderDash: [5, 5]
             }
         ]
     };
@@ -72,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
             y: { display: false, min: 0, max: 2500 }
         },
         plugins: {
-            legend: { display: false },
+            legend: { display: false }, // tu gères ta légende custom en HTML
             tooltip: {
                 backgroundColor: "rgba(255, 255, 255, 0.95)",
                 titleColor: "#333",
@@ -81,23 +104,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 borderWidth: 1,
                 padding: 12,
                 displayColors: true,
-                boxPadding: 5,
                 callbacks: {
                     label: function (context) {
                         return `${context.dataset.label}: ${context.parsed.y}`;
-                    },
-                },
-            },
-        },
+                    }
+                }
+            }
+        }
     };
 
-    const statisticsChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: "line",
         data: data,
-        options: options,
+        options: options
     });
 });
-
 
 
 

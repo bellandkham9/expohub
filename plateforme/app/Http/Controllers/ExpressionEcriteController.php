@@ -89,11 +89,12 @@ class ExpressionEcriteController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
         ])->post('https://openrouter.ai/api/v1/chat/completions', [
-            'model' => 'deepseek/deepseek-r1-0528:free',
+            'model' => 'deepseek/deepseek-chat',
             'messages' => [
                 ['role' => 'user', 'content' => $prompt],
             ],
             'temperature' => 0.4,
+            'max_tokens' => 400,
         ]);
 
         $texte = $response->json('choices.0.message.content');
@@ -246,12 +247,13 @@ class ExpressionEcriteController extends Controller
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
             'Content-Type' => 'application/json',
         ])->post(env('OPENROUTER_API_URL'), [
-                    'model' => 'deepseek/deepseek-r1-0528:free',
+                    'model' => 'deepseek/deepseek-chat',
             'messages' => [
                 ['role' => 'system', 'content' => "Tu es un correcteur pour le test d'expression écrite du TCF."],
                 ['role' => 'user', 'content' => $prompt],
             ],
             'temperature' => 0.7,
+            'max_tokens' => 400,
         ]);
 
     if (!$response->successful()) {

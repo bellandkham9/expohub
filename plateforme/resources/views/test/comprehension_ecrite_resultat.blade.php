@@ -131,7 +131,7 @@
                                     <div class="col-6">
                                         <div class="avatar-container">
                                             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="80"
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
                                                 height="80">
                                         </div>
                                     </div>

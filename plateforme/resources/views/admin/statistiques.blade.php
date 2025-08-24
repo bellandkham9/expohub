@@ -10,13 +10,7 @@
     
     @vite(['resources/css/admin-stats.css','resources/js/admin-stats.js'])
 
-    <script>
-        const monthlyDataCurrentYear = @json($dataCurrentYear);
-        const monthlyDataPreviousYear = @json($dataPreviousYear);
-        const currentYear = @json($currentYear);
-        const previousYear = @json($previousYear);
-    </script>
-
+ 
 </head>
 
 <body>
@@ -161,25 +155,16 @@
                                         <div class="statistics-title">Statistics</div>
                                         <div class="statistics-subtitle">{{ date('F Y') }}</div> 
                                     </div>
-
-                                    <div class="chart-controls">
-                                        <span class="sort-label">Sort by:</span>
-                                        <select class="sort-select">
-                                            <option>Monthly</option>
-                                            <option>Weekly</option>
-                                            <option>Yearly</option>
-                                        </select>
-                                    </div>
                                 </div>
 
                                 <div class="chart-container">
                                     <div class="chart-canvas-container">
                                         <div class="y-axis-labels">
-                                            <span>2500</span>
-                                            <span>2000</span>
-                                            <span>1500</span>
                                             <span>1000</span>
-                                            <span>500</span>
+                                            <span>800</span>
+                                            <span>600</span>
+                                            <span>400</span>
+                                            <span>200</span>
                                             <span>0</span>
                                         </div>
 
@@ -208,16 +193,25 @@
                                         </div>
                                     </div>
 
-                                    <div class="legend">
+                                   <div class="legend">
                                         <div class="legend-item">
                                             <div class="legend-color" style="background-color: #4e73df;"></div>
-                                            <span class="legend-label">{{ $currentYear }}</span>
+                                            <span class="legend-label">Abonnements {{ $currentYear }}</span>
                                         </div>
                                         <div class="legend-item">
                                             <div class="legend-color" style="background-color: #1cc88a;"></div>
-                                            <span class="legend-label">{{ $previousYear }}</span>
+                                            <span class="legend-label">Abonnements {{ $previousYear }}</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background-color: #e74a3b;"></div>
+                                            <span class="legend-label">Tests {{ $currentYear }}</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color" style="background-color: #f6c23e;"></div>
+                                            <span class="legend-label">Tests {{ $previousYear }}</span>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -234,6 +228,30 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+
+<script>
+    const currentYear = @json($currentYear);
+    const previousYear = @json($previousYear);
+    const monthlyDataCurrentYear = @json($dataCurrentYear);
+    const monthlyDataPreviousYear = @json($dataPreviousYear);
+
+    const monthlyDataCurrentYearTests = @json($dataCurrentYearTests);
+    const monthlyDataPreviousYearTests = @json($dataPreviousYearTests);
+
+    console.log("Current Year:", currentYear);
+    console.log("Previous Year:", previousYear);
+    console.log("Data Current Year:", monthlyDataCurrentYear);
+    console.log("Data Previous Year:", monthlyDataPreviousYear);
+
+    console.log("Data Current Year TEST:", monthlyDataCurrentYearTests);
+    console.log("Data Previous Year TEST:", monthlyDataPreviousYearTests);
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 </body>
 
 </html>

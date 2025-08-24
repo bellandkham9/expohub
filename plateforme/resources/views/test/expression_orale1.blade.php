@@ -335,6 +335,16 @@ function enregistrerResultatFinalEtRediriger() {
             throw new Error(data.error);
         }
         
+         console.log({
+                expression_orale_id: document.getElementById('questionId').value,
+                audio_eleve: data.audio_path,
+                transcription_eleve: data.transcription,
+                texte_ia: data.ia_response,
+                audio_ia: data.audio_ia_path,
+                score: data.score || 0,
+                test_type: testType
+            });
+            
         // Enregistrer la réponse après la transcription
         return fetch("{{ route('expression_orale.repondre') }}", {
             method: "POST",
@@ -352,6 +362,8 @@ function enregistrerResultatFinalEtRediriger() {
                 score: data.score || 0,
                 test_type: testType                 // score optionnel
             })
+           
+
         });
 
     })

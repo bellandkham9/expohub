@@ -40,7 +40,7 @@ class AdminUserController extends Controller
         $user->save();
 
         // 4. Redirection avec un message de succès
-        return redirect()->route('admin.gestion_utilisateurs')->with('success', 'L\'utilisateur a été modifié avec succès.');
+        return redirect()->route('gestion_utilisateurs')->with('success', 'L\'utilisateur a été modifié avec succès.');
 
     }
 
@@ -199,7 +199,6 @@ class AdminUserController extends Controller
 
 
 
-
         // Total des souscriptions par mois
         $subscriptionsPerMonth = [];
         foreach (range(1, 12) as $month) {
@@ -215,6 +214,21 @@ class AdminUserController extends Controller
                 ->whereMonth('created_at', $month)
                 ->count();
         }
+
+
+        // 📊 Données tests effectués
+    $dataCurrentYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        ->whereYear('created_at', $currentYear)
+        ->groupBy('month')
+        ->pluck('total', 'month')
+        ->toArray();
+
+    $dataPreviousYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        ->whereYear('created_at', $previousYear)
+        ->groupBy('month')
+        ->pluck('total', 'month')
+        ->toArray();
+
 
         return [
             'totalUsers' => $totalUsers,
@@ -234,10 +248,23 @@ class AdminUserController extends Controller
             'usersPerMonth' => $usersPerMonth,
             'dataCurrentYear' => array_values($dataCurrentYear),
             'dataPreviousYear' => array_values($dataPreviousYear),
+
+            'dataCurrentYearTests' => $this->formatMonthlyData($dataCurrentYearTests),
+            'dataPreviousYearTests' => $this->formatMonthlyData($dataPreviousYearTests),
+
             'currentYear' => $currentYear,
             'previousYear' => $previousYear,
         ];
     }
+
+    private function formatMonthlyData($data)
+{
+    $formatted = [];
+    for ($i = 1; $i <= 12; $i++) {
+        $formatted[] = $data[$i] ?? 0;
+    }
+    return $formatted;
+}
 
 
     // Supprimer un utilisateur

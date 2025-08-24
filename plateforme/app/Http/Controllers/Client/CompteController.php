@@ -35,19 +35,20 @@ class CompteController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        // Si une nouvelle image est uploadée
-        if ($request->hasFile('avatar')) {
-    // Supprime l'ancienne image si elle existe
-        if ($user->avatar_url && file_exists(public_path('images/' . basename($user->avatar_url)))) {
-            unlink(public_path('images/' . basename($user->avatar_url)));
-        }
-
-        // Enregistre la nouvelle image dans le dossier public/images
-        $file = $request->file('avatar');
-        $filename = uniqid() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images'), $filename);
-        $user->avatar_url = 'images/' . $filename;
+       if ($request->hasFile('avatar')) {
+    // Supprimer l'ancienne image si elle existe
+    if ($user->avatar_url && file_exists(public_path($user->avatar_url))) {
+        unlink(public_path($user->avatar_url));
     }
+
+    // Sauvegarde de la nouvelle
+    $file = $request->file('avatar');
+    $filename = uniqid().'_'.$file->getClientOriginalName();
+    $file->move(public_path('images'), $filename);
+
+    $user->avatar_url = 'images/'.$filename; // Stocke le chemin relatif
+}
+
 
         // Sauvegarde des modifications
         $user->save();

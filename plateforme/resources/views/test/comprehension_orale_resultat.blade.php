@@ -28,10 +28,10 @@
                                                     </div>
                                                     <hr class="my-2">
                                                     <div class="row">
-                                                        <div class="col-md-10">
+                                                        <div class="col-md-9">
 
                                                         </div>
-                                                        <div class="col-md-2">
+                                                        <div class="col-md-3">
                                                             <a href="{{ route($route) }}" class="btn"
                                                                 style="background-color:  #224194; color: white;">
                                                                 Refaire le test
@@ -108,7 +108,7 @@
                                     <div class="col-6">
                                         <div class="avatar-container">
                                             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="80"
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
                                                 height="80">
                                         </div>
                                     </div>

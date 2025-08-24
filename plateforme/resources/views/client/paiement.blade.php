@@ -299,8 +299,8 @@
                                             <!-- Avantages -->
                                             <ul class="list-unstyled text-start mb-3" style="font-size: 13px;">
                                                 <li class="mb-1"><i
-                                                        class="bi bi-check-circle-fill text-success me-2"></i><b>Nombres de
-                                                        tests</b></li>
+                                                        class="bi bi-check-circle-fill text-success me-2"></i>Nombres de
+                                                        jours <b>{{ $abonnement->duree }}</b></li>
                                                 <li class="mb-1"><i
                                                         class="bi bi-check-circle text-secondary me-2"></i>Simulations</li>
                                                 <li class="mb-1"><i
@@ -309,7 +309,7 @@
                                             </ul>
 
                                             <!-- Prix -->
-                                            <h6 class="fw-bold mb-3" style="font-size: 18px;">{{ $abonnement->prix }} Frs
+                                            <h6 class="fw-bold mb-3" style="font-size: 18px;">{{ $abonnement->prix }} $
                                             </h6>
 
                                             <!-- Bouton -->

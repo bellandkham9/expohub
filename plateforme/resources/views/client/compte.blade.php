@@ -49,13 +49,13 @@
                             <input type="password" class="form-control" id="Password" name="password" value="{{ auth()->user()->phone }}">
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Nouveau Mot de passe</label>
-                            <input type="password" class="form-control" id="Password" name="password" value="">
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Répeter le nouveau Mot de passe</label>
-                            <input type="password" class="form-control" id="Password" name="password" value="">
-                        </div>
+                        <label for="password" class="form-label">Nouveau Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Répéter le nouveau Mot de passe</label>
+                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                    </div>
                     </div>   
                     <div class="col-sm-6">
                         {{-- Champ pour l'avatar --}}
@@ -66,7 +66,11 @@
                                 <p>Glissez-déposez votre image ici ou 
                                     <button type="button" onclick="document.getElementById('avatar').click()" class="btn btn-link p-0 m-0 align-baseline">sélectionnez</button>
                                 </p>
-                                <img id="preview" src="{{ auth()->user()->avatar_url ?? '' }}" alt="Aperçu" style="max-width:100%; max-height:150px; display:{{ auth()->user()->avatar_url ? 'block' : 'none' }};">
+                                {{-- Avatar preview --}}
+                                <img id="preview" 
+                                    src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : '' }}" 
+                                    alt="Aperçu" 
+                                    style="max-width:100%; max-height:150px; display:{{ auth()->user()->avatar_url ? 'block' : 'none' }};">
                             </div>
                             <div class="form-text">Formats acceptés : JPG, PNG, GIF. Taille maximale : 2 Mo.</div>
                         </div>

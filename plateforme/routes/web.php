@@ -32,10 +32,10 @@ use App\Http\Controllers\TestTypeController;
 Route::get('/auth/{provider}', [SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
-Route::get('/connexion', [\App\Http\Controllers\AuthController::class, 'connexion'])->name('auth.connexion');
+Route::get('/connexion', [\App\Http\Controllers\AuthController::class, 'connexion'])->middleware('guest')->name('auth.connexion');
 Route::post('/connexion', [\App\Http\Controllers\AuthController::class, 'doConnexion']);
 
-Route::get('/inscription', [\App\Http\Controllers\AuthController::class, 'inscription'])->name('auth.inscription');
+Route::get('/inscription', [\App\Http\Controllers\AuthController::class, 'inscription'])->middleware('guest')->name('auth.inscription');
 Route::post('/inscription', [\App\Http\Controllers\AuthController::class, 'doInscription']);
 
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('deconnexion');

@@ -50,9 +50,9 @@ Voici des exemples : " . json_encode($questionsExistantes, JSON_PRETTY_PRINT);
             'model' => 'deepseek/deepseek-chat',
             'max_tokens' => 400,
             'messages' => [
-                ['role' => 'system', 'content' => 'Tu es un générateur de questions TCF. Retourne uniquement un JSON valide.'],
+                ['role' => 'system', 'content' => 'Tu es un générateur de questions TCF. Retourne uniquement un tableau JSON strictement valide, sans virgule finale, sans texte additionnel.'],
                 ['role' => 'user', 'content' => $prompt]
-            ]
+            ],
         ]);
 
         if ($response->failed()) {
@@ -72,8 +72,20 @@ Voici des exemples : " . json_encode($questionsExistantes, JSON_PRETTY_PRINT);
         $content = trim($content);
         $content = preg_replace('/^```json\s*/', '', $content);
         $content = preg_replace('/```$/', '', $content);
+        $content = trim($content);
 
-        $jsonIA = json_decode($content, true);
+            // Nettoyer le bloc de code markdown
+            $content = preg_replace('/^```json\s*/', '', $content);
+            $content = preg_replace('/```$/', '', $content);
+
+            // Supprimer une virgule avant la fermeture du tableau ]
+            $content = preg_replace('/,\s*]/', ']', $content);
+
+            // Supprimer une virgule avant un objet }
+            $content = preg_replace('/,\s*}/', '}', $content);
+
+            $jsonIA = json_decode($content, true);
+
 
         if (!is_array($jsonIA)) {
             \Log::error('JSON IA invalide', ['content' => $content]);

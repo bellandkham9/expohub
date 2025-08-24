@@ -402,7 +402,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" form="addUserForm" class="btn btn-primary">Ajouter un utilisateur</button>
+                    <button style="background-color: #224194; color: white;" type="submit" form="addUserForm" class="btn">Ajouter un utilisateur</button>
                 </div>
             </div>
         </div>
