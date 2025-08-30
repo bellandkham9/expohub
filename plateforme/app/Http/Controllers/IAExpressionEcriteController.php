@@ -64,7 +64,7 @@ EOT;
                     ['role' => 'system', 'content' => 'Tu renvoies uniquement du JSON valide.'],
                     ['role' => 'user', 'content' => $prompt],
                 ],
-                'max_tokens' => 800
+                'max_tokens' => 400
             ]);
 
 

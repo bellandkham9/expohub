@@ -44,8 +44,8 @@
     }
 
     .chat-header {
-        background-color: #FEF8E7;
-        color: black;
+        background-color: #224194;
+        color: white;
         padding: 15px;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -112,11 +112,11 @@
         <a href="/" class="d-flex align-items-center text-decoration-none">
             <img src="{{ asset('images/chatbot.png') }}" 
                  alt="Chatbot Icon" 
-                 width="40" height="40" 
-                 class="me-2 rounded-circle shadow-sm">
-            <span class="fw-bold fs-5 text-primary">Expohub</span>
+                 width="45" height="45" 
+                 class="me-2 rounded-circle p-1 shadow-sm bg-light">
+            <span class="fw-bold fs-5 ">Exponentiel</span>
         </a>
-        <button onclick="toggleChat()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+        <button onclick="toggleChat()" style="background:none; border:none; font-size:1.5rem; color:white;">&times;</button>
     </div>
 
     <div class="chat-body" id="chatBody"></div>
@@ -157,7 +157,9 @@
         userMessageElement.textContent = message;
 
         let userAvatar = document.createElement('img');
-        userAvatar.src = "{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}";
+        userAvatar.src = "{{ auth()->check() && auth()->user()->avatar_url 
+              ? asset(auth()->user()->avatar_url) 
+              : asset('images/user-person.png') }}" ;
         userAvatar.classList.add('avatar');
 
         userWrapper.appendChild(userMessageElement);

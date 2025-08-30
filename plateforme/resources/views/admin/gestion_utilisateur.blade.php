@@ -283,12 +283,17 @@
                                                         <i class="fas fa-edit"></i>
                                                     </button>
 
-                                                    <button class="btn btn-sm btn-outline-danger action-btn"
-                                                        type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#supprimerUserModal"
-                                                        data-user-id="{{ $user->id }}">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
+                                                    {{-- Bouton supprimer : visible uniquement si ce n'est pas un super_admin --}}
+@if(Auth::check() && $user->role !== 'super_admin')
+    @if(Auth::user()->role === 'super_admin' || (Auth::user()->role === 'admin' && $user->role !== 'admin'))
+        <button class="btn btn-sm btn-outline-danger action-btn"
+                type="button" data-bs-toggle="modal"
+                data-bs-target="#supprimerUserModal"
+                data-user-id="{{ $user->id }}">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    @endif
+@endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -393,16 +398,19 @@
                                 placeholder="Mot de passe" required>
                             <label for="userPassword">Mot de passe</label>
                         </div>
-                        <select class="form-select form-select-sm" name="role" aria-label="Sélectionner le rôle"
-                            required>
-                            <option value="user" selected>Utilisateur</option>
-                            <option value="admin">Admin</option>
+                        <select class="form-select form-select-sm" name="role" aria-label="Sélectionner le rôle" required>
+                            <option value="user" >Utilisateur</option>
+
+                            {{-- Affiche l'option "Admin" uniquement si le user connecté est Super Admin --}}
+                            @if(Auth::check() && Auth::user()->role === 'super_admin')
+                                <option value="admin">Admin</option>
+                            @endif
                         </select>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" form="addUserForm" class="btn btn-primary">Ajouter un utilisateur</button>
+                    <button style="background-color: #224194; color: white;" type="submit" form="addUserForm" class="btn">Ajouter un utilisateur</button>
                 </div>
             </div>
         </div>
@@ -435,8 +443,11 @@
                         <select class="form-select form-select-sm" name="role" id="editUserRole"
                             aria-label="Sélectionner le rôle">
                             <option value="">Sélectionner le rôle</option>
-                            <option value="admin">Admin</option>
                             <option value="user">Utilisateur</option>
+                            {{-- Affiche l'option "Admin" uniquement si le user connecté est Super Admin --}}
+                            @if(Auth::check() && Auth::user()->role === 'super_admin')
+                                <option value="admin">Admin</option>
+                            @endif
                         </select>
                     </form>
                 </div>

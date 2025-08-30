@@ -28,7 +28,7 @@ class CheckFreeTests
             ->where('date_fin', '>=', now())
             ->exists();
 
-        if ($freeTestsUsed >= 2 && !$hasActiveSubscription) {
+        if ($freeTestsUsed >= 3 && !$hasActiveSubscription) {
             return redirect()->route('client.paiement')
                 ->with('error', 'Vous avez atteint la limite de tests gratuits.');
         }

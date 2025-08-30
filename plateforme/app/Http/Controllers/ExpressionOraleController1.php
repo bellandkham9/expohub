@@ -55,105 +55,121 @@ class ExpressionOraleController1 extends Controller
     }
 
     public function repondre(Request $request)
-    {
-        try {
+{
+    try {
+        $user = Auth::user();
+        $testType = abonnement::where('examen', 'TCF')->firstOrFail();
 
+        $request->validate([
+            'expression_orale_id' => 'required|exists:expression_orales,id',
+            'audio_eleve' => 'required|string',
+            'transcription_eleve' => 'required', // on accepte tout contenu
+            'texte_ia' => 'required|string',
+            'audio_ia' => 'required|string',
+            'score' => 'nullable|numeric',
+            'test_type' => 'nullable', // plus besoin de string
+        ]);
 
-            $user = Auth::user();
-             $testType = abonnement::where('examen', 'TCF')->firstOrFail();
-            $request->validate([
-                'expression_orale_id' => 'required|exists:expression_orales,id',
-                'audio_eleve' => 'required|string',
-                'transcription_eleve' => 'required|string',
-                'texte_ia' => 'required|string',
-                'audio_ia' => 'required|string',
-                'score' => 'nullable|numeric',
-                'test_type' => 'nullable|string|max:255', // <-- Ajout ici
-            ]);
-
-            $reponse = ExpressionOraleReponse::updateOrCreate(
-                [
-                    'user_id' => $user->id,
-                    'expression_orale_id' => $request->expression_orale_id
-                ],
-                [
-                    'audio_eleve' => $request->audio_eleve,
-                    'transcription_eleve' => $request->transcription_eleve,
-                    'texte_ia' => $request->texte_ia,
-                    'audio_ia' => $request->audio_ia,
-                    'score' => $request->score ?? 0,
-                    'test_type' => $testType->id,
-                ]
-            );
-
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Réponse enregistrée avec succès',
-                'reponse' => $reponse
-            ]);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur serveur: ' . $e->getMessage()
-            ], 500);
+        // Nettoyage de la transcription si c'est un JSON d'erreur
+        $transcription = $request->transcription_eleve;
+        if ($json = json_decode($transcription, true)) {
+            if (isset($json['error'])) {
+                $transcription = "Erreur de transcription : " . ($json['error']['message'] ?? 'Problème inconnu');
+            }
         }
+
+        $reponse = ExpressionOraleReponse::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'expression_orale_id' => $request->expression_orale_id
+            ],
+            [
+                'audio_eleve' => $request->audio_eleve,
+                'transcription_eleve' => $transcription,
+                'texte_ia' => $request->texte_ia,
+                'audio_ia' => $request->audio_ia,
+                'score' => $request->score ?? 0,
+                'test_type' => $testType->id,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Réponse enregistrée avec succès',
+            'reponse' => $reponse
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur serveur: ' . $e->getMessage()
+        ], 500);
     }
+}
 
-    public function handleMessage(Request $request)
-    {
+public function handleMessage(Request $request)
+{
+    try {
+        // Cas prompt initial
+        if ($request->has('prompt_initial')) {
+            $prompt = $request->input('prompt_initial');
+            $texteIA = $this->genererTexteAvecIA($prompt);
+            $audioIA = $this->convertirTexteEnAudio($texteIA);
 
-        try {
-            if ($request->has('prompt_initial')) {
-                $prompt = $request->input('prompt_initial');
-                $texteIA = $this->genererTexteAvecIA($prompt);
-                $audioIA = $this->convertirTexteEnAudio($texteIA);
+            return response()->json([
+                'ia_response' => $texteIA,
+                'audio_url' => $audioIA,
+            ]);
+        }
 
-                return response()->json([
-                    'ia_response' => $texteIA,
-                    'audio_url' => $audioIA,
-                ]);
+        // Cas envoi audio élève
+        if ($request->hasFile('audio')) {
+            $audio = $request->file('audio');
+            $nomFichier = 'eleve_' . Str::random(10) . '.mp3';
+            $chemin = $audio->storeAs('public/audios/eleves', $nomFichier);
+            $urlAudio = 'audios/eleves/' . $nomFichier;
+
+                        // Transcription
+            $transcription = $this->transcrireAvecWhisper($audio);
+
+            // Si c’est un JSON d’erreur, on le convertit en texte lisible
+            if ($json = json_decode($transcription, true)) {
+                if (isset($json['error'])) {
+                    $transcription = "Erreur de transcription : " . ($json['error']['message'] ?? 'Problème inconnu');
+                }
             }
 
-            if ($request->hasFile('audio')) {
-                $audio = $request->file('audio');
-                $nomFichier = 'eleve_' . Str::random(10) . '.mp3';
-                $chemin = $audio->storeAs('public/audios/eleves', $nomFichier);
-                $urlAudio = Storage::url($chemin);
+            // Génération IA et audio
+            $texteIA = $this->genererTexteAvecIA($transcription);
+            $audioIA = $this->convertirTexteEnAudio($texteIA);
+            $score = $this->evaluerExpressionOrale($transcription);
 
-                $transcription = $this->transcrireAvecWhisper($audio);
-
-                $texteIA = $this->genererTexteAvecIA($transcription);
-                $audioIA = $this->convertirTexteEnAudio($texteIA);
-                $score = $this->evaluerExpressionOrale($transcription);
-
-                return response()->json([
-                    'transcription' => $transcription,
-                    'ia_response' => $texteIA,
-                    'audio_url' => $audioIA,
-                    'audio_path' => $urlAudio,
-                    'audio_ia_path' => $audioIA,
-                    'score' => $score,
-                ]);
-            }
-
-            return response()->json(['error' => 'Requête invalide'], 400);
-
-        } catch (\Exception $e) {
-            \Log::error("Erreur dans handleMessage(): " . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'userId' => Auth::id(),
+            return response()->json([
+                'transcription' => $transcription,   // -> transcription_eleve
+                'ia_response' => $texteIA,            // -> texte_ia
+                'audio_path' => $urlAudio,            // -> audio_eleve
+                'audio_ia_path' => $audioIA,          // -> audio_ia
+                'score' => $score,
             ]);
-
-            return response()->json(['error' => 'Erreur serveur'], 500);
         }
+
+        return response()->json(['error' => 'Requête invalide'], 400);
+
+    } catch (\Exception $e) {
+        \Log::error("Erreur dans handleMessage(): " . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+            'userId' => Auth::id(),
+        ]);
+
+        return response()->json(['error' => 'Erreur serveur'], 500);
     }
+}
+
 
     private function evaluerExpressionOrale(string $texte): int
 {
@@ -163,11 +179,12 @@ class ExpressionOraleController1 extends Controller
     $response = Http::withHeaders([
         'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
     ])->post(env('OPENROUTER_API_URL'), [
-        'model' => 'deepseek/deepseek-r1-0528:free',
+        'model' => 'deepseek/deepseek-chat',
         'messages' => [
             ['role' => 'user', 'content' => $prompt]
         ],
         'temperature' => 0.3,
+        'max_tokens' => 400,
     ]);
 
     $textResponse = $response->json()['choices'][0]['message']['content'];
@@ -206,11 +223,12 @@ class ExpressionOraleController1 extends Controller
             'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
             'Content-Type' => 'application/json',
         ])->post(env('OPENROUTER_API_URL'), [
-                    'model' => 'deepseek/deepseek-r1-0528:free',
+                    'model' => 'deepseek/deepseek-chat',
                     'messages' => [
                         ['role' => 'system', 'content' => "Tu es un assistant pour le test d'expression orale du TCF."],
                         ['role' => 'user', 'content' => $prompt],
                     ],
+                    'max_tokens' => 400,
                 ]);
 
         return $response->json('choices.0.message.content');
@@ -343,6 +361,9 @@ class ExpressionOraleController1 extends Controller
         $niveau = $this->determineNiveau($noteTotale);
         // Ajoutez cette ligne pour récupérer les tâches
         $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
+
+         $testTypes = abonnement::all();
+         
         return view('test.expression_orale_resultat', [
             'titre' => 'TCF CANADA, Expression écrite',
             'niveau' => $niveau,
@@ -351,6 +372,7 @@ class ExpressionOraleController1 extends Controller
             'reponses' => $reponses,
             'taches' => $taches, // Ajout de la variable taches
             'route' => 'test.expression_orale',
+            'testTypes' => $testTypes,
         ]);
     }
 

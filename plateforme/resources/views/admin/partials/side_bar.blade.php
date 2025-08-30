@@ -1,4 +1,6 @@
- <!-- Bouton Menu pour mobile --><button class="btn btn-primary d-lg-none mobile-menu-btn" style="position: absolute; right: -50px; top: 10px; z-index: 1000;">
+<!-- Bouton Menu pour mobile -->
+<button class="btn btn-primary d-lg-none mobile-menu-btn"
+    style="position: absolute; right: -50px; top: 10px; z-index: 1000;">
     <i class="fas fa-bars"></i>
 </button>
 
@@ -10,13 +12,17 @@
 <hr style="background-color: black; height: 2px;">
 
 <div class="dropdown d-flex align-items-center mb-4">
-    <a href="#" class="d-flex link-dark text-decoration-none m-2 dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+    <a href="#" class="d-flex link-dark text-decoration-none m-2 dropdown-toggle" id="dropdownUser1"
+        data-bs-toggle="dropdown" aria-expanded="false">
         <div class="d-flex justify-content-center align-items-center">
-            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}" 
-                 alt="Avatar" 
-                 class="rounded-circle" 
-                 style="width: 35px; height: 35px; object-fit: cover;">
-            <div class="fw-bold  ms-2">{{ auth()->user()->name ?? 'Utilisateur' }}</div>
+            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+
+            <!-- Nom utilisateur limité + tooltip -->
+            <div class="fw-bold ms-2 username-text"
+                 title="{{ auth()->user()->name ?? 'Utilisateur' }}">
+                {{ auth()->user()->name ?? 'Utilisateur' }}
+            </div>
         </div>
     </a>
 
@@ -24,9 +30,7 @@
         <li>
             <a class="dropdown-item" href="{{ route('client.mon-compte') }}">Mon compte</a>
         </li>
-        <li>
-            <hr class="dropdown-divider">
-        </li>
+        <li><hr class="dropdown-divider"></li>
         <li>
             <a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a>
         </li>
@@ -35,7 +39,8 @@
 
 <ul class="nav flex-column">
     <li class="nav-item mb-2">
-        <a href="{{ route('gestion_utilisateurs') }}" class="nav-link d-flex justify-content-between align-items-center w-100 
+        <a href="{{ route('gestion_utilisateurs') }}"
+           class="nav-link d-flex justify-content-between align-items-center w-100 
            {{ request()->routeIs('gestion_utilisateurs') ? 'bg-primary text-white rounded px-3 py-2' : 'text-dark px-3 py-2' }}">
             <span>
                 Gestion des Utilisateurs
@@ -47,10 +52,11 @@
     </li>
 
     <li class="nav-item mb-2">
-        <a href="{{ route('statistiques') }}" class="nav-link d-flex justify-content-between align-items-center w-100 
+        <a href="{{ route('statistiques') }}"
+           class="nav-link d-flex justify-content-between align-items-center w-100 
            {{ request()->routeIs('statistiques') ? 'bg-primary text-white rounded px-3 py-2' : 'text-dark px-3 py-2' }}">
             <span>
-                </i> Statistiques
+                Statistiques
             </span>
             @if (request()->routeIs('statistiques'))
                 <i class="fas fa-arrow-right"></i>
@@ -59,7 +65,8 @@
     </li>
 
     <li class="nav-item mb-2">
-        <a href="{{ route('gestion_test') }}" class="nav-link d-flex justify-content-between align-items-center w-100 
+        <a href="{{ route('gestion_test') }}"
+           class="nav-link d-flex justify-content-between align-items-center w-100 
            {{ request()->routeIs('gestion_test') ? 'bg-primary text-white rounded px-3 py-2' : 'text-dark px-3 py-2' }}">
             <span>
                 Gestion des tests
@@ -70,3 +77,32 @@
         </a>
     </li>
 </ul>
+
+<style>
+    .bg-primary {
+        background-color: #224194 !important;
+    }
+
+    .text-primary {
+        color: #224194 !important;
+    }
+
+    .btn-primary {
+        background-color: #224194 !important;
+        border-color: #224194 !important;
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #1d3478 !important;
+        border-color: #1d3478 !important;
+    }
+
+    /* Gestion du nom utilisateur */
+    .username-text {
+        max-width: 120px;       /* largeur max dans la sidebar */
+        white-space: nowrap;    /* pas de retour à la ligne */
+        overflow: hidden;       /* cache le texte qui dépasse */
+        text-overflow: ellipsis;/* affiche "..." */
+    }
+</style>

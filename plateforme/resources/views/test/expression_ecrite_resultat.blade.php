@@ -18,7 +18,7 @@
                                         <!-- Left Column - General Info -->
                                         <div class="col-lg-4">
                                             <div class="card shadow-sm rounded-lg border-0 sticky-top" style="top: 20px;">
-                                                <div  class="card-header btn-primary1 text-white">
+                                                <div class="card-header btn-primary1 text-white">
                                                     <h2 class="h4 mb-0">{{ $titre }}</h2>
                                                 </div>
                                                 <div class="card-body">
@@ -64,10 +64,10 @@
                                                                         class="d-flex justify-content-between align-items-center">
                                                                         <span>Tâche {{ $index + 1 }}</span>
                                                                         @if (isset($reponses[$index]->score))
-                                                                            <span
-                                                                                class="badge bg-{{ $reponses[$index]->score >= 0.5 ? 'success' : 'warning' }}">
-                                                                                {{ $reponses[$index]->score }}/1
+                                                                            <span class="badge bg-{{ isset($reponses[$index]) && $reponses[$index]->score >= 0.5 ? 'success' : 'warning' }}">
+                                                                                {{ $reponses[$index]->score ?? 0 }}/1
                                                                             </span>
+
                                                                         @endif
                                                                     </div>
                                                                 </a>
@@ -102,35 +102,29 @@
                                                                         {!! nl2br(e($tache->contexte_texte)) !!}
                                                                     </div>
                                                                 </div>
-
                                                                 <!-- Student Response -->
                                                                 <div class="mb-4">
                                                                     <h5 class="fw-bold border-bottom pb-2">
-                                                                        <i
-                                                                            class="fas fa-user-edit me-2 text-muted"></i>Votre
-                                                                        réponse
+                                                                        <i class="fas fa-user-edit me-2 text-muted"></i>Votre réponse
                                                                     </h5>
-                                                                    <div class="bg-light p-3 rounded border"
-                                                                        style="height: 20vh; overflow-y: scroll;">
-                                                                        <p>{{ $reponses[$index]->reponse }}</p>
-
+                                                                    <div class="bg-light p-3 rounded border" style="height: 20vh; overflow-y: scroll;">
+                                                                        <p>{{ $reponses[$index]->reponse ?? 'Aucune réponse fournie' }}</p>
                                                                     </div>
                                                                 </div>
 
                                                                 <!-- AI Feedback -->
-                                                                @if ($reponses[$index]->commentaire)
+                                                                @if(isset($reponses[$index]) && $reponses[$index]->commentaire)
                                                                     <div class="ai-feedback">
                                                                         <h5 class="fw-bold border-bottom pb-2">
                                                                             <i class="fas fa-robot me-2 text-muted"></i>
                                                                             Feedback IA
                                                                         </h5>
-                                                                        <div class="bg-light p-3 rounded border border-info"
-                                                                            style="height: 15vh; overflow-y: scroll;">
+                                                                        <div class="bg-light p-3 rounded border border-info" style="height: 15vh; overflow-y: scroll;">
                                                                             <p>{{ $reponses[$index]->commentaire }}</p>
-
                                                                         </div>
                                                                     </div>
                                                                 @endif
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -149,26 +143,23 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Sidebar -->
-                     <div class="col-lg-3">
+                    <div class="col-lg-3">
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
                                 <div class="row align-items-center">
                                     <!-- Avatar -->
-                                    <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
-                                        <div class="avatar-container text-center text-md-start">
+                                    <div class="col-6">
+                                        <div class="avatar-container">
                                             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="150"
-                                                height="150">
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
+                                                height="80">
                                         </div>
                                     </div>
 
                                     <!-- Nom utilisateur -->
-                                    <div class="col-6 col-sm-7 col-md-7 col-lg-7">
-                                        <h5 class="card-title mb-0 text-center text-md-start">
-                                            {{ Auth::user()->name }}
-                                        </h5>
+                                    <div class="col-6">
+                                        <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                                     </div>
                                 </div>
 
@@ -182,41 +173,33 @@
                                 @endphp
 
                                 <div class="mt-4">
-                                    <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
+                                    <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
 
                                     <div class="d-flex flex-wrap gap-2">
-                                        {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
-                                                // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
-                                                // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
+                                                $key = $testType->examen;
                                                 $niveaux = $userLevels[$key] ?? null;
                                             @endphp
 
-                                            {{-- Le bouton principal --}}
-                                            <button style="width: 130px; height: 50px; border-radius: 8px;" type="button"
-                                                class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
-                                                {{ $testType->paye ? '' : 'disabled' }}"
+                                            <button type="button"
+                                                class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
                                                 @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
                                                 @if (!$testType->paye)
-                                                    {{-- Icône de cadenas pour les abonnements non payés --}}
-                                                    <i class="fas fa-lock me-2"></i>
+                                                    <i class="fas fa-lock me-1"></i>
                                                 @endif
                                                 {{ strtoupper($key) }}
                                             </button>
 
-
-                                            {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
+                                            <!-- Modal -->
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
-                                                aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
-                                                                pour
-                                                                {{ strtoupper($key) }}</h5>
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Fermer"></button>
                                                         </div>
@@ -247,22 +230,15 @@
                                                                 </p>
                                                             @endif
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Fermer</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                     <style>
                         .task-link.active {
                             background-color: #224194;
@@ -278,29 +254,32 @@
                             background-color: transparent;
                             color: black;
                         }
-                        .btn-primary1{
+
+                        .btn-primary1 {
                             border-radius: 20px;
                             background-color: #224194;
                             color: white;
                         }
-                        .bg-primary1{
+
+                        .bg-primary1 {
                             background-color: #224194;
                         }
-                        .alert-success1{
-                             background-color: #FEF8E7;
-            border: none;
-            color: black;
+
+                        .alert-success1 {
+                            background-color: #FEF8E7;
+                            border: none;
+                            color: black;
                         }
-                        .bg-danger{
+
+                        .bg-danger {
                             background-color: red;
                         }
-                        <style>
- 
-        .card-body:hover{
-            color: black;
-            background-color: transparent;
-        }
-    </style>
+
+                        <style>.card-body:hover {
+                            color: black;
+                            background-color: transparent;
+                        }
+                    </style>
                     </style>
 
                     <script>

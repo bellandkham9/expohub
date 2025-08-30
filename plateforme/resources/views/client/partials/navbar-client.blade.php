@@ -1,13 +1,19 @@
-<nav class="navbar navbar-expand-lg bg-white sticky-top">
+<nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand fw-bold text-primary" href="{{ route('start.home') }}">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" style="height: 40px;">
         </a>
 
-        <!-- Menu central -->
-        <div class="collapse navbar-collapse justify-content-center" id="mainNavbar">
-            <ul class="navbar-nav gap-3">
+        <!-- Bouton mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu à gauche (près du logo) -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav gap-3 ms-3">
                 <li class="nav-item"><a class="nav-link" href="{{ route('client.dashboard') }}">Tableau de bord</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('test.choix_test') }}">Tests</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('client.history') }}">Historique</a></li>
@@ -16,9 +22,8 @@
             </ul>
         </div>
 
-        <!-- Droits -->
-        <div class="d-flex align-items-center gap-3">
-
+        <!-- Partie droite -->
+        <div class="d-flex align-items-center gap-3 ms-auto">
             @php
                 $notifications = \App\Models\NotificationAdmin::whereNull('user_id')
                     ->orWhere('user_id', auth()->id())
@@ -29,37 +34,33 @@
 
             <!-- Bouton notifications -->
             <button class="btn position-relative" id="btnNotifications">
-            <i class="bi bi-bell " style="font-size: 1.5rem;"></i>
-            @if($unreadCount > 0)
-                <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{ $unreadCount }}
-                    <span class="visually-hidden">notifications non lues</span>
-                </span>
-            @endif
-        </button>
+                <i class="bi bi-bell" style="font-size: 1.5rem;"></i>
+                @if($unreadCount > 0)
+                    <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $unreadCount }}
+                        <span class="visually-hidden">notifications non lues</span>
+                    </span>
+                @endif
+            </button>
 
             <!-- Dropdown utilisateur -->
             <div class="dropdown">
-                <a href="#" class="d-flex link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                             alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
-                        <div class="fw-bold ms-2">{{ auth()->user()->name ?? 'Utilisateur' }}</div>
-                    </div>
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                   id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                         alt="Avatar"
+                         class="rounded-circle"
+                         style="width: 35px; height: 35px; object-fit: cover;">
+                    <!-- Nom affiché seulement sur desktop -->
+                    <span class="fw-bold ms-2 d-none d-lg-inline">{{ auth()->user()->name ?? 'Utilisateur' }}</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1">
+                <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" href="{{ route('client.mon-compte') }}">Mon compte</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{{ route('deconnexion') }}">Se déconnecter</a></li>
+                    <li><a class="dropdown-item text-danger" href="{{ route('deconnexion') }}">Se déconnecter</a></li>
                 </ul>
             </div>
         </div>
-
-        <!-- Bouton mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
     </div>
 </nav>
 
@@ -167,3 +168,9 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 });
 </script>
+
+<Style>
+    
+
+
+</Style>

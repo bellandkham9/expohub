@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Middleware\CheckFreeTests;
 use App\Http\Middleware\UpdateLastSeen;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Controllers\ExpressionOraleController1;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\TestController;
@@ -47,7 +48,6 @@ Route::post('/envoyer-message', [ContactController::class, 'sendEmail'])->name('
 
 Route::get('/', function () {
     return view('start.home'); })->name('start.home');
-
 
 
 // Application du middleware 'auth' sur les routes nécessitant une authentification
@@ -106,6 +106,10 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/suggestion/generate', [SuggestionController::class, 'generate'])->name('suggestions.generate');
 
     Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
+
+    Route::get('/paiementValider', function () {
+    return view('start.paiementValider'); })->name('paiement.return');
+
 
     //  Route du chatbot
     Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
@@ -168,7 +172,8 @@ Route::middleware(['web', 'auth', AdminMiddleware::class, UpdateLastSeen::class]
     Route::post('/notifications/send', [AdminUserController::class, 'sendMessage'])->name('notifications.send');
 
     Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
-    Route::post('/paiement/notify', [PaiementController::class, 'notify'])->name('paiement.notify');
+    
+
 
     // ================= Dashboard =================
     Route::get('/admin/train-dashboard', [TrainController::class, 'index'])->name('train.dashboard');
@@ -243,3 +248,15 @@ Route::post('admin/notifications/{notification}/read', [AdminUserController::cla
     ->name('admin.notifications.read');
 Route::delete('/admin/notifications/{id}', [AdminUserController::class, 'supprimer'])
     ->name('notifications.supprimer');
+
+
+
+    // Routes super admin
+Route::middleware(['web', 'auth', SuperAdminMiddleware::class])->group(function () {
+    
+});
+
+
+Route::get('/contact', function () {
+    return view('client.contact');
+})->name('client.contact');

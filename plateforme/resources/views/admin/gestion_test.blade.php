@@ -246,7 +246,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" id="AjoutBtn" class="btn btn-primary">Ajouter</button>
+                            <button style="background-color: #224194; color: white;" type="submit" id="AjoutBtn" class="btn">Ajouter</button>
                         </div>
                     </form>
                 </div>
@@ -353,7 +353,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                        <button style="background-color: #224194;color: white;" type="submit" class="btn ">Ajouter</button>
                     </div>
                 </form>
             </div>
@@ -401,7 +401,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary">Modifier</button>
+                        <button style="background-color: #224194;color: white;" type="submit" class="btn">Modifier</button>
                     </div>
                 </form>
             </div>

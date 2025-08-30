@@ -1,9 +1,9 @@
 @extends('layouts.app')
+        @include(auth()->check() ? 'client.partials.navbar-client' : 'client.partials.navbar')
 
 @section('content')
     <div class="container-fluid dashboard-container">
         <!-- Navigation -->
-        @include(auth()->check() ? 'client.partials.navbar-client' : 'client.partials.navbar')
 
         <div class="row g-4">
             <!-- Main Content -->
@@ -359,7 +359,6 @@
         }
     </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Gestion des clics sur les boutons de test
@@ -475,7 +474,6 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

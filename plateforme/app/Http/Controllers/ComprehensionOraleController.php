@@ -259,7 +259,7 @@ class ComprehensionOraleController extends Controller
                     'test_type' => $ceTestType->label,
                     'skill' => 'Compréhension Écrite',
                     'date' => $reponse->created_at,
-                    'duration' => 60,
+                    'duration' => 360,
                     'score' => $reponse->score,
                     'max_score' => 699,
                     'level' => $reponse->niveau,

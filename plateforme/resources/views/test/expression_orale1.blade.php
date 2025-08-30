@@ -85,7 +85,51 @@
     {{-- <textarea id="zoneRedaction"></textarea> --}}
 
 
+<style>
 
+
+    /* ==== CSS responsive pour que .consigne ne recouvre jamais le bouton audio ==== */
+@media (max-width: 991px) {
+    .indication {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .indication .consigne {
+        display: block;
+        max-height: 15vh; /* limite la hauteur du texte */
+        overflow-y: auto; /* scroll si le texte est trop long */
+        margin-bottom: 30px; /* espace sous le texte pour le bouton audio */
+    }
+
+    #audioPreview {
+        width: 100%;
+        margin-top: 10px; /* espace supplémentaire pour que le texte ne le recouvre pas */
+        z-index: 10; /* toujours au-dessus si nécessaire */
+    }
+
+    #audioContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px; /* espace depuis la consigne */
+    }
+
+    #recorderSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #recorderSection button {
+        margin-top: 10vh;
+        width: 60px;
+        height: 60px;
+    }
+}
+
+</style>
     <!-- Scripts -->
     <script>
         // Timer
@@ -335,6 +379,16 @@ function enregistrerResultatFinalEtRediriger() {
             throw new Error(data.error);
         }
         
+         console.log({
+                expression_orale_id: document.getElementById('questionId').value,
+                audio_eleve: data.audio_path,
+                transcription_eleve: data.transcription,
+                texte_ia: data.ia_response,
+                audio_ia: data.audio_ia_path,
+                score: data.score || 0,
+                test_type: testType
+            });
+            
         // Enregistrer la réponse après la transcription
         return fetch("{{ route('expression_orale.repondre') }}", {
             method: "POST",
@@ -352,6 +406,8 @@ function enregistrerResultatFinalEtRediriger() {
                 score: data.score || 0,
                 test_type: testType                 // score optionnel
             })
+           
+
         });
 
     })

@@ -116,30 +116,32 @@
     </main>
 
     <!-- Footer -->
-    <footer class="container mb-4 p-4 text-light">
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <div>
-                <p class="mb-1 fw-bold">Allez à</p>
-                <ul class="list-unstyled d-flex gap-3">
+    <footer class="container-fluid p-4 text-light" style="background-color: #222;">
+    <div class="container">
+        <div class="row align-items-start">
+            <!-- Liens -->
+            <div class="col-12 col-md-6 mb-3">
+                <p class="fw-bold">Allez à</p>
+                <ul class="list-unstyled d-flex flex-wrap gap-3">
                     <li><a href="{{ route('start.home') }}" class="text-white text-decoration-none">Accueil</a></li>
                     <li><a href="{{ route('suggestion.suggestion') }}" class="text-white text-decoration-none">Stratégie</a></li>
                     <li><a href="{{ route('client.paiement') }}" class="text-white text-decoration-none">Abonnements</a></li>
                     <li><a href="https://www.exponentielimmigration.com/" target="_blank" class="text-white text-decoration-none">Exponentiel Immigration</a></li>
                     <li><a href="{{ route('client.contact') }}" class="text-white text-decoration-none">Contact</a></li>
                 </ul>
-
-                <p class="mt-2 fw-bold">
-                    Suivez nous sur :
-                    <a href="https://www.facebook.com/immigrationforus?mibextid=ZbWKwL"><i class="bi bi-facebook m-2"></i></a>
-                    <a href="https://youtube.com/@exponentielimmigration?si=TpZ2KjA7mdJYpay2"><i class="bi bi-youtube m-2"></i></a>
+                <p class="mt-3 fw-bold">
+                    Suivez-nous sur :
+                    <a href="https://www.facebook.com/immigrationforus?mibextid=ZbWKwL" class="text-white"><i class="bi bi-facebook m-2"></i></a>
+                    <a href="https://youtube.com/@exponentielimmigration?si=TpZ2KjA7mdJYpay2" class="text-white"><i class="bi bi-youtube m-2"></i></a>
                 </p>
             </div>
 
-            <div class="d-flex flex-column align-items-end text-end">
+            <!-- Connexion / CGU -->
+            <div class="col-12 col-md-6 text-md-end mb-3">
                 @if (!auth()->check())
-                    <div class="d-flex gap-2 mb-3">
-                        <a class="btn" href="{{ route('auth.inscription') }}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">S'inscrire</a>
-                        <a class="btn" href="{{ route('auth.connexion') }}" style="background-color: #D9D9D9; border-radius: 30px; color: black;">Se connecter</a>
+                    <div class="d-flex flex-wrap justify-content-md-end gap-2 mb-3">
+                        <a class="btn btn-light px-3" href="{{ route('auth.inscription') }}" style="border-radius: 30px; color: black;">S'inscrire</a>
+                        <a class="btn btn-light px-3" href="{{ route('auth.connexion') }}" style="border-radius: 30px; color: black;">Se connecter</a>
                     </div>
                 @endif
                 <div>
@@ -151,11 +153,14 @@
             </div>
         </div>
 
-        <hr style="height: 3px; background-color: white; border: 2px solid white;">
-        <div class="container text-center mt-3">
+        <hr class="my-3" style="height: 2px; background-color: white; border: none;">
+
+        <div class="text-center">
             <small class="d-block">&copy; 2025 ExpoHub Academy | Tous droits réservés</small>
         </div>
-    </footer>
+    </div>
+</footer>
+
 </div>
 
 <!-- Toast Notification -->
@@ -190,6 +195,7 @@
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
      
 </body>

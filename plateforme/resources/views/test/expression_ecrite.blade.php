@@ -185,6 +185,8 @@
                     throw new Error('Erreur HTTP : ' + response.status);
                 }
                 return response.json();
+                
+                window.location.href = '/expression-ecrite/resultat';
             })
             .then(data => {
                 console.log("Résultat enregistré :", data);

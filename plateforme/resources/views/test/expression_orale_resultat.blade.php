@@ -97,22 +97,22 @@
                                                             $tache->id,
                                                         );
                                                     @endphp
+                                                  @if ($userReponse && $userReponse->audio_eleve)
+                                                    <audio controls class="w-100">
+    <source src="{{ asset('storage/' . $userReponse->audio_eleve) }}" type="audio/mp3">
+    Votre navigateur ne prend pas en charge la lecture audio.
+</audio>
 
-                                                    @if ($userReponse && $userReponse->audio_eleve)
-                                                        <audio controls class="w-100">
-                                                            <source src="{{ asset($userReponse->audio_eleve) }}"
-                                                                type="audio/mp3">
-                                                            Votre navigateur ne prend pas en charge la lecture audio.
-                                                        </audio>
 
-                                                        <button class="btn btn-outline-primary btn-sm mt-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#responseModal{{ $tache->id }}">
-                                                            Voir les détails
-                                                        </button>
-                                                    @else
-                                                        <p class="text-muted fst-italic">Aucune réponse enregistrée</p>
-                                                    @endif
+                                                    <button class="btn btn-outline-primary btn-sm mt-2"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#responseModal{{ $tache->id }}">
+                                                        Voir les détails
+                                                    </button>
+                                                @else
+                                                    <p class="text-muted fst-italic">Aucun enregistrement disponible</p>
+                                                @endif
+
                                                 </div>
                                             </div>
                                         </div>
@@ -122,32 +122,26 @@
                             @else
                                 <div class="alert alert-warning">Aucune tâche disponible pour afficher les détails.</div>
                             @endisset
-                            <div class="justify-items-center mt-4">
-                                <a href="{{ route('client.dashboard') }}" class="btn btn-outline-secondary">🏠 Retour à
-                                    l’accueil</a>
-                            </div>
                         </section>
                     </div>
 
-                   <div class="col-lg-3">
+                    <div class="col-lg-3">
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
                                 <div class="row align-items-center">
                                     <!-- Avatar -->
-                                    <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
-                                        <div class="avatar-container text-center text-md-start">
+                                    <div class="col-6">
+                                        <div class="avatar-container">
                                             <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                                alt="Avatar" class="rounded-circle avatar-img img-fluid" width="150"
-                                                height="150">
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
+                                                height="80">
                                         </div>
                                     </div>
 
                                     <!-- Nom utilisateur -->
-                                    <div class="col-6 col-sm-7 col-md-7 col-lg-7">
-                                        <h5 class="card-title mb-0 text-center text-md-start">
-                                            {{ Auth::user()->name }}
-                                        </h5>
+                                    <div class="col-6">
+                                        <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                                     </div>
                                 </div>
 
@@ -161,41 +155,33 @@
                                 @endphp
 
                                 <div class="mt-4">
-                                    <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
+                                    <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
 
                                     <div class="d-flex flex-wrap gap-2">
-                                        {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
-                                                // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
-                                                // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
+                                                $key = $testType->examen;
                                                 $niveaux = $userLevels[$key] ?? null;
                                             @endphp
 
-                                            {{-- Le bouton principal --}}
-                                            <button style="width: 130px; height: 50px; border-radius: 8px;" type="button"
-                                                class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
-                                                {{ $testType->paye ? '' : 'disabled' }}"
+                                            <button type="button"
+                                                class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
                                                 @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
                                                 @if (!$testType->paye)
-                                                    {{-- Icône de cadenas pour les abonnements non payés --}}
-                                                    <i class="fas fa-lock me-2"></i>
+                                                    <i class="fas fa-lock me-1"></i>
                                                 @endif
                                                 {{ strtoupper($key) }}
                                             </button>
 
-
-                                            {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
+                                            <!-- Modal -->
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
-                                                aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
-                                                                pour
-                                                                {{ strtoupper($key) }}</h5>
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Fermer"></button>
                                                         </div>
@@ -226,22 +212,15 @@
                                                                 </p>
                                                             @endif
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Fermer</button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
                 </div>
             </section>
         </div>
@@ -255,7 +234,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Réponse complète - Tâche {{ $reponse->question->numero_tache }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
@@ -277,11 +257,12 @@
     @endforeach
 
     <style>
-        .card:hover{
+        .card:hover {
             color: black;
             background-color: transparent;
         }
-        .card-body:hover{
+
+        .card-body:hover {
             color: black;
             background-color: transparent;
         }

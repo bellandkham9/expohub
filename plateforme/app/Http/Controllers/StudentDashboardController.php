@@ -122,7 +122,7 @@ class StudentDashboardController extends Controller
          // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
     $completedTests = HistoriqueTest::where('user_id', $user->id)
         ->orderByDesc('completed_at')
-        ->take(2)
+        ->take(3)
         ->get()
         ->map(function ($test) {
             return [

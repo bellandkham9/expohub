@@ -280,7 +280,7 @@ class ComprehensionEcriteController extends Controller
                     'test_type' => $ceTestType->label,
                     'skill' => 'Compréhension Écrite',
                     'date' => $reponse->created_at,
-                    'duration' => 60,
+                    'duration' => 360,
                     'score' => $reponse->score,
                     'max_score' => 699,
                     'level' => $reponse->niveau,
@@ -300,7 +300,7 @@ class ComprehensionEcriteController extends Controller
                     'test_type' => $coTestType->label,
                     'skill' => 'Compréhension Orale',
                     'date' => $reponse->created_at,
-                    'duration' => 30,
+                    'duration' => 160,
                     'score' => $reponse->score,
                     'max_score' => 699,
                     'level' => $reponse->niveau,
@@ -371,4 +371,6 @@ class ComprehensionEcriteController extends Controller
             'testTypes' => $testTypes,
         ]);
     }
+
+    
 }
