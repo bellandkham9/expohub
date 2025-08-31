@@ -92,6 +92,7 @@ class PaiementController extends Controller
             Souscription::create([
                 'user_id' => $paiement->user_id,
                 'abonnement_id' => $paiement->abonnement_id,
+                'paye'=>true,
                 'date_debut' => Carbon::now(),
                 'date_fin' => Carbon::now()->addDays(30),
             ]);

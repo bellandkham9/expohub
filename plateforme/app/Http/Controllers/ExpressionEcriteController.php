@@ -401,7 +401,7 @@ class ExpressionEcriteController extends Controller
                 ->where('test_type', $testType->id)
                 ->first();
 
-            $userLevels[$testType->nom] = $niveau ? [
+            $userLevels[$testType->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -412,7 +412,14 @@ class ExpressionEcriteController extends Controller
                 'expression_ecrite' => 'Non défini',
                 'expression_orale' => 'Non défini',
             ];
-        }
+
+             // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$testType->examen] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $testType->id)
+                ->first();
+                }
+        
 
 
          // Récupérer les 5 derniers tests complétés par type et compétence
@@ -517,6 +524,7 @@ class ExpressionEcriteController extends Controller
             'completedTests' => $completedTests,
             'learningGoal' => $learningGoal,
             'testTypes' => $testTypes,
+            'souscriptionsPayees'=> $souscriptionsPayees
         ]);
     }
     

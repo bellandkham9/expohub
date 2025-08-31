@@ -12,6 +12,7 @@ class Souscription extends Model
         'abonnement_id',
         'date_debut',
         'date_fin',
+        'paye'
      ];
      
      public function user()

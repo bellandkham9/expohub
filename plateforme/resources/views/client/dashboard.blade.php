@@ -23,7 +23,7 @@
                             <h2 class="h5 fw-bold mb-4">Abonnements</h2>
                             <div class="row g-3 p-4" style="height: 25vh; overflow-y: scroll;">
                                 <div class="row g-3">
-                                    @if ($testTypes->isEmpty())
+                                    @if ($souscriptionActive->isEmpty())
                                         <div class="col-12">
                                             <div class="alert alert-warning text-center">
                                                 <h5 class="mb-3">Aucun abonnement disponible pour votre compte</h5>
@@ -34,7 +34,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        @foreach ($testTypes as $testType)
+                                        @foreach ($souscriptionActive as $testType)
                                             <div class="col-md-6">
                                                 <div class="test-card h-100 p-3 border rounded shadow-sm">
                                                     <div class="d-flex align-items-center mb-3">
@@ -129,160 +129,141 @@
                 </section>
             </div>
 
-            <!-- Sidebar -->
             <div class="col-lg-3">
-                <!-- Profil -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body text-center">
-                        <div class="row align-items-center">
-                            <!-- Avatar -->
-                            <div class="col-6 col-sm-5 col-md-5 col-lg-5  mb-2 mb-md-0">
-                                <div class="avatar-container text-center text-md-start">
-                                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                        alt="Avatar" class="rounded-circle avatar-img img-fluid" width="150"
-                                        height="150">
-                                </div>
-                            </div>
-
-                            <!-- Nom utilisateur -->
-                            <div class="col-6 col-sm-7 col-md-7 col-lg-7">
-                                <h5 class="card-title mb-0 text-center text-md-start">
-                                    {{ Auth::user()->name }}
-                                </h5>
-                            </div>
-                        </div>
-
-                        @php
-                            $skills = [
-                                'Compréhension Écrite' => 'comprehension_ecrite',
-                                'Compréhension Orale' => 'comprehension_orale',
-                                'Expression Écrite' => 'expression_ecrite',
-                                'Expression Orale' => 'expression_orale',
-                            ];
-                        @endphp
-
-                        <div class="mt-4">
-                            <h6 class="text-start fw-bold mb-3">Vos niveaux par test</h6>
-
-                            <div class="d-flex flex-wrap gap-2">
-                                {{-- Assurez-vous que la variable passée depuis le contrôleur est bien $abonnementsPourAffichage --}}
-                                @foreach ($testTypes1 as $testType)
-                                    @php
-                                        $modalId = 'modal_' . $testType->id;
-                                        $key = $testType->examen; // Assumant que 'examen' est la propriété à afficher
-                                        // N'oubliez pas que $userLevels n'est pas passé dans le contrôleur modifié.
-                                        // Si vous avez besoin de $userLevels, assurez-vous de le passer depuis le contrôleur.
-                                        $niveaux = $userLevels[$key] ?? null;
-                                    @endphp
-
-                                    {{-- Le bouton principal --}}
-                                    <button style="width: 130px; height: 50px; border-radius: 8px;" type="button"
-                                        class="btn {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }}
-                                                {{ $testType->paye ? '' : 'disabled' }}"
-                                        @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
-                                        @if (!$testType->paye)
-                                            {{-- Icône de cadenas pour les abonnements non payés --}}
-                                            <i class="fas fa-lock me-2"></i>
-                                        @endif
-                                        {{ strtoupper($key) }}
-                                    </button>
-
-
-                                    {{-- Le Modal (s'affiche seulement si l'abonnement est payé et le bouton cliquable) --}}
-                                    <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
-                                        aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="{{ $modalId }}Label">Niveaux
-                                                        pour
-                                                        {{ strtoupper($key) }}</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Fermer"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    @if ($niveaux)
-                                                        <div class="row g-2">
-                                                            @foreach ($skills as $label => $champ)
-                                                                @php
-                                                                    $level = $niveaux[$champ] ?? 'Non défini';
-                                                                    $color = match ($level) {
-                                                                        'C2', 'C1', 'B2' => 'success',
-                                                                        'B1', 'A2', 'A1' => 'warning',
-                                                                        default => 'secondary',
-                                                                    };
-                                                                @endphp
-                                                                <div class="col-6">
-                                                                    <div class="p-2 bg-light rounded">
-                                                                        <small
-                                                                            class="d-block text-muted">{{ $label }}</small>
-                                                                        <strong
-                                                                            class="text-{{ $color }}">{{ $level }}</strong>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    @else
-                                                        <p class="text-muted">Aucun niveau enregistré pour ce test.
-                                                        </p>
-                                                    @endif
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Fermer</button>
-                                                </div>
-                                            </div>
+                        <!-- Profil -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <div class="row align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="col-6">
+                                        <div class="avatar-container">
+                                            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
+                                                height="80">
                                         </div>
                                     </div>
-                                @endforeach
+
+                                    <!-- Nom utilisateur -->
+                                    <div class="col-6">
+                                        <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
+                                    </div>
+                                </div>
+
+                                @php
+                                    $skills = [
+                                        'Compréhension Écrite' => 'comprehension_ecrite',
+                                        'Compréhension Orale' => 'comprehension_orale',
+                                        'Expression Écrite' => 'expression_ecrite',
+                                        'Expression Orale' => 'expression_orale',
+                                    ];
+                                @endphp
+
+                                <div class="mt-4">
+                                    <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach ($testTypes as $testType)
+                                            @php
+                                                $modalId = 'modal_' . $testType->id;
+                                                $key = $testType->examen;
+                                                $niveaux = $userLevels[$key] ?? null;
+                                                $souscription = $souscriptionsPayees[$key] ?? null;
+                                            @endphp
+
+                                            <button type="button"
+                                                class="btn btn-level {{ $souscription && $souscription->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $souscription && $souscription->paye ? '' : 'disabled' }}"
+                                                @if ($souscription && $souscription->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$souscription || !$souscription->paye)
+                                                    <i class="fas fa-lock me-1"></i>
+                                                @endif
+                                                {{ strtoupper($key) }}
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
 
-            </div>
         </div>
 
-        <!-- Test Modal -->
-        <div class="modal fade" id="testModal" tabindex="-1">
+         <!-- Test Modal -->
+        <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Choisissez une compétence</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="testModalLabel">Choisissez une compétence</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
-                            <div class="col-6">
-                                <a href="#"
-                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-yellow start-test-btn"
-                                    data-test-type="comprehension_ecrite" data-test-name="Compréhension Écrite">
-                                    <img src="{{ asset('images/lecture.png') }}" width="40" class="mb-2">
+                            <div class="col-6 col-md-6">
+                                <a href="#" class="skill-card d-block p-3 rounded text-center text-decoration-none bg-warning start-test-btn"
+                                   data-test-type="comprehension_ecrite" data-test-name="Compréhension Écrite">
+                                    <img src="{{ asset('images/lecture.png') }}" width="40" class="mb-2" alt="Lecture" loading="lazy">
                                     <h6 class="mb-0">Compréhension Écrite</h6>
                                 </a>
                             </div>
-                            <div class="col-6">
-                                <a href="#"
-                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-red start-test-btn"
-                                    data-test-type="comprehension_orale" data-test-name="Compréhension Orale">
-                                    <img src="{{ asset('images/ecoute.png') }}" width="40" class="mb-2">
+                            <div class="col-6 col-md-6">
+                                <a href="#" class="skill-card d-block p-3 rounded text-center text-decoration-none bg-danger text-white start-test-btn"
+                                   data-test-type="comprehension_orale" data-test-name="Compréhension Orale">
+                                    <img src="{{ asset('images/ecoute.png') }}" width="40" class="mb-2" alt="Écoute" loading="lazy">
                                     <h6 class="mb-0">Compréhension Orale</h6>
                                 </a>
                             </div>
-                            <div class="col-6">
-                                <a href="#"
-                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-blue start-test-btn"
-                                    data-test-type="expression_ecrite" data-test-name="Expression Écrite">
-                                    <img src="{{ asset('images/ecrite.png') }}" width="40" class="mb-2">
+                            <div class="col-6 col-md-6">
+                                <a href="#" class="skill-card d-block p-3 rounded text-center text-decoration-none bg-primary text-white start-test-btn"
+                                   data-test-type="expression_ecrite" data-test-name="Expression Écrite">
+                                    <img src="{{ asset('images/ecrite.png') }}" width="40" class="mb-2" alt="Écriture" loading="lazy">
                                     <h6 class="mb-0">Expression Écrite</h6>
                                 </a>
                             </div>
-                            <div class="col-6">
-                                <a href="#"
-                                    class="skill-card d-block p-3 rounded text-center text-decoration-none bg-teal start-test-btn"
-                                    data-test-type="expression_orale" data-test-name="Expression Orale">
-                                    <img src="{{ asset('images/orale.png') }}" width="40" class="mb-2">
+                            <div class="col-6 col-md-6">
+                                <a href="#" class="skill-card d-block p-3 rounded text-center text-decoration-none bg-info text-white start-test-btn"
+                                   data-test-type="expression_orale" data-test-name="Expression Orale">
+                                    <img src="{{ asset('images/orale.png') }}" width="40" class="mb-2" alt="Orale" loading="lazy">
                                     <h6 class="mb-0">Expression Orale</h6>
                                 </a>
                             </div>
@@ -291,6 +272,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <style>
@@ -594,6 +576,46 @@ Nous vous proposons aujourd'hui de continuer avec le test : ${testPropose}.`;
                     .catch(err => console.error("Impossible de supprimer la notification", err));
             }
         });
+
+
+
+
+         // Gestion des tests
+                document.querySelectorAll('.start-test-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const testType = this.dataset.testType;
+                        const testName = this.dataset.testName;
+
+                        const consignes = {
+                            comprehension_ecrite: `Bienvenue au test de Compréhension Écrite.\n\nDurée : 60 minutes\nNombre de questions : 30\n\nInstructions :\n1. Lisez attentivement chaque texte\n2. Répondez aux questions associées\n3. Vous ne pouvez pas revenir en arrière`,
+                            comprehension_orale: `Bienvenue au test de Compréhension Orale.\n\nDurée : 45 minutes\nNombre d'extraits audio : 20\n\nInstructions :\n1. Écoutez chaque extrait une seule fois\n2. Prenez des notes si nécessaire\n3. Répondez aux questions`,
+                            expression_ecrite: `Bienvenue au test d'Expression Écrite.\n\nDurée : 60 minutes\nNombre de sujets : 2\n\nInstructions :\n1. Structurez clairement vos réponses\n2. Vérifiez votre grammaire et orthographe\n3. Respectez le nombre de mots demandé`,
+                            expression_orale: `Bienvenue au test d'Expression Orale.\n\nDurée : 15 minutes\nNombre de sujets : 3\n\nInstructions :\n1. Parlez clairement et distinctement\n2. Structurez vos idées\n3. Utilisez un vocabulaire varié`
+                        };
+
+                        Swal.fire({
+                            title: `Consignes - ${testName}`,
+                            html: `<div style="text-align:left; white-space: pre-line;">${consignes[testType]}</div>`,
+                            icon: 'info',
+                            confirmButtonText: 'Commencer le test',
+                            showCancelButton: true,
+                            cancelButtonText: 'Annuler',
+                            allowOutsideClick: false,
+                            width: '600px'
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                const routes = {
+                                    comprehension_ecrite: "{{ route('test.comprehension_ecrite') }}",
+                                    comprehension_orale: "{{ route('test.comprehension_orale') }}",
+                                    expression_ecrite: "{{ route('test.expression_ecrite') }}",
+                                    expression_orale: "{{ route('test.expression_orale') }}"
+                                };
+                                window.location.href = routes[testType];
+                            }
+                        });
+                    });
+                });
     </script>
 
 

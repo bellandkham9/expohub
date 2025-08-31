@@ -36,8 +36,8 @@
                                             Détails
                                         </a>
 
-                                        <div class="w-100">
-                                            <a href="{{ route($test['refaire_route']) }}" class="btn btn-primary w-100"
+                                        <div class="" style="width: 500px;">
+                                            <a href="{{ route($test['refaire_route']) }}" class="btn btn-primary"
                                                 style="background-color: #224194; color: white;"
                                                 onclick="event.preventDefault(); if(confirm('Êtes-vous sûr de vouloir recommencer le test ?')) { document.getElementById('reset-form-{{ $loop->index }}').submit(); }">
                                                 Refaire le test
@@ -62,85 +62,104 @@
                 </div>
             </div>
 
-            {{-- Barre latérale du profil --}}
-            <div class="col-12 col-lg-3">
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-body text-center">
-                        <div class="row align-items-center g-3">
-                            <div class="col-12 col-md-6 col-lg-12"> {{-- Ajusté pour la réactivité --}}
-                                <div class="d-flex flex-column align-items-center">
-                                    <div class="avatar-container mb-2">
-                                        <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                             alt="Avatar" class="rounded-circle avatar-img img-fluid">
+             <div class="col-12 col-lg-3">
+                        <!-- Profil -->
+                        <div class="card border-0 shadow-sm mb-4">
+                            <div class="card-body text-center">
+                                <div class="row align-items-center">
+                                    <!-- Avatar -->
+                                    <div class="col-6">
+                                        <div class="avatar-container">
+                                            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
+                                                alt="Avatar" class="rounded-circle avatar-img" width="80"
+                                                height="80">
+                                        </div>
                                     </div>
-                                    <h5 class="card-title mb-0 text-center">{{ Auth::user()->name }}</h5> {{-- Centré le texte --}}
-                                </div>
-                            </div>
 
-                            <div class="col-12 col-md-6 col-lg-12"> {{-- Ajusté pour la réactivité --}}
-                                <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
-                                <div class="d-flex flex-wrap justify-content-center gap-2">
-                                    @foreach ($testTypes as $testType)
-                                        @php
-                                            $modalId = 'modal_' . $testType->id;
-                                            $key = $testType->examen;
-                                            $niveaux = $userLevels[$key] ?? null;
-                                            $skills = [
-                                                'Compréhension Écrite' => 'comprehension_ecrite',
-                                                'Compréhension Orale' => 'comprehension_orale',
-                                                'Expression Écrite' => 'expression_ecrite',
-                                                'Expression Orale' => 'expression_orale',
-                                            ];
-                                        @endphp
-                                        <button type="button" class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
-                                                @if($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
-                                            @if(!$testType->paye)
-                                            <i class="fas fa-lock me-1"></i>
-                                            @endif
-                                            {{ strtoupper($key) }}
-                                        </button>
-                                        
-                                        <div class="modal fade" id="{{ $modalId }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        @if($niveaux)
-                                                        <div class="row g-2">
-                                                            @foreach($skills as $label => $champ)
-                                                                @php
-                                                                    $level = $niveaux[$champ] ?? 'Non défini';
-                                                                    $color = match($level) {
-                                                                        'C2', 'C1', 'B2' => 'success',
-                                                                        'B1', 'A2', 'A1' => 'warning',
-                                                                        default => 'secondary'
-                                                                    };
-                                                                @endphp
-                                                                <div class="col-6">
-                                                                    <div class="p-2 bg-light rounded">
-                                                                        <small class="d-block text-muted">{{ $label }}</small>
-                                                                        <strong class="text-{{ $color }}">{{ $level }}</strong>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
+                                    <!-- Nom utilisateur -->
+                                    <div class="col-6">
+                                        <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
+                                    </div>
+                                </div>
+
+                                @php
+                                    $skills = [
+                                        'Compréhension Écrite' => 'comprehension_ecrite',
+                                        'Compréhension Orale' => 'comprehension_orale',
+                                        'Expression Écrite' => 'expression_ecrite',
+                                        'Expression Orale' => 'expression_orale',
+                                    ];
+                                @endphp
+
+                                <div class="mt-4">
+                                    <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach ($testTypes as $testType)
+                                            @php
+                                                $modalId = 'modal_' . $testType->id;
+                                                $key = $testType->examen;
+                                                $niveaux = $userLevels[$key] ?? null;
+                                                $souscription = $souscriptionsPayees[$key] ?? null;
+                                            @endphp
+
+                                            <button type="button"
+                                                class="btn btn-level {{ $souscription && $souscription->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $souscription && $souscription->paye ? '' : 'disabled' }}"
+                                                @if ($souscription && $souscription->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$souscription || !$souscription->paye)
+                                                    <i class="fas fa-lock me-1"></i>
+                                                @endif
+                                                {{ strtoupper($key) }}
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
                                                         </div>
-                                                        @else
-                                                        <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
-                                                        @endif
+                                                        <div class="modal-body">
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+
         </div>
     </div>
     @include('start.chatbot')

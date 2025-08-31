@@ -15,6 +15,7 @@ use App\Models\ExpressionOraleReponse;
 use App\Models\HistoriqueTest;
 use App\Models\Souscription;
 
+
 class StudentDashboardController extends Controller
 {
     public function dashboard()
@@ -34,16 +35,16 @@ class StudentDashboardController extends Controller
         }
 
         // Accéder directement aux informations de l'abonnement via la relation
-        $testTypes = $souscriptionActive;
+        $testTypes = abonnement::all();
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
         foreach ($testTypes as $testType) {
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testType->abonnement->id)
+                ->where('test_type', $testType->id)
                 ->first();
 
-            $userLevels[$testType->abonnement->examen] = $niveau ? [
+            $userLevels[$testType->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -54,7 +55,12 @@ class StudentDashboardController extends Controller
                 'expression_ecrite' => 'Non défini',
                 'expression_orale' => 'Non défini',
             ];
-        }
+        // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$testType->examen] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $testType->id)
+                ->first();
+                }
 
         // 2. Regrouper tous les tests en un tableau commun
         $allTests = collect();
@@ -156,7 +162,9 @@ class StudentDashboardController extends Controller
             'completedTests',
             'learningGoal',
             'testTypes',
-            'testTypes1'
+            'testTypes1',
+            'souscriptionsPayees',
+            'souscriptionActive'
         ));
     }
 
@@ -167,9 +175,10 @@ class StudentDashboardController extends Controller
         ->where('is_free', true)
         ->count();
 
-    if ($testsGratuits >= 4) {
+    if ($testsGratuits >=5) {
         return response()->json([
-            'has_free_tests' => false
+            'has_free_tests' => false,
+            'nombre' =>$testsGratuits
         ]);
     }
 

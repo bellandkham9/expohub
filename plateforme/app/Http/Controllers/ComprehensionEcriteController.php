@@ -246,15 +246,17 @@ class ComprehensionEcriteController extends Controller
         $route='test.comprehension_ecrite';
 
         $testTypes = abonnement::all();
+        
 
         $userLevels = [];
+        $souscriptionsPayees = [];
         foreach ($testTypes as $testType) {
             // Récupérer le niveau global pour ce test (en tenant compte des compétences)
             $niveau = Niveau::where('user_id', $user->id)
                 ->where('test_type', $testType->id)
                 ->first();
 
-            $userLevels[$testType->nom] = $niveau ? [
+            $userLevels[$testType->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -265,7 +267,13 @@ class ComprehensionEcriteController extends Controller
                 'expression_ecrite' => 'Non défini',
                 'expression_orale' => 'Non défini',
             ];
-        }
+
+            // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$testType->examen] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $testType->id)
+                ->first();
+                }
 
         // Récupérer les 5 derniers tests complétés par type et compétence
         $completedTests = [];
@@ -369,6 +377,7 @@ class ComprehensionEcriteController extends Controller
             'completedTests' => $completedTests,
             'learningGoal' => $learningGoal,
             'testTypes' => $testTypes,
+            'souscriptionsPayees'=> $souscriptionsPayees
         ]);
     }
 

@@ -163,16 +163,18 @@
                                                 $modalId = 'modal_' . $testType->id;
                                                 $key = $testType->examen;
                                                 $niveaux = $userLevels[$key] ?? null;
+                                                $souscription = $souscriptionsPayees[$key] ?? null;
                                             @endphp
 
                                             <button type="button"
-                                                class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
-                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
-                                                @if (!$testType->paye)
+                                                class="btn btn-level {{ $souscription && $souscription->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $souscription && $souscription->paye ? '' : 'disabled' }}"
+                                                @if ($souscription && $souscription->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$souscription || !$souscription->paye)
                                                     <i class="fas fa-lock me-1"></i>
                                                 @endif
                                                 {{ strtoupper($key) }}
                                             </button>
+
 
                                             <!-- Modal -->
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"

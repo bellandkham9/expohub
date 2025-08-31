@@ -108,7 +108,7 @@ function envoyerReponse(reponse, index) {
     }
 
     // ✅ Timer 60 minutes
-    let seconds = 1* 60;
+    let seconds = 60* 60;
     const timerEl = document.getElementById("timer");
 
     const countdown = setInterval(() => {
