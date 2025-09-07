@@ -1,29 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card text-center shadow-sm">
-                <div class="card-body">
-                    @if(session('success'))
-                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                        <h3 class="card-title mb-3">Paiement réussi !</h3>
-                        <p class="card-text">Merci pour votre paiement. Votre abonnement a été activé.</p>
-                        <a href="{{ route('client.dashboard') }}" class="btn btn-success mt-3">Aller au tableau de bord</a>
-                    @elseif(session('error'))
-                        <i class="fas fa-times-circle fa-3x text-danger mb-3"></i>
-                        <h3 class="card-title mb-3">Paiement échoué</h3>
-                        <p class="card-text">Il y a eu un problème avec votre paiement. Veuillez réessayer.</p>
-                        <a href="{{ route('client.dashboard') }}" class="btn btn-danger mt-3">Retour au tableau de bord</a>
-                    @else
-                        <i class="fas fa-info-circle fa-3x text-info mb-3"></i>
-                        <h3 class="card-title mb-3">Information</h3>
-                        <p class="card-text">Statut du paiement inconnu.</p>
-                        <a href="{{ route('client.dashboard') }}" class="btn btn-primary mt-3">Retour au tableau de bord</a>
-                    @endif
+        <div class="col-md-6 text-center">
+
+            @if(session('success') || isset($success))
+                <div class="alert alert-success">
+                    <h3>🎉 Paiement réussi !</h3>
+                    <p>Merci, votre paiement a été validé avec succès.</p>
                 </div>
-            </div>
+            @elseif(session('error') || isset($error))
+                <div class="alert alert-danger">
+                    <h3>❌ Paiement échoué</h3>
+                    <p>Votre paiement n’a pas été validé. Veuillez réessayer ou contacter le support.</p>
+                </div>
+            @else
+                <div class="alert alert-info">
+                    <h3>⏳ Paiement en cours...</h3>
+                    <p>Nous vérifions votre paiement. Cela peut prendre quelques secondes.</p>
+                </div>
+            @endif
+
+            <a href="{{ url('/') }}" class="btn btn-primary mt-3">Retour à l’accueil</a>
         </div>
     </div>
 </div>
