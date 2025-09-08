@@ -27,6 +27,9 @@ use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\AbonnementController;
 use App\Http\Controllers\TestTypeController;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Http\Request;
+
 
 
 
@@ -107,6 +110,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('/paiementValider', function () {
     return view('start.paiementValider'); })->name('paiement.return');
+    Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
 
 
     //  Route du chatbot
@@ -258,3 +262,28 @@ Route::middleware(['web', 'auth', SuperAdminMiddleware::class])->group(function 
 Route::get('/contact', function () {
     return view('client.contact');
 })->name('client.contact');
+
+
+Route::any('/paiement/return/{transactionId}', [PaiementController::class, 'verify'])
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('paiement.return');
+
+Route::any('/paiement/notify/{transactionId}', [PaiementController::class, 'notify'])
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('paiement.notify');
+
+Route::get('/paiement/process/{abonnementId}', [PaiementController::class, 'process']);
+
+
+    Route::any('/debug-csrf', function (Request $request) {
+    return response()->json([
+        'method' => $request->method(),
+        'all' => $request->all(),
+        'cookies' => $_COOKIE,
+        'session' => session()->all(),
+    ]);
+});
+
+    Route::get('/test-419', function () {
+    return 'OK';
+});

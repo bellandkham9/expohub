@@ -16,7 +16,9 @@ class paiement extends Model
         'transaction_id',    // ID unique de la transaction retourné par le service (ex: CinetPay)
         'statut',            // Statut du paiement (ex: en_attente, payé, échoué)
         'devise',            // Devise utilisée (ex: XAF, EUR)
-        'details',           // Informations supplémentaires (JSON ou texte libre)
+        'details',
+        'created_at',         // date de création du paiement
+        'updated_at',         // date de mise à jour du paiement
     ];
 
     // Relation avec l'utilisateur (chaque paiement appartient à un utilisateur)

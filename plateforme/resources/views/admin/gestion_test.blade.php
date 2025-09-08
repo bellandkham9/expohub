@@ -187,7 +187,7 @@
                                                 <td><input type="checkbox" class="form-check-input"></td>
                                                 <td>{{ $abonnement->nom_du_plan }}</td>
                                                 <td>{{ $abonnement->examen ?? '-' }}</td>
-                                                <td>{{ $abonnement->prix }} FCFA</td>
+                                                <td>{{ $abonnement->prix }} $</td>
                                                 <td>{{ $abonnement->duree }}</td>
                                                 <td>{{ $abonnement->description }}</td>
                                                 <td>
