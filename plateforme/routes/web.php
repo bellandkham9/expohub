@@ -105,8 +105,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/suggestion', [SuggestionController::class, 'index'])->name('suggestion.suggestion');
     Route::post('/suggestion/generate', [SuggestionController::class, 'generate'])->name('suggestions.generate');
 
-    Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
-
     Route::get('/paiementValider', function () {
     return view('start.paiementValider'); })->name('paiement.return');
 
