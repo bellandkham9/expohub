@@ -312,6 +312,7 @@ class AdminUserController extends Controller
         Souscription::create([
             'user_id' => $user->id,
             'abonnement_id' => $abonnement->id,
+            'paye'=>true,
             'date_debut' => now(),
             'date_fin' => now()->addDays($abonnement->duree), // Exemple : si durée = 30 jours
         ]);

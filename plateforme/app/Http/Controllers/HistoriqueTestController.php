@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\abonnement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HistoriqueTest;
@@ -12,14 +13,14 @@ use App\Models\ComprehensionEcriteResultat;
 use App\Models\ComprehensionOraleReponse;
 use App\Models\ExpressionEcriteReponse;
 use App\Models\ExpressionOraleReponse;
-
+use App\Models\Souscription;
 
 class HistoriqueTestController extends Controller
 {
     public function index()
     {
        $user = Auth::user();
-        $testTypes = TestType::all();
+        $testTypes = abonnement::all();
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
@@ -28,7 +29,7 @@ class HistoriqueTestController extends Controller
                 ->where('test_type', $testType->id)
                 ->first();
 
-            $userLevels[$testType->nom] = $niveau ? [
+            $userLevels[$testType->examen] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -39,7 +40,14 @@ class HistoriqueTestController extends Controller
                 'expression_ecrite' => 'Non défini',
                 'expression_orale' => 'Non défini',
             ];
-        }
+
+            // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$testType->examen] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $testType->id)
+                ->first();
+         }
+        
 
         // 2. Regrouper tous les tests en un tableau commun
         $allTests = collect();
@@ -138,6 +146,7 @@ class HistoriqueTestController extends Controller
         return view('client.history', compact('userLevels',
             'completedTests',
             'learningGoal',
-            'testTypes'));
+            'testTypes',
+            'souscriptionsPayees'));
     }
 }
