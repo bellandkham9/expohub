@@ -56,7 +56,6 @@ class PaiementController extends Controller
                 // Sauvegarder la transaction dans DB
                 Log::error('CinetPay transaction initialization failed', [
                 'response' => $response->json(),
-                'purchase_id' => isset($paiement) ? $paiement->id : null,
                 'request' => $response,
 ]);
                 $paiement = Paiement::create([
@@ -75,7 +74,6 @@ class PaiementController extends Controller
         }
             Log::error('CinetPay transaction initialization failed', [
                         'response' => $response->json(),
-                        'purchase_id' => $paiement->id,
                         'request' => $response,
                     ]);
         return back()->with('error', 'Erreur lors de l’initiation du paiement.');
