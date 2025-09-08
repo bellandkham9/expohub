@@ -54,9 +54,13 @@ class PaiementController extends Controller
             $result = $response->json();
             Log::info('CinetPay init', $result);
 
-            if (isset($result['data']['payment_url'])) {
-                // Sauvegarder la transaction
-                Paiement::create([
+            if ($result['code'] === '201'&& $result['message'] === 'CREATED') {
+                // Sauvegarder la transaction dans DB
+                Log::error('CinetPay transaction initialization failed', [
+                'response' => $response->json(),
+                'request' => $response,
+]);
+                $paiement = Paiement::create([
                     'user_id' => $user->id,
                     'abonnement_id' => $abonnement->id,
                     'montant' => $prixXaf,
@@ -70,7 +74,10 @@ class PaiementController extends Controller
                 return redirect()->away($result['data']['payment_url']);
             }
         }
-
+            Log::error('CinetPay transaction initialization failed', [
+                        'response' => $response->json(),
+                        'request' => $response,
+                    ]);
         return back()->with('error', 'Erreur lors de l’initiation du paiement.');
     }
 
