@@ -262,7 +262,7 @@ Route::get('/contact', function () {
 })->name('client.contact');
 
 
-Route::any('/paiement/return/{transactionId}', [PaiementController::class, 'verify'])
+Route::any('/paiement/return', [PaiementController::class, 'return'])
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
     ->name('paiement.return');
 
@@ -273,15 +273,6 @@ Route::any('/paiement/notify/{transactionId}', [PaiementController::class, 'noti
 Route::get('/paiement/process/{abonnementId}', [PaiementController::class, 'process']);
 
 
-    Route::any('/debug-csrf', function (Request $request) {
-    return response()->json([
-        'method' => $request->method(),
-        'all' => $request->all(),
-        'cookies' => $_COOKIE,
-        'session' => session()->all(),
-    ]);
-});
-
-    Route::get('/test-419', function () {
-    return 'OK';
-});
+// Route::get('/payment/collect/{abonnementId}', [PaymentController::class, 'collect']);
+// Route::post('/payment/deposit', [PaymentController::class, 'deposit']);
+// Route::get('/payment/status', [PaymentController::class, 'status']);

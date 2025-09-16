@@ -12,159 +12,168 @@ use Carbon\Carbon;
 
 class PaiementController extends Controller
 {
+
+        protected function getUsdToXafRate()
+{
+    try {
+        $apiKey = env('EXCHANGERATE_API_KEY'); // ta clé API
+        $response = Http::get("https://v6.exchangerate-api.com/v6/{$apiKey}/latest/USD"); // exemple pour exchangerate-api.com
+
+        if ($response->successful()) {
+            $data = $response->json();
+            if (isset($data['conversion_rates']['XAF'])) {
+                return $data['conversion_rates']['XAF'];
+            }
+        }
+        Log::error('Impossible de récupérer le taux de change', ['response' => $response->body()]);
+    } catch (\Exception $e) {
+        Log::error('Erreur récupération taux de change : ' . $e->getMessage());
+    }
+
+    // Si échec, on ne retourne rien ou on peut renvoyer null pour gérer ailleurs
+    return null;
+}
+
+
     /**
-     * Initier un paiement CinetPay
+     * Étape 1 : Initier un paiement CinetPay
      */
     public function process(Request $request, $abonnementId)
     {
         $abonnement = Abonnement::findOrFail($abonnementId);
         $user = auth()->user();
 
-        $apiKey = env('CINETPAY_API_KEY');
-        $siteId = env('CINETPAY_SITE_ID');
+        $apiKey     = env('CINETPAY_API_KEY');
+        $siteId     = env('CINETPAY_SITE_ID');
+        $secretKey  = env('CINETPAY_SECRET_KEY'); // utilisé pour HMAC si nécessaire
 
+        // URLs
+        $returnUrl  = url('/callback.php');
+        $notifyUrl  = url('/callback.php');
+
+        // Générer un ID de transaction unique
         $transactionId = uniqid('PAY-');
-        $prixXaf = 100; // Montant pour test
 
-        $returnUrl = route('paiement.return', ['transactionId' => $transactionId]);
-        $notifyUrl = route('paiement.notify', ['transactionId' => $transactionId]);
+        // montant
+        $prixUsd = $abonnement->prix;
+        $prixXaf = round($prixUsd * $this->getUsdToXafRate());
 
         $formData = [
-            "apikey" => $apiKey,
-            "site_id" => $siteId,
-            "transaction_id" => $transactionId,
-            "amount" => $prixXaf,
-            "currency" => "XAF",
-            "description" => "Paiement abonnement : {$abonnement->examen}",
-            "return_url" => $returnUrl,
-            "notify_url" => $notifyUrl,
-            "customer_name" => $user->name,
-            "customer_email" => $user->email,
-            "channels" => "ALL",
+            "apikey"             => $apiKey,
+            "site_id"            => $siteId,
+            "transaction_id"     => $transactionId,
+            "amount"             => $prixXaf,
+            "currency"           => "XAF",
+            "description"        => "Paiement abonnement : {$abonnement->examen}",
+            "return_url"         => $returnUrl,
+            "notify_url"         => $notifyUrl,
+            "customer_name"      => $user->name,
+            "customer_email"     => $user->email,
+            "channels"           => "ALL",
+            "metadata"           => "user:{$user->id},abonnement:{$abonnement->id}",
+            "lang"               => "fr"
         ];
 
-        // Appel à l'API CinetPay
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
-            ])->post('https://api-checkout.cinetpay.com/v2/payment', $formData);
+        // Appel API CinetPay
+        $response = Http::asJson()->post('https://api-checkout.cinetpay.com/v2/payment', $formData);
 
         if ($response->successful()) {
             $result = $response->json();
             Log::info('CinetPay init', $result);
 
-            if ($result['code'] === '201'&& $result['message'] === 'CREATED') {
-                // Sauvegarder la transaction dans DB
-                Log::error('CinetPay transaction initialization failed', [
-                'response' => $response->json(),
-                'request' => $response,
-]);
-                $paiement = Paiement::create([
-                    'user_id' => $user->id,
-                    'abonnement_id' => $abonnement->id,
-                    'montant' => $prixXaf,
-                    'methode' => 'cinetpay',
+            if (isset($result['data']['payment_url'])) {
+                // Sauvegarder la transaction en attente
+                Paiement::create([
+                    'user_id'        => $user->id,
+                    'abonnement_id'  => $abonnement->id,
+                    'montant'        => $prixXaf,
+                    'methode'        => 'cinetpay',
                     'transaction_id' => $transactionId,
-                    'statut' => 'pending',
-                    'devise' => 'XAF',
-                    'details' => json_encode($result),
+                    'statut'         => 'pending',
+                    'devise'         => 'XAF',
+                    'details'        => json_encode($result),
                 ]);
 
-                return redirect($result['data']['payment_url']);
+                return redirect()->away($result['data']['payment_url']);
             }
         }
-            Log::error('CinetPay transaction initialization failed', [
-                        'response' => $response->json(),
-                        'request' => $response,
-                    ]);
+
+        Log::error('Erreur CinetPay', [
+            'status' => $response->status(),
+            'body'   => $response->body()
+        ]);
+
         return back()->with('error', 'Erreur lors de l’initiation du paiement.');
     }
 
     /**
-     * Callback utilisateur (return_url)
+     * Étape 2 : Notification silencieuse CinetPay (mise à jour de la base)
      */
-    public function return(Request $request, $transactionId)
+    public function notify(Request $request)
     {
-        return $this->verify($request, $transactionId);
+        Log::info('Notify reçu', $request->all());
+
+        $transactionId = $request->input('transaction_id') ?? $request->input('cpm_trans_id');
+
+        if (!$transactionId) {
+            return response('transaction_id manquant', 400);
+        }
+
+        $apiKey = env('CINETPAY_API_KEY');
+        $siteId = env('CINETPAY_SITE_ID');
+
+        // Vérification de la transaction auprès de CinetPay
+        $verifyResponse = Http::asJson()->post('https://api-checkout.cinetpay.com/v2/payment/check', [
+            "apikey"         => $apiKey,
+            "site_id"        => $siteId,
+            "transaction_id" => $transactionId,
+        ]);
+
+        if (!$verifyResponse->successful()) {
+            Log::error('Erreur vérification CinetPay', [
+                'status' => $verifyResponse->status(),
+                'body'   => $verifyResponse->body()
+            ]);
+            return response()->json(['error' => 'Vérification échouée'], 500);
+        }
+
+        $data = $verifyResponse->json();
+        Log::info('CinetPay verify', $data);
+
+        $paiement = Paiement::where('transaction_id', $transactionId)->first();
+
+        if ($paiement) {
+            if (isset($data['data']['status']) && $data['data']['status'] === 'ACCEPTED') {
+                $paiement->update(['statut' => 'success']);
+
+                Souscription::create([
+                    'user_id'        => $paiement->user_id,
+                    'abonnement_id'  => $paiement->abonnement_id,
+                    'date_debut'     => Carbon::now(),
+                    'date_fin'       => Carbon::now()->addDays(30),
+                ]);
+            } else {
+                $paiement->update(['statut' => 'failed']);
+            }
+        }
+
+        return response()->json(['message' => 'OK']);
     }
 
     /**
-     * Notification serveur (notify_url)
+     * Étape 3 : Retour utilisateur après paiement
      */
-    public function notify(Request $request,$transactionId)
+    public function return(Request $request)
     {
-        log::info('notify' . $request->all());
+        $transactionId = $request->query('transaction_id');
+        $paiement = Paiement::where('transaction_id', $transactionId)->first();
 
-        try {
-            $paiement = Paiement::where('transaction_id', $transactionId)->first();
-
-            if (!$paiement) {
-                Log::warning("Paiement non trouvé pour la transaction_id: {$transactionId}");
-                return response();
-            }
-
-            $this->checkStatus($paiement);
-
-            return response();
-        } catch (\Exception $e) {
-            Log::error("Erreur lors du traitement de la notification CinetPay: " . $e->getMessage());
-            return response();
-        }
-   }
-
-
-
-protected function verify(Request $request, $transactionId)
-{
-    $paiement = Paiement::where('transaction_id', $transactionId)->first();
-
-    if ($paiement) {
-        if ($paiement->statut === 'completed') {
+        if ($paiement && $paiement->statut === 'success') {
             return view('paiement.return')->with('success', true);
-        } elseif ($paiement->statut === 'failed') {
+        } elseif ($paiement && $paiement->statut === 'failed') {
             return view('paiement.return')->with('error', true);
-        } else {
-            $this->checkStatus($paiement);
-            $paiement->refresh();
-
-            if ($paiement->statut === 'completed') {
-                return view('paiement.return')->with('success', true);
-            } elseif ($paiement->statut === 'failed') {
-                return view('paiement.return')->with('error', true);
-            }
         }
+
+        return view('paiement.return')->with('info', true);
     }
-
-   return view('paiement.return')->with('info', 'Aucune transaction trouvée ou statut inconnu.');
-}
-
-
-
-   protected function checkStatus($paiement)
-   {
-       $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
-            ])->post('https://api-checkout.cinetpay.com/v2/payment' . '/check', [
-                'apikey' => env('CINETPAY_API_KEY'),
-                'site_id' => env('CINETPAY_SITE_ID'),
-                'transaction_id' => $paiement->transaction_id,
-            ]);
-
-
-            if ($response->successful()) {
-                $result = $response->json();
-                if ($result['code'] === '00'&& $result['message'] === 'SUCCES') {
-
-                    $paiement = Paiement::where('transaction_id',$paiement->transaction_id)->first();
-                    $paiement->statut = 'completed';
-                    $paiement->created_at = now();
-                    $paiement->updated_at = now();
-                }
-                else{
-                    $paiement->statut = 'failed';
-                }    
-                    $paiement->save();      
-            }
-
-         return true;
-   }
 }
