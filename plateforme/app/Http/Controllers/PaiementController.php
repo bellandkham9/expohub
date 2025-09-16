@@ -12,6 +12,29 @@ use Carbon\Carbon;
 
 class PaiementController extends Controller
 {
+
+        protected function getUsdToXafRate()
+{
+    try {
+        $apiKey = env('EXCHANGERATE_API_KEY'); // ta clé API
+        $response = Http::get("https://v6.exchangerate-api.com/v6/{$apiKey}/latest/USD"); // exemple pour exchangerate-api.com
+
+        if ($response->successful()) {
+            $data = $response->json();
+            if (isset($data['conversion_rates']['XAF'])) {
+                return $data['conversion_rates']['XAF'];
+            }
+        }
+        Log::error('Impossible de récupérer le taux de change', ['response' => $response->body()]);
+    } catch (\Exception $e) {
+        Log::error('Erreur récupération taux de change : ' . $e->getMessage());
+    }
+
+    // Si échec, on ne retourne rien ou on peut renvoyer null pour gérer ailleurs
+    return null;
+}
+
+
     /**
      * Étape 1 : Initier un paiement CinetPay
      */
@@ -25,14 +48,15 @@ class PaiementController extends Controller
         $secretKey  = env('CINETPAY_SECRET_KEY'); // utilisé pour HMAC si nécessaire
 
         // URLs
-        $returnUrl  = url('/paiement/return');
-        $notifyUrl  = url('/paiement/notify');
+        $returnUrl  = url('/callback.php');
+        $notifyUrl  = url('/callback.php');
 
         // Générer un ID de transaction unique
         $transactionId = uniqid('PAY-');
 
-        // Pour test → montant fixe
-        $prixXaf = 100;
+        // montant
+        $prixUsd = $abonnement->prix;
+        $prixXaf = round($prixUsd * $this->getUsdToXafRate());
 
         $formData = [
             "apikey"             => $apiKey,
