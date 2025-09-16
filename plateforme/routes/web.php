@@ -108,6 +108,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/suggestion', [SuggestionController::class, 'index'])->name('suggestion.suggestion');
     Route::post('/suggestion/generate', [SuggestionController::class, 'generate'])->name('suggestions.generate');
 
+    Route::get('/paiementValider', function () {
+    return view('start.paiementValider'); })->name('paiement.return');
     Route::post('/paiement/process/{abonnement}', [PaiementController::class, 'process'])->name('paiement.process');
 
 
@@ -262,12 +264,9 @@ Route::get('/contact', function () {
 })->name('client.contact');
 
 
-Route::any('/paiement/return', [PaiementController::class, 'return'])
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
-    ->name('paiement.return');
 
 Route::any('/paiement/notify/{transactionId}', [PaiementController::class, 'notify'])
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->withoutMiddleware([VerifyCsrfToken::class])
     ->name('paiement.notify');
 
 Route::get('/paiement/process/{abonnementId}', [PaiementController::class, 'process']);

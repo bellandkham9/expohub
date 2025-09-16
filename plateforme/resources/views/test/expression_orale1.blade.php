@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     @vite(['resources/css/expression_ecrite.css', 'resources/css/myExpressionEcrite.css'])
-   
+
 </head>
 
 <body>
@@ -51,11 +51,10 @@
 
                     <h5><strong>Indications</strong></h5>
                     <button class="btn" id="speak-button"><img src="{{ asset('images/volume.png') }}" width="32" alt=""></button>
-                    <div class="p-2" style="width: 60%; height: 10vh; overflow-y: scroll; margin: 0 auto;">
-                        <p style="text-align: justify" id="text-input">{{ $tacheActive->consigne }}</p>
-                    </div>
-                    <p>{{ $tacheActive->contexte_texte }}</p>
                     <div class="consigne">
+                      <p style="text-align: justify" id="text-input">{{ $tacheActive->consigne }}</p>
+                    </div>
+                     <div class="consigne mt-4">
                         <p style="text-align: justify">{{ $tacheActive->contexte }}</p>
                     </div>
 
@@ -86,6 +85,13 @@
 
 
 <style>
+
+@media (max-width: 768px) {
+    .consigne{
+    width: 100%;
+}
+}
+
 
 
     /* ==== CSS responsive pour que .consigne ne recouvre jamais le bouton audio ==== */
