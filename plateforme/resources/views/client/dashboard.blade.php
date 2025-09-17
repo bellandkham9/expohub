@@ -167,7 +167,7 @@
                                                                 $level = $niveaux[$champ] ?? 'Non défini';
                                                                 $color = match($level) {
                                                                     'C2', 'C1', 'B2' => 'success',
-                                                                    'B1', 'A2', 'A1' => 'warning',
+                                                                    'B1', 'A2', 'A1', 'A0' => 'warning',
                                                                     default => 'secondary'
                                                                 };
                                                                 @endphp
@@ -303,6 +303,30 @@
         .consignes-popup {
             max-width: 600px;
             font-size: 1.1em;
+        }
+
+        .btn-level {
+            width: 120px;
+            height: 45px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 991.98px) {
+            .col-lg-3 .card-body .row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .col-lg-3 .card-body .row .col-6 {
+                width: 100%;
+                text-align: center;
+            }
+
+            .col-lg-3 .card-body .row .col-6:first-child {
+                margin-bottom: 1rem;
+            }
         }
     </style>
 

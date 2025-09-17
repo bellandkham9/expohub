@@ -142,7 +142,7 @@
             </div>
         </div>
     </div>
-    <input type="hidden" id="testType" value="{{ $test_type }}">
+    <input type="hidden" name="test_type_id" id="testType" value="{{ $test_type }}">
 
     <!-- Audio -->
     <audio id="audio-success" src="/sounds/success.wav" preload="auto"></audio>

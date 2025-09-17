@@ -46,7 +46,6 @@ class ComprehensionEcriteController extends Controller
         $reponseUtilisateur = strtoupper($request->reponse);
         $isCorrect = $reponseUtilisateur === strtoupper($question->reponse);
 
-       
         $typeTest = $typeTest['examen'] ?? 'INCONNU'; // tu gardes que "TCF" par ex.
  
   

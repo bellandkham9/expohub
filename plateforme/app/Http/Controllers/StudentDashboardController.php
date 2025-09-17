@@ -37,7 +37,7 @@ class StudentDashboardController extends Controller
                                           ->with('abonnement') // Charger la relation 'abonnement'
                                           ->get();
 
-                                          
+
         if (!$souscriptionActive) {
             return dd('error', 'Votre abonnement est épuisé. Veuillez souscrire à un nouvel abonnement pour accéder à ce contenu.');
         }
@@ -54,9 +54,14 @@ class StudentDashboardController extends Controller
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
+
+        
         foreach ($testTypes as $testType) {
+            // Récupérer le TestType en fonction de l'examen
+        $testTypeId = TestType::where('examen', $testType->examen)->first();
+
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testType->id)
+                ->where('test_type', $testTypeId->id)
                 ->first();
 
             $userLevels[$testType->examen] = $niveau ? [
@@ -179,7 +184,8 @@ class StudentDashboardController extends Controller
             'testTypes',
             'testTypes1',
             'souscriptionsPayees',
-            'souscriptionActive'
+            'souscriptionActive',
+            'niveau'
         ));
     }
 
