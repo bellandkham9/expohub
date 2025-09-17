@@ -151,17 +151,19 @@ class ComprehensionEcriteController extends Controller
         return response()->json(['message' => 'Résultat enregistré', 'score' => $score, 'total' => $total]);
     }
     
-  private function determineNiveau(float $score): string
-    {
-        return match (true) {
-            $score >= 450 => 'C2',
-            $score >= 350 => 'C1',
-            $score >= 250 => 'B2',
-            $score >= 150 => 'B1',
-            $score >= 75 => 'A2',
-            default => 'A1'
-        };
-    }
+ private function determineNiveau(float $score): string
+{
+    return match (true) {
+        $score >= 600 && $score <= 699 => 'C2', // Utilisateur expérimenté maîtrise, proche du bilinguisme
+        $score >= 500 && $score <= 599 => 'C1', // Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes
+        $score >= 400 && $score <= 499 => 'B2', // Utilisateur indépendant avancé, conversation spontanée sur divers sujets
+        $score >= 300 && $score <= 399 => 'B1', // Utilisateur indépendant, autonome lors d'un voyage ou au travail
+        $score >= 200 && $score <= 299 => 'A2', // Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien
+        $score >= 100 && $score <= 199 => 'A1', // Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne
+        default => 'A0', // (0-99 points) : Débutant, reconnaissance de quelques mots
+    };
+}
+
 
     public function reinitialiserTest()
 {
@@ -229,24 +231,26 @@ class ComprehensionEcriteController extends Controller
             }
 
             // Détermination du niveau
-            if ($totalPoints >= 450) {
-                $niveau = 'C2';
-            } elseif ($totalPoints >= 350) {
-                $niveau = 'C1';
-            } elseif ($totalPoints >= 250) {
-                $niveau = 'B2';
-            } elseif ($totalPoints >= 150) {
-                $niveau = 'B1';
-            } elseif ($totalPoints >= 75) {
-                $niveau = 'A2';
-            } else {
-                $niveau = 'A1';
-            }
         
         $route='test.comprehension_ecrite';
 
-        $testTypes = abonnement::all();
-        
+        $tousLesAbonnements = abonnement::all();
+
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+
+          // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
+            $abonnement->paye = $souscriptionActives->contains($abonnement->id);
+
+            return $abonnement;
+        });
+
 
         $userLevels = [];
         $souscriptionsPayees = [];

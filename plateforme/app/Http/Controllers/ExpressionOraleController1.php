@@ -317,17 +317,18 @@ public function handleMessage(Request $request)
         }
     }
 
-    private function determineNiveau(float $score): string
-    {
-        return match (true) {
-            $score >= 450 => 'C2',
-            $score >= 350 => 'C1',
-            $score >= 250 => 'B2',
-            $score >= 150 => 'B1',
-            $score >= 75 => 'A2',
-            default => 'A1'
-        };
-    }
+     private function determineNiveau(float $score): string
+{
+    return match (true) {
+        $score >= 600 && $score <= 699 => 'C2', // Utilisateur expérimenté maîtrise, proche du bilinguisme
+        $score >= 500 && $score <= 599 => 'C1', // Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes
+        $score >= 400 && $score <= 499 => 'B2', // Utilisateur indépendant avancé, conversation spontanée sur divers sujets
+        $score >= 300 && $score <= 399 => 'B1', // Utilisateur indépendant, autonome lors d'un voyage ou au travail
+        $score >= 200 && $score <= 299 => 'A2', // Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien
+        $score >= 100 && $score <= 199 => 'A1', // Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne
+        default => 'A0', // (0-99 points) : Débutant, reconnaissance de quelques mots
+    };
+}
 
     private function generateGlobalComment(float $score): string
     {
@@ -351,6 +352,83 @@ public function handleMessage(Request $request)
         return redirect()->route('test.expression_orale');
     }
 
+
+      public function enregistrerResultatFinal(Request $request)
+        {
+            $validated = $request->validate([
+            'test_type' => 'required|string' // test_type requis ici
+        ]);
+
+        $userId = Auth::id();
+        if (!$userId)
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+
+
+        $reponses = ExpressionOraleReponse::where('user_id', $userId)
+            ->where('test_type', $validated['test_type'])
+            ->get();
+
+        $scoreTotal = $reponses->sum('score');
+        $niveau = $this->determineNiveau($scoreTotal);
+
+        $testType = abonnement::where('examen', 'TCF')->firstOrFail();
+
+        Niveau::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'test_type' => $testType->id,
+            ],
+            [
+                'expression_orale' => $niveau, // ✅ correction ici
+                'updated_at' => now(),
+            ]
+        );
+
+        
+                      // Vérifier si l'utilisateur a un abonnement valide
+            $hasActiveSubscription = Souscription::where('user_id', $userId)
+                ->where('date_debut', '<=', now())
+                ->where('date_fin', '>=', now())
+                ->exists();
+
+            // Vérifier le nombre de tests gratuits déjà utilisés
+            $freeTestsUsed = DB::table('historique_tests')
+                ->where('user_id', $userId)
+                ->where('is_free', true)
+                ->count();
+
+            $isFree = false;
+
+            // Si pas d'abonnement actif ET moins de 5 tests gratuits utilisés
+            if (!$hasActiveSubscription && $freeTestsUsed < 5) {
+                $isFree = true;
+            }
+
+
+
+        
+        
+        // Insertion dans historique_tests
+        DB::table('historique_tests')->insert([
+            'user_id' => $userId,
+            'is_free' => $isFree, // On marque si c'est un test gratuit
+            'test_type' => 'TCF', // champ string, donc on met le nom
+            'skill' => 'expression_orale',
+            'score' => $scoreTotal,
+            'niveau' => $niveau,
+            'duration' => null, // ou tu peux calculer si tu veux (ex: fin - début)
+            'details_route'=> 'test.expression_orale_resultat',
+            'refaire_route'=> 'expression_orale.reinitialiser',
+            'completed_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
+        return response()->json(['message' => 'Résultat enregistré', 'score' => $scoreTotal]);
+    }
+
+    
     public function afficherResultat()
     {
         $user = Auth::user();
@@ -367,7 +445,23 @@ public function handleMessage(Request $request)
         // Ajoutez cette ligne pour récupérer les tâches
         $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
 
-         $testTypes = abonnement::all();
+           $tousLesAbonnements = abonnement::all();
+
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+
+          // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
+            $abonnement->paye = $souscriptionActives->contains($abonnement->id);
+
+            return $abonnement;
+        });
+        
 
         $userLevels = [];
         foreach ($testTypes as $testType) {
@@ -499,81 +593,5 @@ public function handleMessage(Request $request)
             'souscriptionsPayees'=> $souscriptionsPayees
         ]);
     }
-
-      public function enregistrerResultatFinal(Request $request)
-        {
-            $validated = $request->validate([
-            'test_type' => 'required|string' // test_type requis ici
-        ]);
-
-        $userId = Auth::id();
-        if (!$userId)
-            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
-
-
-        $reponses = ExpressionOraleReponse::where('user_id', $userId)
-            ->where('test_type', $validated['test_type'])
-            ->get();
-
-        $scoreTotal = $reponses->sum('score');
-        $niveau = $this->determineNiveau($scoreTotal);
-
-        $testType = abonnement::where('examen', 'TCF')->firstOrFail();
-
-        Niveau::updateOrCreate(
-            [
-                'user_id' => $userId,
-                'test_type' => $testType->id,
-            ],
-            [
-                'expression_orale' => $niveau, // ✅ correction ici
-                'updated_at' => now(),
-            ]
-        );
-
-        
-                      // Vérifier si l'utilisateur a un abonnement valide
-            $hasActiveSubscription = Souscription::where('user_id', $userId)
-                ->where('date_debut', '<=', now())
-                ->where('date_fin', '>=', now())
-                ->exists();
-
-            // Vérifier le nombre de tests gratuits déjà utilisés
-            $freeTestsUsed = DB::table('historique_tests')
-                ->where('user_id', $userId)
-                ->where('is_free', true)
-                ->count();
-
-            $isFree = false;
-
-            // Si pas d'abonnement actif ET moins de 5 tests gratuits utilisés
-            if (!$hasActiveSubscription && $freeTestsUsed < 5) {
-                $isFree = true;
-            }
-
-
-
-        
-        
-        // Insertion dans historique_tests
-        DB::table('historique_tests')->insert([
-            'user_id' => $userId,
-            'is_free' => $isFree, // On marque si c'est un test gratuit
-            'test_type' => 'TCF', // champ string, donc on met le nom
-            'skill' => 'expression_orale',
-            'score' => $scoreTotal,
-            'niveau' => $niveau,
-            'duration' => null, // ou tu peux calculer si tu veux (ex: fin - début)
-            'details_route'=> 'test.expression_orale_resultat',
-            'refaire_route'=> 'expression_orale.reinitialiser',
-            'completed_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-
-        return response()->json(['message' => 'Résultat enregistré', 'score' => $scoreTotal]);
-    }
-
 
 }
