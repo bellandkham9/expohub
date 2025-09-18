@@ -20,7 +20,27 @@ class HistoriqueTestController extends Controller
     public function index()
     {
        $user = Auth::user();
-        $testTypes = abonnement::all();
+       
+           // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActive = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+                                          
+        if (!$souscriptionActive) {
+            return dd('error', 'Votre abonnement est épuisé. Veuillez souscrire à un nouvel abonnement pour accéder à ce contenu.');
+        }
+
+        $tousLesAbonnements = abonnement::all();
+
+           // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActive) {
+            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
+            $abonnement->paye = $souscriptionActive->contains($abonnement->id);
+
+            return $abonnement;
+        });
 
         // 1. Récupération des niveaux par test
         $userLevels = [];

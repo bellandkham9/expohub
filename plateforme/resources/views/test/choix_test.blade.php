@@ -118,6 +118,9 @@
                                 </div>
                                 <div class="mt-4">
                                     <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
+                                    <button onclick="showNiveauxInfo()" class="btn btn-info btn-sm mb-3">
+                                        ℹ️ Infos niveaux
+                                    </button>
                                     <div class="d-flex flex-wrap justify-content-center gap-2">
                                         @foreach ($testTypes as $testType)
                                             @php
@@ -234,4 +237,30 @@
             }
         }
     </style>
+
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function showNiveauxInfo() {
+            Swal.fire({
+                title: 'Information sur les niveaux',
+                html: `
+                    <div style="text-align:left;">
+                        <b>A0 (0-99 points)</b> : Débutant, reconnaissance de quelques mots.<br><br>
+                        <b>A1 (100-199 points)</b> : Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne.<br><br>
+                        <b>A2 (200-299 points)</b> : Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien.<br><br>
+                        <b>B1 (300-399 points)</b> : Utilisateur indépendant, autonome lors d'un voyage ou au travail.<br><br>
+                        <b>B2 (400-499 points)</b> : Utilisateur indépendant avancé, conversation spontanée sur divers sujets.<br><br>
+                        <b>C1 (500-599 points)</b> : Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes.<br><br>
+                        <b>C2 (600-699 points)</b> : Utilisateur expérimenté maîtrise, proche du bilinguisme.
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+            });
+        }
+    </script>
+
 @endsection

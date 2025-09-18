@@ -278,29 +278,20 @@ class ExpressionEcriteController extends Controller
         ];
     }
 
+
+
     private function determineNiveau(float $score): string
-    {
-        return match(true) {
-            $score >= 450 => 'C2',
-            $score >= 350 => 'C1',
-            $score >= 250 => 'B2',
-            $score >= 150 => 'B1',
-            $score >= 75 => 'A2',
-            default => 'A1'
-        };
-    }
-
-
-    private function generateGlobalComment(float $score): string
-    {
-        return match(true) {
-            $score >= 450 => 'Excellent travail ! Votre maîtrise de la langue est remarquable.',
-            $score >= 350 => 'Très bon travail avec quelques erreurs mineures à perfectionner.',
-            $score >= 250 => 'Bon niveau global avec des axes d\'amélioration identifiés.',
-            $score >= 150 => 'Niveau intermédiaire, continuez à pratiquer régulièrement.',
-            default => 'Des progrès sont nécessaires, révisez les bases et pratiquez davantage.'
-        };
-    }
+{
+    return match (true) {
+        $score >= 600 && $score <= 699 => 'C2', // Utilisateur expérimenté maîtrise, proche du bilinguisme
+        $score >= 500 && $score <= 599 => 'C1', // Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes
+        $score >= 400 && $score <= 499 => 'B2', // Utilisateur indépendant avancé, conversation spontanée sur divers sujets
+        $score >= 300 && $score <= 399 => 'B1', // Utilisateur indépendant, autonome lors d'un voyage ou au travail
+        $score >= 200 && $score <= 299 => 'A2', // Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien
+        $score >= 100 && $score <= 199 => 'A1', // Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne
+        default => 'A0', // (0-99 points) : Débutant, reconnaissance de quelques mots
+    };
+}
 
 
   public function enregistrerResultatFinal(Request $request)
@@ -392,7 +383,22 @@ class ExpressionEcriteController extends Controller
         
         $route='test.expression_ecrite';
 
-        $testTypes = abonnement::all();
+           $tousLesAbonnements = abonnement::all();
+
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+                                          ->where('date_fin', '>=', Carbon::now())
+                                          ->with('abonnement') // Charger la relation 'abonnement'
+                                          ->get();
+
+
+          // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
+            $abonnement->paye = $souscriptionActives->contains($abonnement->id);
+
+            return $abonnement;
+        });
 
         $userLevels = [];
         foreach ($testTypes as $testType) {
