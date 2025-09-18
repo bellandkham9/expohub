@@ -71,65 +71,52 @@
                             </div>
 
                             <div class="test-history">
-                                @foreach ($completedTests as $test)
-                                    <div class="list-group-item border-0 mb-3 rounded"
-                                        style="box-shadow: 1px 1px 1px 1px gainsboro; padding: 10px;">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <div>
-                                                <h5 class="fw-bold mb-1">{{ $test['test_type'] }} - {{ $test['skill'] }}
-                                                </h5>
-                                                <small class="text-muted">
-                                                    {{ \Carbon\Carbon::parse($test['date'])->format('d/m/Y') }}
-                                                </small>
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="mt-3">
-
-                                            <div class="progress-bar" role="progressbar"
-                                                style="width: {{ $test['max_score'] > 0 ? ($test['score'] / $test['max_score']) * 100 : 0 }}%">
-                                            </div>
-
-                                        </div>
-
-                                        <div class="d-flex justify-content-end gap-2 mt-3">
-                                            <a href="{{ route($test['details_route'], ['id' => $test['related_id'] ?? $test['id']]) }}"
-                                                class="btn btn-sm btn-outline-primary">
-                                                Détails
-                                            </a>
-
-                                            <div class="text-md-end">
-                                                <a href="{{ route($test['refaire_route']) }}" class="btn"
-                                                    style="background-color: #224194; color: white;"
-                                                    onclick="event.preventDefault(); 
-                                                                    if(confirm('Êtes-vous sûr de vouloir recommencer le test ?')) { 
-                                                                        document.getElementById('reset-form').submit(); 
-                                                                    }">
-                                                    Refaire le test
-                                                </a>
-
-                                                <form id="reset-form" action="{{ route($test['refaire_route']) }}"
-                                                    method="POST" class="d-none">
-                                                    @csrf
-                                                </form>
-                                            </div>
-
-
-
-
-                                        </div>
-
+                                <div class="list-group">
+                        @foreach ($completedTests as $test)
+                            <div class="list-group-item border-0 mb-3 rounded shadow-sm">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                                    <div class="mb-2 mb-sm-0">
+                                        <h5 class="fw-bold mb-1">{{ $test['test_type'] }} - {{ $test['skill'] }}</h5>
+                                        <small class="text-muted">
+                                            {{ \Carbon\Carbon::parse($test['date'])->format('d/m/Y') }}
+                                        </small>
                                     </div>
-                                @endforeach
+                                    <div class="d-flex flex-column flex-sm-row align-items-center gap-2 mt-2 mt-sm-0">
+                                        <a href="{{ route($test['details_route'], ['id' => $test['related_id'] ?? $test['id']]) }}"
+                                           class="btn btn-sm btn-outline-primary w-100">
+                                            Détails
+                                        </a>
+
+                                        <div class="" style="width: 500px;">
+                                            <a href="{{ route($test['refaire_route']) }}" class="btn btn-primary"
+                                                style="background-color: #224194; color: white;"
+                                                onclick="event.preventDefault(); if(confirm('Êtes-vous sûr de vouloir recommencer le test ?')) { document.getElementById('reset-form-{{ $loop->index }}').submit(); }">
+                                                Refaire le test
+                                            </a>
+                                            <form id="reset-form-{{ $loop->index }}" action="{{ route($test['refaire_route']) }}"
+                                                  method="POST" class="d-none">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: {{ $test['max_score'] > 0 ? ($test['score'] / $test['max_score']) * 100 : 0 }}%; background-color: #224194;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <div class="col-lg-3">
+             <div class="col-12 col-lg-3">
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
@@ -161,7 +148,7 @@
                                 <div class="mt-4">
                                     <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
 
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap gap-2  overflow-y-scroll" style="height: 15vh">
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
@@ -225,7 +212,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+             </div>
 
         </div>
 

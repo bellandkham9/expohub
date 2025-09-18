@@ -143,7 +143,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                     <div class="col-12 col-lg-3">
                         <!-- Profil -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-body text-center">
@@ -175,9 +175,9 @@
                                 <div class="mt-4">
                                     <h6 class="fw-bold mb-3">Vos niveaux par test</h6>
 
-                                    <div class="d-flex flex-wrap gap-2">
+                                    <div class="d-flex flex-wrap gap-2  overflow-y-scroll" style="height: 15vh">
                                         @foreach ($testTypes as $testType)
-                                             @php
+                                            @php
                                                 $modalId = 'modal_' . $testType->id;
                                                 $key = $testType->examen;
                                                 $niveaux = $userLevels[$key] ?? null;
@@ -192,7 +192,6 @@
                                                 @endif
                                                 {{ strtoupper($key) }}
                                             </button>
-
 
                                             <!-- Modal -->
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
@@ -240,7 +239,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+             </div>
                     <style>
                         .task-link.active {
                             background-color: #224194;

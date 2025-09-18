@@ -115,7 +115,6 @@ class HistoriqueTestController extends Controller
          // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
     $completedTests = HistoriqueTest::where('user_id', $user->id)
         ->orderByDesc('completed_at')
-        ->take(2)
         ->get()
         ->map(function ($test) {
             return [
