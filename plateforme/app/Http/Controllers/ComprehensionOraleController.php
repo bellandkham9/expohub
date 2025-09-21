@@ -59,7 +59,7 @@ class ComprehensionOraleController extends Controller
       
 
     $testTypeString = $validated['test_type']; // Exemple: "TCF-Plan1"
-
+    $abonnementId = $request->abonnement_id; // id réel de la table abonnements
 
         DB::table('comprehension_orale_user_answers')->updateOrInsert(
     [
@@ -71,6 +71,7 @@ class ComprehensionOraleController extends Controller
         'is_correct' => $isCorrect,
         'score'=> $isCorrect ? 1 : 0,
         'test_type' => $testTypeString,
+        'abonnement_id' => $abonnementId, // ✅ ajouté ici
         'created_at' => now(),
         'updated_at' => now(),
     ]

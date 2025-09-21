@@ -450,7 +450,8 @@ function enregistrerResultatFinalEtRediriger() {
                             reponse: reponse,
                             question_id: questionId,
                             user_id: userId,
-                            test_type: testTypeData.string
+                            test_type: testTypeData.string,
+                            abonnement_id: testTypeData.id // on ajoute aussi l'id
                         })
                     })
                     .then(res => res.json())
