@@ -375,13 +375,13 @@ class ExpressionEcriteController extends Controller
     }
 
     /**
- * Génère un commentaire global basé sur toutes les réponses de l'utilisateur pour un test.
- *
- * @param int $userId
- * @param int $testTypeId
- * @return string
- */
-  private function generateGlobalComment(float $score): string
+     * Génère un commentaire global basé sur toutes les réponses de l'utilisateur pour un test.
+     *
+     * @param int $userId
+     * @param int $testTypeId
+     * @return string
+     */
+    private function generateGlobalComment(float $score): string
     {
         return match (true) {
             $score >= 450 => 'Excellent travail ! Votre maîtrise de la langue est remarquable.',
@@ -418,10 +418,10 @@ class ExpressionEcriteController extends Controller
             ->with('abonnement') // Charger la relation 'abonnement'
             ->get();
 
-            // 3. Fusionner les deux collections et marquer les abonnements payés
-       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
-    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
-        return $souscription->abonnement_id == $abonnement->id;
+        // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
             });
             return $abonnement;
         });
@@ -559,7 +559,7 @@ class ExpressionEcriteController extends Controller
             'niveau' => $niveau,
             'note' => $noteTotale,
             // Exemple d'utilisation correcte
-            'commentaire' =>$this->generateGlobalComment( $noteTotale),
+            'commentaire' => $this->generateGlobalComment($noteTotale),
             'reponses' => $reponses,
             'taches' => $taches, // Ajout de la variable taches
             'route' => $route,

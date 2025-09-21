@@ -25,14 +25,14 @@ class ComprehensionEcriteController extends Controller
     public function index(Request $request)
     {
         $userId = Auth::id();
-    if (!$userId)
-        return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+        if (!$userId)
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
 
 
         $questions = ComprehensionEcrite::orderBy('numero')->get();
         $test_type = abonnement::where('examen', 'TCF')->firstOrFail();
         $reponses = ComprehensionEcriteUserAnswer::where('user_id', $userId)
-    ->pluck('reponse', 'question_id'); // clé = question_id
+            ->pluck('reponse', 'question_id'); // clé = question_id
 
         if ($questions->isEmpty()) {
             return view('test.indisponible', [
@@ -41,129 +41,129 @@ class ComprehensionEcriteController extends Controller
         }
 
 
-    return view('test.comprehension_ecrite', compact('questions', 'test_type', 'reponses'));
+        return view('test.comprehension_ecrite', compact('questions', 'test_type', 'reponses'));
     }
 
     public function enregistrerReponse(Request $request)
-{
-    $userId = Auth::id();
-    if (!$userId)
-        return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+    {
+        $userId = Auth::id();
+        if (!$userId)
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
 
-    $question = ComprehensionEcrite::findOrFail($request->question_id);
-    $reponseUtilisateur = strtoupper($request->reponse);
-    $isCorrect = $reponseUtilisateur === strtoupper($question->reponse);
+        $question = ComprehensionEcrite::findOrFail($request->question_id);
+        $reponseUtilisateur = strtoupper($request->reponse);
+        $isCorrect = $reponseUtilisateur === strtoupper($question->reponse);
 
-    // ✅ Récupération du type de test depuis la requête
-    $typeTest = $request->test_type ?? 'INCONNU';
+        // ✅ Récupération du type de test depuis la requête
+        $typeTest = $request->test_type ?? 'INCONNU';
 
-    // Si c'est un JSON, on le décode
-    if (is_string($typeTest)) {
-        $typeTestObj = json_decode($typeTest, true);
-        if ($typeTestObj && isset($typeTestObj['examen'], $typeTestObj['nom_du_plan'])) {
-            $typeTest = $typeTestObj['examen'] . '-' . $typeTestObj['nom_du_plan'];
+        // Si c'est un JSON, on le décode
+        if (is_string($typeTest)) {
+            $typeTestObj = json_decode($typeTest, true);
+            if ($typeTestObj && isset($typeTestObj['examen'], $typeTestObj['nom_du_plan'])) {
+                $typeTest = $typeTestObj['examen'] . '-' . $typeTestObj['nom_du_plan'];
+            }
         }
+
+
+        Log::info('Valeur de test_type : ' . $typeTest);
+        DB::table('comprehension_ecrite_user_answers')->updateOrInsert(
+            [
+                'user_id' => $userId,
+                'question_id' => $question->id
+            ],
+            [
+                'reponse' => $reponseUtilisateur,
+                'is_correct' => $isCorrect,
+                'test_type' => $typeTest, // maintenant TCF-Basique
+                'updated_at' => now(),
+                'created_at' => now()
+            ]
+        );
+
+
+        return response()->json([
+            'success' => true,
+            'correct' => $isCorrect
+        ]);
     }
 
 
-    Log::info('Valeur de test_type : ' . $typeTest);
-    DB::table('comprehension_ecrite_user_answers')->updateOrInsert(
-        [
+    public function enregistrerResultatFinal(Request $request)
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+        }
+
+        $reponses = DB::table('comprehension_ecrite_user_answers')
+            ->where('user_id', $userId)
+            ->get();
+
+        $score = $reponses->where('is_correct', true)->count();
+        $total = $reponses->count();
+        $abonnementId = $request->abonnement_id; // id réel de la table abonnements
+
+        DB::table('comprehension_ecrite_resultats')->insert([
             'user_id' => $userId,
-            'question_id' => $question->id
-        ],
-        [
-            'reponse' => $reponseUtilisateur,
-            'is_correct' => $isCorrect,
-            'test_type' => $typeTest, // maintenant TCF-Basique
+            'score' => $score * 18,
+            'abonnement_id' => $abonnementId, // ✅ ajouté ici
+            'total' => $total,
+            'created_at' => now(),
             'updated_at' => now(),
-            'created_at' => now()
-        ]
-    );
+        ]);
 
+        // ✅ récupération
+        $typeTest = $request->test_type;         // ex: "TCF-Canada"
 
-    return response()->json([
-        'success' => true,
-        'correct' => $isCorrect
-    ]);
-}
+        Log::info('Valeur de test_type : ' . $typeTest);
+        Log::info('Valeur de abonnement_id : ' . $abonnementId);
 
+        $niveauComp = $this->determineNiveau($score);
 
-public function enregistrerResultatFinal(Request $request)
-{
-    $userId = Auth::id();
-    if (!$userId) {
-        return response()->json(['error' => 'Utilisateur non authentifié'], 401);
-    }
+        Niveau::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'test_type' => $typeTest,
+            ],
+            [
+                'comprehension_ecrite' => $niveauComp,
+                'updated_at' => now(),
+            ]
+        );
 
-    $reponses = DB::table('comprehension_ecrite_user_answers')
-        ->where('user_id', $userId)
-        ->get();
+        // Vérifier abonnement
+        $hasActiveSubscription = Souscription::where('user_id', $userId)
+            ->where('date_debut', '<=', now())
+            ->where('date_fin', '>=', now())
+            ->exists();
 
-    $score = $reponses->where('is_correct', true)->count();
-    $total = $reponses->count();
-    $abonnementId = $request->abonnement_id; // id réel de la table abonnements
+        $freeTestsUsed = DB::table('historique_tests')
+            ->where('user_id', $userId)
+            ->where('is_free', true)
+            ->count();
 
-    DB::table('comprehension_ecrite_resultats')->insert([
-        'user_id' => $userId,
-        'score' => $score * 18,
-        'abonnement_id' => $abonnementId, // ✅ ajouté ici
-        'total' => $total,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+        $isFree = !$hasActiveSubscription && $freeTestsUsed < 5;
 
-    // ✅ récupération
-    $typeTest = $request->test_type;         // ex: "TCF-Canada"
-    
-    Log::info('Valeur de test_type : ' . $typeTest);
-    Log::info('Valeur de abonnement_id : ' . $abonnementId);
-
-    $niveauComp = $this->determineNiveau($score);
-
-    Niveau::updateOrCreate(
-        [
+        DB::table('historique_tests')->insert([
             'user_id' => $userId,
+            'is_free' => $isFree,
             'test_type' => $typeTest,
-        ],
-        [
-            'comprehension_ecrite' => $niveauComp,
+            'skill' => 'comprehension_ecrite',
+            'score' => $score,
+            'niveau' => $niveauComp,
+            'duration' => null,
+            'details_route' => 'test.comprehension_ecrite_resultat',
+            'refaire_route' => 'comprehension_ecrite.reinitialiser',
+            'completed_at' => now(),
+            'created_at' => now(),
             'updated_at' => now(),
-        ]
-    );
+        ]);
 
-    // Vérifier abonnement
-    $hasActiveSubscription = Souscription::where('user_id', $userId)
-        ->where('date_debut', '<=', now())
-        ->where('date_fin', '>=', now())
-        ->exists();
+        return response()->json(['message' => 'Résultat enregistré', 'score' => $score, 'total' => $total]);
+    }
 
-    $freeTestsUsed = DB::table('historique_tests')
-        ->where('user_id', $userId)
-        ->where('is_free', true)
-        ->count();
 
-    $isFree = !$hasActiveSubscription && $freeTestsUsed < 5;
-
-    DB::table('historique_tests')->insert([
-        'user_id'       => $userId,
-        'is_free'       => $isFree,
-        'test_type'     => $typeTest,
-        'skill'         => 'comprehension_ecrite',
-        'score'         => $score,
-        'niveau'        => $niveauComp,
-        'duration'      => null,
-        'details_route' => 'test.comprehension_ecrite_resultat',
-        'refaire_route' => 'comprehension_ecrite.reinitialiser',
-        'completed_at'  => now(),
-        'created_at'    => now(),
-        'updated_at'    => now(),
-    ]);
-
-    return response()->json(['message' => 'Résultat enregistré', 'score' => $score, 'total' => $total]);
-}
-
-    
     private function determineNiveau(float $score): string
     {
         return match (true) {
@@ -178,15 +178,15 @@ public function enregistrerResultatFinal(Request $request)
     }
 
     public function reinitialiserTest()
-{
-    $user = Auth::user();
-    
-    // Supprimer toutes les réponses de l'utilisateur pour ce test
-    ComprehensionEcriteResultat::where('user_id', $user->id)->delete();
+    {
+        $user = Auth::user();
 
-    // Rediriger vers la page du test
-    return redirect()->route('test.comprehension_ecrite');
-}
+        // Supprimer toutes les réponses de l'utilisateur pour ce test
+        ComprehensionEcriteResultat::where('user_id', $user->id)->delete();
+
+        // Rediriger vers la page du test
+        return redirect()->route('test.comprehension_ecrite');
+    }
 
     public function resultat()
     {
@@ -211,15 +211,15 @@ public function enregistrerResultatFinal(Request $request)
         $score = $reponses->where('is_correct', true)->count();
         $total = $reponses->count();
 
-       /*  DB::table('comprehension_ecrite_resultats')->insert([
-            'user_id' => $user->id,
-            'score' => $score,
-            'total' => $total,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]); */
+        /*  DB::table('comprehension_ecrite_resultats')->insert([
+             'user_id' => $user->id,
+             'score' => $score,
+             'total' => $total,
+             'created_at' => now(),
+             'updated_at' => now(),
+         ]); */
 
-         $historique = DB::table('comprehension_ecrite_resultats')
+        $historique = DB::table('comprehension_ecrite_resultats')
             ->where('user_id', $user)
             ->orderBy('created_at', 'asc')
             ->get()
@@ -228,155 +228,159 @@ public function enregistrerResultatFinal(Request $request)
                 return $item;
             });
 
-            $totalPoints = 0;
-            $bonnesReponses = 0;
-            $mauvaisesReponses = 0;
+        $totalPoints = 0;
+        $bonnesReponses = 0;
+        $mauvaisesReponses = 0;
 
-            foreach ($reponses as $reponse) {
-                if ($reponse->is_correct) {
-                    $totalPoints += 3;
-                    $bonnesReponses++;
-                } else {
-                    $totalPoints -= 2;
-                    $mauvaisesReponses++;
-                }
+        foreach ($reponses as $reponse) {
+            if ($reponse->is_correct) {
+                $totalPoints += 3;
+                $bonnesReponses++;
+            } else {
+                $totalPoints -= 2;
+                $mauvaisesReponses++;
             }
+        }
 
-            // Détermination du niveau
-        
-        $route='test.comprehension_ecrite';
+        // Détermination du niveau
+
+        $route = 'test.comprehension_ecrite';
 
         $tousLesAbonnements = abonnement::all();
 
         // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
         $souscriptionActives = Souscription::where('user_id', $user->id)
-                                          ->where('date_fin', '>=', Carbon::now())
-                                          ->with('abonnement') // Charger la relation 'abonnement'
-                                          ->get();
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
 
-            // 3. Fusionner les deux collections et marquer les abonnements payés
-       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
-    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
-        return $souscription->abonnement_id == $abonnement->id;
+        // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
             });
             return $abonnement;
         });
 
 
-$userLevels = [];
-$souscriptionsPayees = [];
+        $userLevels = [];
+        $souscriptionsPayees = [];
 
-foreach ($testTypes as $abonnement) {
-    // Créer une clé unique pour ce plan
-    $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
+        foreach ($testTypes as $abonnement) {
+            // Créer une clé unique pour ce plan
+            $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
 
-    // Récupérer le niveau global pour cet abonnement
-    $niveau = Niveau::where('user_id', $user->id)
-        ->where('test_type', $abonnement->id)
-        ->first();
+            // Récupérer le niveau global pour cet abonnement
+            $niveau = Niveau::where('user_id', $user->id)
+                ->where('test_type', $abonnement->id)
+                ->first();
 
-    $userLevels[$key] = $niveau ? [
-        'comprehension_ecrite' => $niveau->comprehension_ecrite,
-        'comprehension_orale' => $niveau->comprehension_orale,
-        'expression_ecrite' => $niveau->expression_ecrite,
-        'expression_orale' => $niveau->expression_orale,
-    ] : [
-        'comprehension_ecrite' => 'Non défini',
-        'comprehension_orale' => 'Non défini',
-        'expression_ecrite' => 'Non défini',
-        'expression_orale' => 'Non défini',
-    ];
+            $userLevels[$key] = $niveau ? [
+                'comprehension_ecrite' => $niveau->comprehension_ecrite,
+                'comprehension_orale' => $niveau->comprehension_orale,
+                'expression_ecrite' => $niveau->expression_ecrite,
+                'expression_orale' => $niveau->expression_orale,
+            ] : [
+                'comprehension_ecrite' => 'Non défini',
+                'comprehension_orale' => 'Non défini',
+                'expression_ecrite' => 'Non défini',
+                'expression_orale' => 'Non défini',
+            ];
 
-    // Vérifier si l’utilisateur a souscrit et payé cet abonnement
-    $souscriptionsPayees[$key] = Souscription::where('user_id', $user->id)
-        ->where('paye', true)
-        ->where('abonnement_id', $abonnement->id)
-        ->first();
-}
+            // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$key] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $abonnement->id)
+                ->first();
+        }
 
-// Récupérer les 5 derniers tests complétés par abonnement et compétence
-$completedTests = [];
+        // Récupérer les 5 derniers tests complétés par abonnement et compétence
+        $completedTests = [];
 
-// Comprehension Ecrite
-foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id); // Assurez-vous d'avoir ce champ
-    if (!$abonnement) continue;
+        // Comprehension Ecrite
+        foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id); // Assurez-vous d'avoir ce champ
+            if (!$abonnement)
+                continue;
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Compréhension Écrite',
-        'date' => $reponse->created_at,
-        'duration' => 360,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => $reponse->nb_bonnes_reponses,
-        'total_questions' => $reponse->nb_total_questions,
-    ];
-}
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Compréhension Écrite',
+                'date' => $reponse->created_at,
+                'duration' => 360,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => $reponse->nb_bonnes_reponses,
+                'total_questions' => $reponse->nb_total_questions,
+            ];
+        }
 
-// Comprehension Orale
-foreach (ComprehensionOraleReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+        // Comprehension Orale
+        foreach (ComprehensionOraleReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Compréhension Orale',
-        'date' => $reponse->created_at,
-        'duration' => 160,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => $reponse->nb_bonnes_reponses,
-        'total_questions' => $reponse->nb_total_questions,
-    ];
-}
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Compréhension Orale',
+                'date' => $reponse->created_at,
+                'duration' => 160,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => $reponse->nb_bonnes_reponses,
+                'total_questions' => $reponse->nb_total_questions,
+            ];
+        }
 
-// Expression Ecrite
-foreach (ExpressionEcriteReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+        // Expression Ecrite
+        foreach (ExpressionEcriteReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Expression Écrite',
-        'date' => $reponse->created_at,
-        'duration' => 60,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => null,
-        'total_questions' => null,
-    ];
-}
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Expression Écrite',
+                'date' => $reponse->created_at,
+                'duration' => 60,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => null,
+                'total_questions' => null,
+            ];
+        }
 
-// Expression Orale
-foreach (ExpressionOraleReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+        // Expression Orale
+        foreach (ExpressionOraleReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Expression Orale',
-        'date' => $reponse->created_at,
-        'duration' => 15,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => null,
-        'total_questions' => null,
-    ];
-}
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Expression Orale',
+                'date' => $reponse->created_at,
+                'duration' => 15,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => null,
+                'total_questions' => null,
+            ];
+        }
 
 
         $learningGoal = [
@@ -395,14 +399,14 @@ foreach (ExpressionOraleReponse::where('user_id', $user->id)
             'bonnesReponses' => $bonnesReponses,
             'mauvaisesReponses' => $mauvaisesReponses,
             'niveau' => $niveau,
-            'route'=> $route,
+            'route' => $route,
             'userLevels' => $userLevels,
             'completedTests' => $completedTests,
             'learningGoal' => $learningGoal,
             'testTypes' => $testTypes,
-            'souscriptionsPayees'=> $souscriptionsPayees
+            'souscriptionsPayees' => $souscriptionsPayees
         ]);
     }
 
-    
+
 }

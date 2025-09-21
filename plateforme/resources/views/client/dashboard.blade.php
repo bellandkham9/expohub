@@ -131,7 +131,7 @@
                                     <button onclick="showNiveauxInfo()" class="btn btn-info btn-sm mb-3">
                                         ℹ️ Infos niveaux
                                     </button>
-                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <div class="d-flex flex-wrap justify-content-center gap-2" style="height: 100px; overflow-y: scroll;">
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;

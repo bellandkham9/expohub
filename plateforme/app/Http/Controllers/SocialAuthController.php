@@ -30,19 +30,19 @@ class SocialAuthController extends Controller
         if (!$user) {
             // Crée un nouvel utilisateur
             $user = User::create([
-                'name'        => $socialUser->getName() ?? $socialUser->getNickname(),
-                'email'       => $socialUser->getEmail(),
-                'password'    => bcrypt(Str::random(16)), // Génère un mot de passe aléatoire
-                'provider'    => $provider,
+                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
+                'email' => $socialUser->getEmail(),
+                'password' => bcrypt(Str::random(16)), // Génère un mot de passe aléatoire
+                'provider' => $provider,
                 'provider_id' => $socialUser->getId(),
-                'avatar_url'  => $socialUser->getAvatar(), // ✅ Sauvegarde l’avatar Google
+                'avatar_url' => $socialUser->getAvatar(), // ✅ Sauvegarde l’avatar Google
             ]);
         } else {
             // ✅ Met à jour l’avatar si l’utilisateur existait déjà
             $user->update([
-                'provider'    => $provider,
+                'provider' => $provider,
                 'provider_id' => $socialUser->getId(),
-                'avatar_url'  => $socialUser->getAvatar(),
+                'avatar_url' => $socialUser->getAvatar(),
             ]);
         }
 

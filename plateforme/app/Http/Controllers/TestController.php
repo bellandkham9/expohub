@@ -34,36 +34,36 @@ class TestController extends Controller
 
 
         // 3. Fusionner les deux collections et marquer les abonnements payés
-       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
-    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
-        return $souscription->abonnement_id == $abonnement->id;
-    });
-    return $abonnement;
-});
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
+            });
+            return $abonnement;
+        });
 
 
 
         $userLevels = [];
-foreach ($testTypes as $abonnement) {
-    // Récupérer le niveau global pour cet abonnement
-    $niveau = Niveau::where('user_id', $user->id)
-        ->where('test_type', $abonnement->id)
-        ->first();
+        foreach ($testTypes as $abonnement) {
+            // Récupérer le niveau global pour cet abonnement
+            $niveau = Niveau::where('user_id', $user->id)
+                ->where('test_type', $abonnement->id)
+                ->first();
 
-    $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
+            $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
 
-    $userLevels[$key] = $niveau ? [
-        'comprehension_ecrite' => $niveau->comprehension_ecrite,
-        'comprehension_orale' => $niveau->comprehension_orale,
-        'expression_ecrite' => $niveau->expression_ecrite,
-        'expression_orale' => $niveau->expression_orale,
-    ] : [
-        'comprehension_ecrite' => 'Non défini',
-        'comprehension_orale' => 'Non défini',
-        'expression_ecrite' => 'Non défini',
-        'expression_orale' => 'Non défini',
-    ];
-}
+            $userLevels[$key] = $niveau ? [
+                'comprehension_ecrite' => $niveau->comprehension_ecrite,
+                'comprehension_orale' => $niveau->comprehension_orale,
+                'expression_ecrite' => $niveau->expression_ecrite,
+                'expression_orale' => $niveau->expression_orale,
+            ] : [
+                'comprehension_ecrite' => 'Non défini',
+                'comprehension_orale' => 'Non défini',
+                'expression_ecrite' => 'Non défini',
+                'expression_orale' => 'Non défini',
+            ];
+        }
 
 
         $completedTests = [];

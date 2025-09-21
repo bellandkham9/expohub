@@ -163,15 +163,15 @@ class AdminUserController extends Controller
             return Carbon::createFromDate(null, $m, 1)->format('M');
         });
 
-             // Récupérer l'année en cours et l'année précédente de manière dynamique
+        // Récupérer l'année en cours et l'année précédente de manière dynamique
         $currentYear = date('Y');
         $previousYear = $currentYear - 1;
 
         // Récupérer les souscriptions de l'année en cours
         $subscriptionsCurrentYear = Souscription::select(
-                DB::raw('MONTH(date_debut) as month'),
-                DB::raw('COUNT(*) as count')
-            )
+            DB::raw('MONTH(date_debut) as month'),
+            DB::raw('COUNT(*) as count')
+        )
             ->whereYear('date_debut', $currentYear)
             ->groupBy(DB::raw('MONTH(date_debut)'))
             ->pluck('count', 'month')
@@ -179,9 +179,9 @@ class AdminUserController extends Controller
 
         // Récupérer les souscriptions de l'année précédente
         $subscriptionsPreviousYear = Souscription::select(
-                DB::raw('MONTH(date_debut) as month'),
-                DB::raw('COUNT(*) as count')
-            )
+            DB::raw('MONTH(date_debut) as month'),
+            DB::raw('COUNT(*) as count')
+        )
             ->whereYear('date_debut', $previousYear)
             ->groupBy(DB::raw('MONTH(date_debut)'))
             ->pluck('count', 'month')
@@ -218,17 +218,17 @@ class AdminUserController extends Controller
 
 
         // 📊 Données tests effectués
-    $dataCurrentYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-        ->whereYear('created_at', $currentYear)
-        ->groupBy('month')
-        ->pluck('total', 'month')
-        ->toArray();
+        $dataCurrentYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $currentYear)
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
 
-    $dataPreviousYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-        ->whereYear('created_at', $previousYear)
-        ->groupBy('month')
-        ->pluck('total', 'month')
-        ->toArray();
+        $dataPreviousYearTests = HistoriqueTest::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', $previousYear)
+            ->groupBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
 
 
         return [
@@ -259,13 +259,13 @@ class AdminUserController extends Controller
     }
 
     private function formatMonthlyData($data)
-{
-    $formatted = [];
-    for ($i = 1; $i <= 12; $i++) {
-        $formatted[] = $data[$i] ?? 0;
+    {
+        $formatted = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $formatted[] = $data[$i] ?? 0;
+        }
+        return $formatted;
     }
-    return $formatted;
-}
 
 
     // Supprimer un utilisateur
@@ -312,7 +312,7 @@ class AdminUserController extends Controller
         Souscription::create([
             'user_id' => $user->id,
             'abonnement_id' => $abonnement->id,
-            'paye'=>true,
+            'paye' => true,
             'date_debut' => now(),
             'date_fin' => now()->addDays($abonnement->duree), // Exemple : si durée = 30 jours
         ]);
@@ -354,7 +354,7 @@ class AdminUserController extends Controller
 
 
 
-        $listAbonnement=abonnement::with('testType')->get();
+        $listAbonnement = abonnement::with('testType')->get();
         $tests = TestType::all();
         // Tu peux retourner les données pour ton dashboard ou les passer à une vue
         return view('admin.gestion_test', [
@@ -365,25 +365,25 @@ class AdminUserController extends Controller
             'testsAbandonnes' => $testsAbandonnes,
             'testsAbandonnesSemaine' => $testsAbandonnesSemaine,
             'abonnements' => $listAbonnement,
-            'tests' =>  $tests
+            'tests' => $tests
         ]);
     }
     // envoyer un message à un utilisateur ou tout les users
 
 
     public function sendMessage(Request $request)
-{
-    $request->validate([
-        'title' => 'required|string',
-        'message' => 'required|string',
-        'user_id' => 'nullable|exists:users,id',
-    ]);
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'message' => 'required|string',
+            'user_id' => 'nullable|exists:users,id',
+        ]);
 
-    \App\Models\NotificationAdmin::create($request->only('title', 'message', 'user_id'));
+        \App\Models\NotificationAdmin::create($request->only('title', 'message', 'user_id'));
 
-    return back()->with('success', 'Notification envoyée');
-}
-public function markAsRead(Request $request, \App\Models\NotificationAdmin $notification)
+        return back()->with('success', 'Notification envoyée');
+    }
+    public function markAsRead(Request $request, \App\Models\NotificationAdmin $notification)
     {
         $notification->read = true;
         $notification->save();
@@ -392,16 +392,16 @@ public function markAsRead(Request $request, \App\Models\NotificationAdmin $noti
             'success' => true,
             'id' => $notification->id
         ]);
-    
-    
-}
-public function supprimer($id)
-{
-    $notif = \App\Models\NotificationAdmin::findOrFail($id);
-    $notif->delete();
 
-    return response()->json(['success' => true]);
-}
+
+    }
+    public function supprimer($id)
+    {
+        $notif = \App\Models\NotificationAdmin::findOrFail($id);
+        $notif->delete();
+
+        return response()->json(['success' => true]);
+    }
 
 
 }

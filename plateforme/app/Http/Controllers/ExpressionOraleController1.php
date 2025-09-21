@@ -22,110 +22,111 @@ use App\Models\ExpressionEcriteReponse;
 
 class ExpressionOraleController1 extends Controller
 {
-   public function afficherTest()
-{
-    $user = auth()->user();
-    $taches = collect();
+    public function afficherTest()
+    {
+        $user = auth()->user();
+        $taches = collect();
 
-    foreach ([1, 2, 3] as $numero) {
-        // Chercher d'abord si l'utilisateur a déjà répondu à une tâche pour ce numéro
-        $reponse = ExpressionOraleReponse::where('user_id', $user->id)
-            ->whereHas('tache', fn($q) => $q->where('numero', $numero))
-            ->first();
+        foreach ([1, 2, 3] as $numero) {
+            // Chercher d'abord si l'utilisateur a déjà répondu à une tâche pour ce numéro
+            $reponse = ExpressionOraleReponse::where('user_id', $user->id)
+                ->whereHas('tache', fn($q) => $q->where('numero', $numero))
+                ->first();
 
-        if ($reponse) {
-            $taches->push($reponse->tache); // tâche déjà complétée
-        } else {
-            $tache = ExpressionOrale::where('numero', $numero)->first();
-            if ($tache) $taches->push($tache); // nouvelle tâche disponible
-        }
-    }
-
-    $test_type = abonnement::where('examen', 'TCF')->firstOrFail();
-    if ($taches->isEmpty()) {
-        return view('test.indisponible', ['test' => 'Expression Orale']);
-    }
-
-    $tacheActive = $taches->first();
-
-    // Vérifier si la tâche active a déjà une réponse
-    $reponseActive = ExpressionOraleReponse::where('user_id', $user->id)
-        ->where('expression_orale_id', $tacheActive->id)
-        ->first();
-
-    return view('test.expression_orale1', [
-        'taches' => $taches,
-        'tacheActive' => $tacheActive,
-        'reponseActive' => $reponseActive, // <- important
-        'testTypeData' => [
-            'id' => $test_type->id,
-            'string' => $test_type->examen . '-' . $test_type->nom_du_plan,
-            'examen' => $test_type->examen,
-            'nom_du_plan' => $test_type->nom_du_plan,
-        ]
-    ]);
-}
-
-
-   public function repondre(Request $request)
-{
-    try {
-        $user = Auth::user();
-
-        $validated = $request->validate([
-            'expression_orale_id' => 'required|exists:expression_orales,id',
-            'audio_eleve' => 'required|string',
-            'transcription_eleve' => 'required',
-            'texte_ia' => 'required|string',
-            'audio_ia' => 'required|string',
-            'score' => 'nullable|numeric',
-            'test_type' => 'required|string',
-            'test_type_id' => 'required|integer',
-            'abonnement_id' => 'required|integer',
-        ]);
-
-        // Nettoyage de la transcription
-        $transcription = $validated['transcription_eleve'];
-        if ($json = json_decode($transcription, true)) {
-            if (isset($json['error'])) {
-                $transcription = "Erreur de transcription : " . ($json['error']['message'] ?? 'Problème inconnu');
+            if ($reponse) {
+                $taches->push($reponse->tache); // tâche déjà complétée
+            } else {
+                $tache = ExpressionOrale::where('numero', $numero)->first();
+                if ($tache)
+                    $taches->push($tache); // nouvelle tâche disponible
             }
         }
 
-        $reponse = ExpressionOraleReponse::updateOrCreate(
-            [
-                'user_id' => $user->id,
-                'expression_orale_id' => $validated['expression_orale_id']
-            ],
-            [
-                'audio_eleve' => $validated['audio_eleve'],
-                'transcription_eleve' => $transcription,
-                'texte_ia' => $validated['texte_ia'],
-                'audio_ia' => $validated['audio_ia'],
-                'score' => $validated['score'] ?? 0,
-                'test_type' => $validated['test_type'],
-                'test_type_id' => $validated['test_type_id'],
-                'abonnement_id'=> $validated['abonnement_id'],
+        $test_type = abonnement::where('examen', 'TCF')->firstOrFail();
+        if ($taches->isEmpty()) {
+            return view('test.indisponible', ['test' => 'Expression Orale']);
+        }
+
+        $tacheActive = $taches->first();
+
+        // Vérifier si la tâche active a déjà une réponse
+        $reponseActive = ExpressionOraleReponse::where('user_id', $user->id)
+            ->where('expression_orale_id', $tacheActive->id)
+            ->first();
+
+        return view('test.expression_orale1', [
+            'taches' => $taches,
+            'tacheActive' => $tacheActive,
+            'reponseActive' => $reponseActive, // <- important
+            'testTypeData' => [
+                'id' => $test_type->id,
+                'string' => $test_type->examen . '-' . $test_type->nom_du_plan,
+                'examen' => $test_type->examen,
+                'nom_du_plan' => $test_type->nom_du_plan,
             ]
-        );
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Réponse enregistrée avec succès',
-            'reponse' => $reponse
         ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur serveur: ' . $e->getMessage()
-        ], 500);
     }
+
+
+    public function repondre(Request $request)
+    {
+        try {
+            $user = Auth::user();
+
+            $validated = $request->validate([
+                'expression_orale_id' => 'required|exists:expression_orales,id',
+                'audio_eleve' => 'required|string',
+                'transcription_eleve' => 'required',
+                'texte_ia' => 'required|string',
+                'audio_ia' => 'required|string',
+                'score' => 'nullable|numeric',
+                'test_type' => 'required|string',
+                'test_type_id' => 'required|integer',
+                'abonnement_id' => 'required|integer',
+            ]);
+
+            // Nettoyage de la transcription
+            $transcription = $validated['transcription_eleve'];
+            if ($json = json_decode($transcription, true)) {
+                if (isset($json['error'])) {
+                    $transcription = "Erreur de transcription : " . ($json['error']['message'] ?? 'Problème inconnu');
+                }
+            }
+
+            $reponse = ExpressionOraleReponse::updateOrCreate(
+                [
+                    'user_id' => $user->id,
+                    'expression_orale_id' => $validated['expression_orale_id']
+                ],
+                [
+                    'audio_eleve' => $validated['audio_eleve'],
+                    'transcription_eleve' => $transcription,
+                    'texte_ia' => $validated['texte_ia'],
+                    'audio_ia' => $validated['audio_ia'],
+                    'score' => $validated['score'] ?? 0,
+                    'test_type' => $validated['test_type'],
+                    'test_type_id' => $validated['test_type_id'],
+                    'abonnement_id' => $validated['abonnement_id'],
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Réponse enregistrée avec succès',
+                'reponse' => $reponse
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur serveur: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function handleMessage(Request $request)
@@ -150,7 +151,7 @@ class ExpressionOraleController1 extends Controller
                 $chemin = $audio->storeAs('public/audios/eleves', $nomFichier);
                 $urlAudio = 'audios/eleves/' . $nomFichier;
 
-                            // Transcription
+                // Transcription
                 $transcription = $this->transcrireAvecWhisper($audio);
 
                 // Si c’est un JSON d’erreur, on le convertit en texte lisible
@@ -188,26 +189,26 @@ class ExpressionOraleController1 extends Controller
 
 
     private function evaluerExpressionOrale(string $texte): int
-{
-    // Appel à ton API IA (OpenAI, DeepSeek, etc.)
-    $prompt = "Évalue le niveau de cette réponse orale (0 à 100) selon la grammaire, fluidité, vocabulaire :\n\n\"$texte\"\n\nScore (un seul chiffre entre 0 et 100) :";
+    {
+        // Appel à ton API IA (OpenAI, DeepSeek, etc.)
+        $prompt = "Évalue le niveau de cette réponse orale (0 à 100) selon la grammaire, fluidité, vocabulaire :\n\n\"$texte\"\n\nScore (un seul chiffre entre 0 et 100) :";
 
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
-    ])->post(env('OPENROUTER_API_URL'), [
-        'model' => 'deepseek/deepseek-chat',
-        'messages' => [
-            ['role' => 'user', 'content' => $prompt]
-        ],
-        'temperature' => 0.3,
-        'max_tokens' => 400,
-    ]);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+        ])->post(env('OPENROUTER_API_URL'), [
+                    'model' => 'deepseek/deepseek-chat',
+                    'messages' => [
+                        ['role' => 'user', 'content' => $prompt]
+                    ],
+                    'temperature' => 0.3,
+                    'max_tokens' => 400,
+                ]);
 
-    $textResponse = $response->json()['choices'][0]['message']['content'];
+        $textResponse = $response->json()['choices'][0]['message']['content'];
 
-    // Extraire le score (tu peux améliorer cette extraction)
-    preg_match('/\d{1,3}/', $textResponse, $matches);
-    return isset($matches[0]) ? min(100, max(0, intval($matches[0]))) : 0;
+        // Extraire le score (tu peux améliorer cette extraction)
+        preg_match('/\d{1,3}/', $textResponse, $matches);
+        return isset($matches[0]) ? min(100, max(0, intval($matches[0]))) : 0;
     }
 
 
@@ -339,18 +340,18 @@ class ExpressionOraleController1 extends Controller
         }
     }
 
-     private function determineNiveau(float $score): string
-{
-    return match (true) {
-        $score >= 600 && $score <= 699 => 'C2', // Utilisateur expérimenté maîtrise, proche du bilinguisme
-        $score >= 500 && $score <= 599 => 'C1', // Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes
-        $score >= 400 && $score <= 499 => 'B2', // Utilisateur indépendant avancé, conversation spontanée sur divers sujets
-        $score >= 300 && $score <= 399 => 'B1', // Utilisateur indépendant, autonome lors d'un voyage ou au travail
-        $score >= 200 && $score <= 299 => 'A2', // Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien
-        $score >= 100 && $score <= 199 => 'A1', // Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne
-        default => 'A0', // (0-99 points) : Débutant, reconnaissance de quelques mots
-    };
-}
+    private function determineNiveau(float $score): string
+    {
+        return match (true) {
+            $score >= 600 && $score <= 699 => 'C2', // Utilisateur expérimenté maîtrise, proche du bilinguisme
+            $score >= 500 && $score <= 599 => 'C1', // Utilisateur expérimenté autonome, bonne compréhension des textes et dialogues complexes
+            $score >= 400 && $score <= 499 => 'B2', // Utilisateur indépendant avancé, conversation spontanée sur divers sujets
+            $score >= 300 && $score <= 399 => 'B1', // Utilisateur indépendant, autonome lors d'un voyage ou au travail
+            $score >= 200 && $score <= 299 => 'A2', // Utilisateur élémentaire intermédiaire, capacité à parler de l'environnement quotidien
+            $score >= 100 && $score <= 199 => 'A1', // Utilisateur élémentaire débutant, phrases simples liées à la vie quotidienne
+            default => 'A0', // (0-99 points) : Débutant, reconnaissance de quelques mots
+        };
+    }
 
     private function generateGlobalComment(float $score): string
     {
@@ -366,7 +367,7 @@ class ExpressionOraleController1 extends Controller
     public function reinitialiserTest()
     {
         $user = Auth::user();
-        
+
         // Supprimer toutes les réponses de l'utilisateur pour ce test
         ExpressionOraleReponse::where('user_id', $user->id)->delete();
 
@@ -428,29 +429,29 @@ class ExpressionOraleController1 extends Controller
 
         // Insertion dans historique_tests
         DB::table('historique_tests')->insert([
-            'user_id'       => $userId,
-            'is_free'       => $isFree,
-            'test_type'     => $testTypeString, // ✅ On garde "TCF-Plan1"
-            'skill'         => 'expression_orale',
-            'score'         => $scoreTotal,
-            'niveau'        => $niveau,
-            'duration'      => null,
+            'user_id' => $userId,
+            'is_free' => $isFree,
+            'test_type' => $testTypeString, // ✅ On garde "TCF-Plan1"
+            'skill' => 'expression_orale',
+            'score' => $scoreTotal,
+            'niveau' => $niveau,
+            'duration' => null,
             'details_route' => 'test.expression_orale_resultat',
             'refaire_route' => 'expression_orale.reinitialiser',
-            'completed_at'  => now(),
-            'created_at'    => now(),
-            'updated_at'    => now(),
+            'completed_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return response()->json([
             'message' => 'Résultat enregistré',
-            'score'   => $scoreTotal,
-            'niveau'  => $niveau,
+            'score' => $scoreTotal,
+            'niveau' => $niveau,
             'test_type' => $testTypeString
         ]);
     }
 
-    
+
     public function afficherResultat()
     {
         $user = Auth::user();
@@ -467,139 +468,143 @@ class ExpressionOraleController1 extends Controller
         // Ajoutez cette ligne pour récupérer les tâches
         $taches = ExpressionOrale::orderBy('numero')->take(3)->get();
 
-           $tousLesAbonnements = abonnement::all();
+        $tousLesAbonnements = abonnement::all();
 
         // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
         $souscriptionActives = Souscription::where('user_id', $user->id)
-                                          ->where('date_fin', '>=', Carbon::now())
-                                          ->with('abonnement') // Charger la relation 'abonnement'
-                                          ->get();
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
 
-            // 3. Fusionner les deux collections et marquer les abonnements payés
-       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
-    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
-        return $souscription->abonnement_id == $abonnement->id;
+        // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
             });
             return $abonnement;
         });
 
-        
 
-     $userLevels = [];
-$souscriptionsPayees = [];
 
-// Parcours des abonnements / types de test
-foreach ($testTypes as $abonnement) {
-    // Clé unique combinant examen + nom_du_plan
-    $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
+        $userLevels = [];
+        $souscriptionsPayees = [];
 
-    // Récupérer le niveau global pour cet abonnement
-    $niveau = Niveau::where('user_id', $user->id)
-        ->where('test_type', $abonnement->id)
-        ->first();
+        // Parcours des abonnements / types de test
+        foreach ($testTypes as $abonnement) {
+            // Clé unique combinant examen + nom_du_plan
+            $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
 
-    $userLevels[$key] = $niveau ? [
-        'comprehension_ecrite' => $niveau->comprehension_ecrite,
-        'comprehension_orale' => $niveau->comprehension_orale,
-        'expression_ecrite' => $niveau->expression_ecrite,
-        'expression_orale' => $niveau->expression_orale,
-    ] : [
-        'comprehension_ecrite' => 'Non défini',
-        'comprehension_orale' => 'Non défini',
-        'expression_ecrite' => 'Non défini',
-        'expression_orale' => 'Non défini',
-    ];
+            // Récupérer le niveau global pour cet abonnement
+            $niveau = Niveau::where('user_id', $user->id)
+                ->where('test_type', $abonnement->id)
+                ->first();
 
-    // Vérifier si l’utilisateur a souscrit et payé cet abonnement
-    $souscriptionsPayees[$key] = Souscription::where('user_id', $user->id)
-        ->where('paye', true)
-        ->where('abonnement_id', $abonnement->id)
-        ->first();
-}
+            $userLevels[$key] = $niveau ? [
+                'comprehension_ecrite' => $niveau->comprehension_ecrite,
+                'comprehension_orale' => $niveau->comprehension_orale,
+                'expression_ecrite' => $niveau->expression_ecrite,
+                'expression_orale' => $niveau->expression_orale,
+            ] : [
+                'comprehension_ecrite' => 'Non défini',
+                'comprehension_orale' => 'Non défini',
+                'expression_ecrite' => 'Non défini',
+                'expression_orale' => 'Non défini',
+            ];
 
-// Récupérer les 5 derniers tests complétés par type et compétence
-$completedTests = [];
+            // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            $souscriptionsPayees[$key] = Souscription::where('user_id', $user->id)
+                ->where('paye', true)
+                ->where('abonnement_id', $abonnement->id)
+                ->first();
+        }
 
-// Comprehension Ecrite
-foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+        // Récupérer les 5 derniers tests complétés par type et compétence
+        $completedTests = [];
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Compréhension Écrite',
-        'date' => $reponse->created_at,
-        'duration' => 360,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => $reponse->nb_bonnes_reponses,
-        'total_questions' => $reponse->nb_total_questions,
-    ];
-}
+        // Comprehension Ecrite
+        foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-// Comprehension Orale
-foreach (ComprehensionOraleReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Compréhension Écrite',
+                'date' => $reponse->created_at,
+                'duration' => 360,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => $reponse->nb_bonnes_reponses,
+                'total_questions' => $reponse->nb_total_questions,
+            ];
+        }
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Compréhension Orale',
-        'date' => $reponse->created_at,
-        'duration' => 160,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => $reponse->nb_bonnes_reponses,
-        'total_questions' => $reponse->nb_total_questions,
-    ];
-}
+        // Comprehension Orale
+        foreach (ComprehensionOraleReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-// Expression Ecrite
-foreach (ExpressionEcriteReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Compréhension Orale',
+                'date' => $reponse->created_at,
+                'duration' => 160,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => $reponse->nb_bonnes_reponses,
+                'total_questions' => $reponse->nb_total_questions,
+            ];
+        }
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Expression Écrite',
-        'date' => $reponse->created_at,
-        'duration' => 60,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => null,
-        'total_questions' => null,
-    ];
-}
+        // Expression Ecrite
+        foreach (ExpressionEcriteReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
 
-// Expression Orale
-foreach (ExpressionOraleReponse::where('user_id', $user->id)
-    ->latest()->take(5)->get() as $reponse) {
-    $abonnement = abonnement::find($reponse->abonnement_id);
-    if (!$abonnement) continue;
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Expression Écrite',
+                'date' => $reponse->created_at,
+                'duration' => 60,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => null,
+                'total_questions' => null,
+            ];
+        }
 
-    $completedTests[] = [
-        'id' => $reponse->id,
-        'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
-        'skill' => 'Expression Orale',
-        'date' => $reponse->created_at,
-        'duration' => 15,
-        'score' => $reponse->score,
-        'max_score' => 699,
-        'level' => $reponse->niveau,
-        'correct_answers' => null,
-        'total_questions' => null,
-    ];
-}
+        // Expression Orale
+        foreach (ExpressionOraleReponse::where('user_id', $user->id)
+            ->latest()->take(5)->get() as $reponse) {
+            $abonnement = abonnement::find($reponse->abonnement_id);
+            if (!$abonnement)
+                continue;
+
+            $completedTests[] = [
+                'id' => $reponse->id,
+                'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                'skill' => 'Expression Orale',
+                'date' => $reponse->created_at,
+                'duration' => 15,
+                'score' => $reponse->score,
+                'max_score' => 699,
+                'level' => $reponse->niveau,
+                'correct_answers' => null,
+                'total_questions' => null,
+            ];
+        }
 
         $learningGoal = [
             'target_level' => 'C1',
@@ -607,7 +612,7 @@ foreach (ExpressionOraleReponse::where('user_id', $user->id)
             'target_date' => Carbon::now()->addMonths(3)
         ];
 
-         
+
         return view('test.expression_orale_resultat', [
             'titre' => 'TCF CANADA, Expression Orale',
             'niveau' => $niveau,
@@ -620,7 +625,7 @@ foreach (ExpressionOraleReponse::where('user_id', $user->id)
             'completedTests' => $completedTests,
             'learningGoal' => $learningGoal,
             'testTypes' => $testTypes,
-            'souscriptionsPayees'=> $souscriptionsPayees
+            'souscriptionsPayees' => $souscriptionsPayees
         ]);
     }
 

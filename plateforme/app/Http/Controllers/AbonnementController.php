@@ -22,14 +22,14 @@ class AbonnementController extends Controller
 
     public function store(Request $request)
     {
-  
-       $request->validate([
-        'nom_du_plan' => 'required|string|max:255',
-        'examen' => 'required|exists:test_types,examen',
-        'prix' => 'required|numeric',
-        'duree' => 'required|integer',
-        'description' => 'nullable|string',
-    ]);
+
+        $request->validate([
+            'nom_du_plan' => 'required|string|max:255',
+            'examen' => 'required|exists:test_types,examen',
+            'prix' => 'required|numeric',
+            'duree' => 'required|integer',
+            'description' => 'nullable|string',
+        ]);
 
         Abonnement::create($request->all());
         return redirect()->route('gestion_test')->with('success', 'Abonnement créé avec succès');
@@ -43,13 +43,13 @@ class AbonnementController extends Controller
 
     public function update(Request $request, Abonnement $abonnement)
     {
-       $request->validate([
-        'nom_du_plan' => 'required|string|max:255',
-        'examen' => 'required|exists:test_types,examen',
-        'prix' => 'required|numeric',
-        'duree' => 'required|integer',
-        'description' => 'nullable|string',
-    ]);
+        $request->validate([
+            'nom_du_plan' => 'required|string|max:255',
+            'examen' => 'required|exists:test_types,examen',
+            'prix' => 'required|numeric',
+            'duree' => 'required|integer',
+            'description' => 'nullable|string',
+        ]);
 
         $abonnement->update($request->all());
         return redirect()->route('gestion_test')->with('success', 'Abonnement mis à jour');
@@ -63,5 +63,5 @@ class AbonnementController extends Controller
 
 
 
-    
+
 }
