@@ -47,29 +47,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         mettreAJourBoutons(index);
     }
-  function enregistrerResultatFinalEtRediriger() {
-    fetch('/comprehension_ecrite/resultat/final', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Résultat enregistré :", data);
-        // Redirection vers la page de résultats après enregistrement
-        window.location.href = '/comprehension_ecrite/resultat';
-    })
-    .catch(error => {
-        console.error('Erreur enregistrement résultat final :', error);
-    });
-}
+   
 
-    // ✅ Réponse utilisateur via AJAX
+
+   
+let questionsNonRepondues = questions
+    .map((q, idx) => reponses[q.id] ? null : idx)
+    .filter(idx => idx !== null);
+
+
 function envoyerReponse(reponse, index) {
     const questionId = questions[index].id;
-    const testType = document.getElementById('testType')?.value;
 
     fetch('/comprehension_ecrite/repondre', {
         method: 'POST',
@@ -80,24 +68,28 @@ function envoyerReponse(reponse, index) {
         body: JSON.stringify({
             question_id: questionId,
             reponse: reponse,
-            test_type: testType
+            test_type: document.getElementById("testType").value,
         })
     })
     .then(res => res.json())
     .then(data => {
-        // ✅ Enchaîne automatiquement sur la question suivante
-        setTimeout(() => {
-            if (index < questions.length - 1) {
-                chargerQuestion(index + 1);
-            } else {
+        // ✅ Supprimer l'index de la liste des questions non répondues
+        questionsNonRepondues = questionsNonRepondues.filter(i => i !== index);
+
+        if (questionsNonRepondues.length > 0) {
+            // Charger la prochaine question non répondue
+            const nextIndex = questionsNonRepondues[0];
+            setTimeout(() => chargerQuestion(nextIndex), 500);
+        } else {
+            // Toutes les questions ont été répondues
+            setTimeout(() => {
                 alert("🎉 Test terminé !");
                 enregistrerResultatFinalEtRediriger();
-            }
-        }, 1000); // ⏱️ délai de 1 seconde
+            }, 500);
+        }
     })
     .catch(err => console.error("Erreur AJAX:", err));
 }
-
 
     // ✅ Mise à jour visuelle des boutons de navigation
     function mettreAJourBoutons(indexActif) {
@@ -108,7 +100,7 @@ function envoyerReponse(reponse, index) {
     }
 
     // ✅ Timer 60 minutes
-    let seconds = 60* 60;
+    let seconds = 60 * 60;
     const timerEl = document.getElementById("timer");
 
     const countdown = setInterval(() => {

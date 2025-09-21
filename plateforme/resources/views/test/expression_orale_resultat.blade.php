@@ -22,7 +22,9 @@
                                                         </div>
                                                         <div class="text-md-end text-muted small">
                                                             <div><strong>60 min</strong></div>
-                                                            <div>{{ now()->addMonth()->format('d M Y') }}</div>
+                                                            <div>
+                                                                {{ \Carbon\Carbon::now('Africa/Douala')->addMonthNoOverflow()->format('d M Y') }}
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -144,8 +146,11 @@
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->examen;
+                                                $key = $testType->examen . '_' . $testType->nom_du_plan;
+                                                $key1 = $testType->examen;
+                                                $key2 = $testType->nom_du_plan;
                                                 $niveaux = $userLevels[$key] ?? null;
+
                                                 $skills = [
                                                     'Compréhension Écrite' => 'comprehension_ecrite',
                                                     'Compréhension Orale' => 'comprehension_orale',
@@ -159,7 +164,8 @@
                                                 @if (!$testType->paye)
                                                     <i class="fas fa-lock me-1"></i>
                                                 @endif
-                                                {{ strtoupper($key) }}
+                                                {{ strtoupper($key1) }}
+                                                <p style="font-size: 10px; color: #F8B70D;">({{ strtoupper($key2) }})</p>
                                             </button>
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
                                                 aria-hidden="true">
@@ -179,7 +185,7 @@
                                                                             $level = $niveaux[$champ] ?? 'Non défini';
                                                                             $color = match ($level) {
                                                                                 'C2', 'C1', 'B2' => 'success',
-                                                                                'B1', 'A2', 'A1' => 'warning',
+                                                                                'B1', 'A2', 'A1','A0' => 'warning',
                                                                                 default => 'secondary',
                                                                             };
                                                                         @endphp

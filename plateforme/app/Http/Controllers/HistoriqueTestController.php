@@ -32,15 +32,23 @@ class HistoriqueTestController extends Controller
             return dd('error', 'Votre abonnement est épuisé. Veuillez souscrire à un nouvel abonnement pour accéder à ce contenu.');
         }
 
-        $tousLesAbonnements = abonnement::all();
+            $tousLesAbonnements = abonnement::all();
+     
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
-           // 3. Fusionner les deux collections et marquer les abonnements payés
-        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActive) {
-            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
-            $abonnement->paye = $souscriptionActive->contains($abonnement->id);
 
+            // 3. Fusionner les deux collections et marquer les abonnements payés
+       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+        return $souscription->abonnement_id == $abonnement->id;
+            });
             return $abonnement;
         });
+
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
@@ -75,7 +83,7 @@ class HistoriqueTestController extends Controller
         $comprehensionEcrite = ComprehensionEcriteResultat::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Canada',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Compréhension Écrite',
                 'date' => $item->created_at,
                 'duration' => 60,
@@ -90,7 +98,7 @@ class HistoriqueTestController extends Controller
         $comprehensionOrale = ComprehensionOraleReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Québec',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Compréhension Orale',
                 'date' => $item->created_at,
                 'duration' => 30,
@@ -105,7 +113,7 @@ class HistoriqueTestController extends Controller
         $expressionEcrite = ExpressionEcriteReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Canada',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Expression Écrite',
                 'date' => $item->created_at,
                 'duration' => 60,
@@ -120,7 +128,7 @@ class HistoriqueTestController extends Controller
         $expressionOrale = ExpressionOraleReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Québec',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Expression Orale',
                 'date' => $item->created_at,
                 'duration' => 15,

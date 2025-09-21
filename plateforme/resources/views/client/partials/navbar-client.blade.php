@@ -47,10 +47,13 @@
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                         alt="Avatar"
-                         class="rounded-circle"
-                         style="width: 35px; height: 35px; object-fit: cover;">
+                    <img src="{{ auth()->user()->avatar_url 
+            ? (Str::startsWith(auth()->user()->avatar_url, ['http', 'https']) 
+                ? auth()->user()->avatar_url 
+                : asset(auth()->user()->avatar_url)) 
+            : asset('images/user-person.png') }}"
+     alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+
                     <!-- Nom affiché seulement sur desktop -->
                     <span class="fw-bold ms-2 d-none d-lg-inline">{{ auth()->user()->name ?? 'Utilisateur' }}</span>
                 </a>

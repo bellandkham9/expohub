@@ -154,6 +154,18 @@
 </head>
 
 <body>
+@php
+    $testTypeString = $test_type->examen . '-' . $test_type->nom_du_plan;
+    $testTypeData = [
+        'id' => $test_type->id,
+        'string' => $testTypeString,
+        'examen' => $test_type->examen,
+        'nom_du_plan' => $test_type->nom_du_plan,
+    ];
+@endphp
+
+<input type="hidden" id="test_type" value='@json($testTypeData)'>
+
     <div class="container py-2">
         <div class="test-container">
             <div class="p-2">
@@ -226,28 +238,48 @@
                 }
             }
 
-            function enregistrerResultatFinalEtRediriger() {
-                fetch('/comprehension_orale/resultat/final', {
-                        method: 'POST'
-                        , headers: {
-                            'Content-Type': 'application/json'
-                            , 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Résultat enregistré :", data);
-                        // Redirection vers la page de résultats après enregistrement
-                        window.location.href = '/comprehension_orale/resultat';
-                    })
-                    .catch(error => {
-                        console.error('Erreur enregistrement résultat final :', error);
-                    });
-            }
+function enregistrerResultatFinalEtRediriger() {
+    const testTypeData = JSON.parse(document.getElementById("test_type").value);
+
+    console.log("Data envoyée au serveur :", testTypeData);
+
+    fetch('/comprehension_orale/resultat/final', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            test_type: testTypeData.string,   // ex: "TCF-Canada"
+            abonnement_id: testTypeData.id    // ex: 5
+        })
+    })
+    .then(async response => {
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("Réponse erreur brute :", text);
+            throw new Error('Erreur HTTP : ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Résultat enregistré :", data);
+        window.location.href = '/comprehension_orale/resultat';
+    })
+    .catch(error => {
+        console.error('Erreur enregistrement résultat final :', error);
+    });
+}
+
 
 
         document.addEventListener('DOMContentLoaded', () => {
             let questions = @json($questions);
+            let reponses = @json($reponses); // {question_id: "réponse"}
+
+
+
             let currentQuestion = 0;
             let userId = {{ auth()->id() ?? 1 }};
 
@@ -397,9 +429,15 @@
                 demarrerQuestionTimer(q.id, index);
             }
 
+            let questionsNonRepondues = questions
+    .map((q, idx) => reponses[q.id] ? null : idx)
+    .filter(idx => idx !== null);
+
+            console.log(questionsNonRepondues)
+
             function verifierReponse(reponse, questionId, questionIndex) {
                 clearInterval(questionTimer); // Stoppe le timer dès qu'on a une réponse
-
+                const testTypeData = JSON.parse(document.getElementById("test_type").value);
                 if (responses[questionIndex] !== undefined) return;
 
                 fetch('/comprehension_orale/repondre', {
@@ -408,23 +446,40 @@
                             'Content-Type': 'application/json'
                             , 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
-                        , body: JSON.stringify({
-                            reponse: reponse
-                            , question_id: questionId
-                            , user_id: userId
+                        ,body: JSON.stringify({
+                            reponse: reponse,
+                            question_id: questionId,
+                            user_id: userId,
+                            test_type: testTypeData.string
                         })
                     })
                     .then(res => res.json())
                     .then(data => {
-                        responses[questionIndex] = reponse;
+                         // ✅ Supprimer l'index de la liste des questions non répondues
+                        questionsNonRepondues = questionsNonRepondues.filter(i => i !== questionIndex);
 
+                        responses[questionIndex] = reponse;
+                        if (questionsNonRepondues.length > 0) {
+            // Charger la prochaine question non répondue
+            const nextIndex = questionsNonRepondues[0];
+            setTimeout(() => chargerQuestion(nextIndex), 500);
+        } else {
+            // Toutes les questions ont été répondues
+            setTimeout(() => {
+                alert("🎉 Test terminé !");
+                window.location.href = "/comprehension_orale/resultat";
+            }, 1000);
+        }
+
+
+/* 
                         setTimeout(() => {
                             if (questionIndex + 1 < questions.length) {
                                 chargerQuestion(questionIndex + 1);
                             } else {
                                 window.location.href = "/comprehension_orale/resultat";
                             }
-                        }, 1000);
+                        }, 1000); */
                     });
             }
 

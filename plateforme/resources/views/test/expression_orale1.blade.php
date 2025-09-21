@@ -16,6 +16,9 @@
 </head>
 
 <body>
+<!-- Stocker les infos du test_type en JSON utilisable par JS -->
+<input type="hidden" id="testType" value='@json($testTypeData)'>
+
     <div class="container py-3">
         <div class="test-container">
             <div class="row g-2 justify-content-between align-items-center mb-4">
@@ -51,11 +54,11 @@
 
                     <h5><strong>Indications</strong></h5>
                     <button class="btn" id="speak-button"><img src="{{ asset('images/volume.png') }}" width="32" alt=""></button>
-                    <div class="consigne">
-                      <p style="text-align: justify" id="text-input">{{ $tacheActive->consigne }}</p>
+                    <div class="consigne text-center justify-center">
+                      <p  id="text-input">{{ $tacheActive->consigne }}</p>
                     </div>
-                     <div class="consigne mt-4">
-                        <p style="text-align: justify">{{ $tacheActive->contexte }}</p>
+                     <div class="consigne text-center justify-center mt-4">
+                        <p>{{ $tacheActive->contexte }}</p>
                     </div>
 
                     <div class="d-flex justify-content-center mt-4">
@@ -74,12 +77,12 @@
                         <img src="{{ asset('images/stop-micro.png') }}" width="30" height="32" alt="">
                     </button>
 
-                    <button class="btn btn-success mt-2 d-none" id="uploadBtn">📤 Envoyer l'audio</button>
+                    <button class="btn btn-success w-100 mt-2 d-none" id="uploadBtn">📤 Envoyer l'audio</button>
                 </div>
             </div>
         </div>
     </div>
-    <input type="hidden" id="test_type" value="{{$test_type}}">
+    
     <input type="hidden" id="expression_orale_id" value="{{ $question->id ?? 1 }}">
     {{-- <textarea id="zoneRedaction"></textarea> --}}
 
@@ -145,8 +148,10 @@
 
          
 function enregistrerResultatFinalEtRediriger() {
+     const testTypeData = JSON.parse(document.getElementById('testType').value);
+
     const data = {
-        test_type: document.getElementById('test_type')?.value // ✅ camelCase → snake_case
+        test_type: testTypeData.string
     };
 
     fetch("{{ route('expression_orale.resultat_final') }}", {
@@ -168,14 +173,13 @@ function enregistrerResultatFinalEtRediriger() {
     })
     .then(data => {
         console.log("Résultat enregistré :", data);
-
-         window.location.href = '/expression-orale/resultat';
-
+        window.location.href = '/expression-orale/resultat';
     })
     .catch(error => {
         console.log('Erreur enregistrement résultat final :', error);
     });
 }
+
 
         setInterval(() => {
             const minutes = Math.floor(duration / 60);
@@ -212,88 +216,98 @@ function enregistrerResultatFinalEtRediriger() {
             }).showToast();
         }
 
-        // Version corrigée du gestionnaire de tâches
-        document.querySelectorAll('.tache-btn1').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const numeroTache = parseInt(this.dataset.numero);
-                const tacheId = parseInt(this.dataset.tacheId);
+document.querySelectorAll('.tache-btn1').forEach(btn => {
+    btn.addEventListener('click', async function () {
+        const numeroTache = parseInt(this.dataset.numero);
+        const tacheId = parseInt(this.dataset.tacheId);
 
-                try {
-                    // UI Feedback
-                    const originalText = this.innerHTML;
-                    this.innerHTML =
-                        '<span class="spinner-border spinner-border-sm me-1" role="status"></span>';
-                    this.disabled = true;
+        const indicationsDiv = document.getElementById('indications');
+        const recorderSection = document.getElementById('recorderSection');
+        const questionIdInput = document.getElementById('questionId');
+        const reponseInput = document.getElementById('reponse');
 
-                    // Visual update
-                    // Mettre à jour le style des boutons
-                    document.querySelectorAll('.tache-btn1').forEach(b => {
-                        b.classList.remove('btn-tache-active');
-                        b.classList.add('btn-tache-inactive');
-                    });
-                    this.classList.remove('btn-tache-inactive');
-                    this.classList.add('btn-tache-active');
+        try {
+            // Bloquer le bouton et afficher un spinner
+            const originalText = this.innerHTML;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span>';
+            this.disabled = true;
 
-                    // API Call
-                    const response = await fetch("{{ route('expression_orale.changer_tache') }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({
-                            numero: numeroTache,
-                            tache_id: tacheId
-                        })
-                    });
+            // Mettre à jour le style des boutons
+            document.querySelectorAll('.tache-btn1').forEach(b => {
+                b.classList.remove('btn-tache-active');
+                b.classList.add('btn-tache-inactive');
+            });
+            this.classList.remove('btn-tache-inactive');
+            this.classList.add('btn-tache-active');
 
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            // Appel API
+            const response = await fetch("{{ route('expression_orale.changer_tache') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ numero: numeroTache, tache_id: tacheId })
+            });
 
-                    const data = await response.json();
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            console.log(data)
 
-                    if (!data.success || !data.tache) {
-                        throw new Error(data.error || 'Données de tâche manquantes');
-                    }
+            if (!data.success || !data.tache) throw new Error(data.error || 'Données manquantes');
 
-                    // Mise à jour sécurisée de l'UI
-                    const indicationsDiv = document.getElementById('indications');
-                    if (indicationsDiv) {
-                        indicationsDiv.innerHTML = `
+            
+
+            // Mettre à jour l’ID de la question
+            if (questionIdInput) questionIdInput.value = data.tache.id || '';
+
+            // Pré-remplir la réponse si elle existe
+            if (reponseInput) reponseInput.value = data.reponse || '';
+
+            // ⚠️ Bloquer ou activer l’enregistrement selon si la tâche est déjà complétée
+            if (data.reponse) {
+                // La tâche a déjà été complétée
+                if (recorderSection) recorderSection.style.display = 'none';
+                if (indicationsDiv) {
+                    indicationsDiv.innerHTML += `
+                        <div class="alert alert-success mt-3">
+                            ✅ Cette tâche a déjà été complétée. Vous ne pouvez plus l'enregistrer.
+                        </div>
+                    `;
+                }
+            } else {
+                if (indicationsDiv) {
+                indicationsDiv.innerHTML = `
                     <h5><strong>Indications</strong></h5>
-                    <div class="text-justify" style="width: 40%; margin: 0 auto;">
+                    <button class="btn" id="speak-button">
+                        <img src="{{ asset('images/volume.png') }}" width="32" alt="Volume">
+                    </button>
+                    <div class="consigne text-center mt-2">
                         <p>${data.tache.consigne || 'Aucune consigne disponible'}</p>
                     </div>
-                    <div class="consigne">
-                        <p style="text-align: justify">${data.tache.contexte || ''}</p>
+                    <div class="consigne text-center mt-2">
+                        <p>${data.tache.contexte || ''}</p>
                     </div>
                 `;
-                    }
+            }
+                // Tâche non complétée, autoriser l'enregistrement
+                if (recorderSection) recorderSection.style.display = 'block';
+            }
 
-                    const questionIdInput = document.getElementById('questionId');
-                    if (questionIdInput) {
-                        questionIdInput.value = data.tache.id || '';
-                    }
-
-                    // Gestion de la réponse existante
-                    const reponseInput = document.getElementById('reponse');
-                    if (reponseInput) {
-                        reponseInput.value = data.reponse || '';
-                    }
-
-                } catch (error) {
-                    console.error('Erreur:', error);
-                    alert('Erreur: ' + error.message);
-                } finally {
-                    // Réinitialisation correcte des boutons
-                    document.querySelectorAll('.tache-btn1').forEach(b => {
-                        b.disabled = false;
-                        b.innerHTML =
-                        `Tâche ${b.dataset.numero}`; // Corrigé: utiliser dataset.numero
-                    });
-                }
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Erreur: ' + error.message);
+        } finally {
+            // Réinitialisation des boutons
+            document.querySelectorAll('.tache-btn1').forEach(b => {
+                b.disabled = false;
+                b.innerHTML = `Tâche ${b.dataset.numero}`;
             });
-        });
+        }
+    });
+});
+
         // Fonctions utilitaires (à ajouter)
         function showToast(message, type = 'success') {
             // Implémentez votre système de notification/toast
@@ -362,7 +376,7 @@ function enregistrerResultatFinalEtRediriger() {
 
     // Afficher un indicateur de chargement
     uploadBtn.disabled = true;
-    uploadBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
+    uploadBtn.innerHTML = '<span class="spinner-border w-100 spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
 
     fetch("{{ route('expression_orale.handleMessage') }}", {
         method: "POST",
@@ -396,6 +410,9 @@ function enregistrerResultatFinalEtRediriger() {
             });
             
         // Enregistrer la réponse après la transcription
+        const testTypeData = JSON.parse(document.getElementById('testType').value);
+
+        // Enregistrer la réponse après la transcription
         return fetch("{{ route('expression_orale.repondre') }}", {
             method: "POST",
             headers: {
@@ -405,16 +422,18 @@ function enregistrerResultatFinalEtRediriger() {
             },
             body: JSON.stringify({
                 expression_orale_id: document.getElementById('questionId').value,
-                audio_eleve: data.audio_path,         // audio_path => audio_eleve
-                transcription_eleve: data.transcription,  // transcription => transcription_eleve
-                texte_ia: data.ia_response,           // ia_response => texte_ia
-                audio_ia: data.audio_ia_path,         // audio_ia reste pareil
+                audio_eleve: data.audio_path,
+                transcription_eleve: data.transcription,
+                texte_ia: data.ia_response,
+                audio_ia: data.audio_ia_path,
                 score: data.score || 0,
-                test_type: testType                 // score optionnel
+                test_type: testTypeData.string,   // "TCF-Basique"
+                test_type_id: testTypeData.id,    // id numérique
+                abonnement_id: testTypeData.id    // même id que test_type_id
             })
-           
-
         });
+
+
 
     })
     .then(response => response.json())

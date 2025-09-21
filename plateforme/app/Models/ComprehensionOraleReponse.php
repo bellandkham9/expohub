@@ -14,6 +14,9 @@ class ComprehensionOraleReponse extends Model
         'question_id',
         'reponse',
         'is_correct',
+        'test_type',
+        'score',          // ✅ nouveau champ
+        'abonnement_id',  // ✅ nouveau champ
     ];
 
     // Relations
@@ -25,5 +28,10 @@ class ComprehensionOraleReponse extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(ComprehensionOrale::class, 'question_id');
+    }
+
+    public function abonnement()
+    {
+        return $this->belongsTo(Abonnement::class, 'abonnement_id');
     }
 }

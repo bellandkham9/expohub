@@ -43,14 +43,22 @@ class StudentDashboardController extends Controller
         }
 
         $tousLesAbonnements = abonnement::all();
+     
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
-           // 3. Fusionner les deux collections et marquer les abonnements payés
-        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActive) {
-            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
-            $abonnement->paye = $souscriptionActive->contains($abonnement->id);
 
+            // 3. Fusionner les deux collections et marquer les abonnements payés
+       $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+    $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+        return $souscription->abonnement_id == $abonnement->id;
+            });
             return $abonnement;
         });
+
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
@@ -58,13 +66,12 @@ class StudentDashboardController extends Controller
         
         foreach ($testTypes as $testType) {
             // Récupérer le TestType en fonction de l'examen
-        $testTypeId = TestType::where('examen', $testType->examen)->first();
-
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testTypeId->id)
+                ->where('test_type', $testType->id)
                 ->first();
+            $key = $testType->examen . '_' . $testType->nom_du_plan;
 
-            $userLevels[$testType->examen] = $niveau ? [
+            $userLevels[$key] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -80,7 +87,10 @@ class StudentDashboardController extends Controller
                 ->where('paye', true)
                 ->where('abonnement_id', $testType->id)
                 ->first();
-                }
+}
+
+
+
 
         // 2. Regrouper tous les tests en un tableau commun
         $allTests = collect();

@@ -15,8 +15,13 @@
     <a href="#" class="d-flex link-dark text-decoration-none m-2 dropdown-toggle" id="dropdownUser1"
         data-bs-toggle="dropdown" aria-expanded="false">
         <div class="d-flex justify-content-center align-items-center">
-            <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+           <img src="{{ auth()->user()->avatar_url 
+            ? (Str::startsWith(auth()->user()->avatar_url, ['http', 'https']) 
+                ? auth()->user()->avatar_url 
+                : asset(auth()->user()->avatar_url)) 
+            : asset('images/user-person.png') }}"
+     alt="Avatar" class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+
 
             <!-- Nom utilisateur limité + tooltip -->
             <div class="fw-bold ms-2 username-text"

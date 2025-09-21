@@ -9,11 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-
-
 class SocialAuthController extends Controller
 {
-    //
     public function redirectToProvider($provider)
     {
         return Socialite::driver($provider)->redirect();
@@ -24,8 +21,7 @@ class SocialAuthController extends Controller
         try {
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            // return redirect('auth.connexion')->withErrors('Erreur d’authentification via ' . $provider);
-            dd('erreur ici'. $e->getMessage());
+            return redirect()->route('login')->withErrors('Erreur d’authentification via ' . $provider);
         }
 
         // Vérifie si l'utilisateur existe déjà
@@ -34,16 +30,23 @@ class SocialAuthController extends Controller
         if (!$user) {
             // Crée un nouvel utilisateur
             $user = User::create([
-                'name' => $socialUser->getName() ?? $socialUser->getNickname(),
-                'email' => $socialUser->getEmail(),
-                'password' => bcrypt(Str::random(16)), // Génère un mot de passe aléatoire
-                'provider' => $provider,
+                'name'        => $socialUser->getName() ?? $socialUser->getNickname(),
+                'email'       => $socialUser->getEmail(),
+                'password'    => bcrypt(Str::random(16)), // Génère un mot de passe aléatoire
+                'provider'    => $provider,
                 'provider_id' => $socialUser->getId(),
+                'avatar_url'  => $socialUser->getAvatar(), // ✅ Sauvegarde l’avatar Google
+            ]);
+        } else {
+            // ✅ Met à jour l’avatar si l’utilisateur existait déjà
+            $user->update([
+                'provider'    => $provider,
+                'provider_id' => $socialUser->getId(),
+                'avatar_url'  => $socialUser->getAvatar(),
             ]);
         }
 
         Auth::login($user, true);
-        $user = Auth::user();
 
         // Vérifier le rôle de l'utilisateur
         if ($user->role === 'admin') {
@@ -53,5 +56,4 @@ class SocialAuthController extends Controller
         // Redirection par défaut pour les autres rôles (par exemple, 'client')
         return redirect()->route('client.dashboard');
     }
-
 }

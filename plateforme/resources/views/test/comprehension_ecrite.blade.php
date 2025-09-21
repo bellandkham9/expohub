@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,12 +27,14 @@
             font-weight: bold;
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
-        .btn-success{
+
+        .btn-success {
             background-color: #224194;
             border: none;
             color: white;
         }
-        .btn-secondary{
+
+        .btn-secondary {
             background-color: #FEF8E7;
             border: none;
             color: black;
@@ -44,7 +47,8 @@
             padding: 10px;
             height: 30vh;
         }
-        .main-content{
+
+        .main-content {
             padding: 10px;
             background-color: #F8F9FA;
         }
@@ -56,28 +60,42 @@
         .situation-box {
             background-color: #FEF8E7;
             width: 500px;
-            height:25vh;
+            height: 25vh;
             margin: 0 auto;
             padding: 20px;
             box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
-        #inpu-group{
+
+        #inpu-group {
             padding: 15px;
             border-radius: 15px;
             box-shadow: 3px 3px 3px 3px rgba(23, 22, 22, 0.2);
         }
-        .choix-reponse{
+
+        .choix-reponse {
             border-radius: 15px;
             box-shadow: 2px 2px 2px 2px rgba(23, 22, 22, 0.2);
         }
-
     </style>
 </head>
 
 <body>
+    @php
+        $testTypeString = $test_type->examen . '-' . $test_type->nom_du_plan;
+        $testTypeData = [
+            'id' => $test_type->id,
+            'string' => $testTypeString,
+            'examen' => $test_type->examen,
+            'nom_du_plan' => $test_type->nom_du_plan,
+        ];
+    @endphp
+
+    <input type="hidden" id="testType" value='@json($testTypeData)'>
+
+
     <div class="container py-2">
         <div class="test-container p-4">
-                  <!-- Titre + Timer + Bouton abandon -->
+            <!-- Titre + Timer + Bouton abandon -->
             <div class="row justify-between text-center mb-4">
                 <div class="col-md-2">
                     <h4 id="timer">60:00</h4>
@@ -95,32 +113,32 @@
                     function abandonnerTest() {
                         if (confirm("Es-tu sûr de vouloir abandonner le test ?")) {
                             enregistrerResultatFinalEtRediriger();
-                            
+
                         }
                     }
-
                 </script>
 
             </div>
             <div class="main-content">
-         
-              <!-- Marqueurs 1 à 39 -->
+
+                <!-- Marqueurs 1 à 39 -->
                 <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
-                @foreach($questions as $index => $q)
-                <button class="btn btn-sm question-btn {{ $index == 0 ? 'btn-success' : 'btn-secondary' }}" data-index="{{ $index }}">
-                    {{ $q->numero }}
-                </button>
-                @endforeach
-            </div>
-
-           
-
-            <!-- Situation -->
-            <div class="chat-container mb-4">
-                <div class="situation-box rounded text-justify">
-                    <p class="mb-0 situation-text">{{ $questions[0]->situation }}</p>
+                    @foreach ($questions as $index => $q)
+                        <button class="btn btn-sm question-btn {{ $index == 0 ? 'btn-success' : 'btn-secondary' }}"
+                            data-index="{{ $index }}">
+                            {{ $q->numero }}
+                        </button>
+                    @endforeach
                 </div>
-            </div>
+
+
+
+                <!-- Situation -->
+                <div class="chat-container mb-4">
+                    <div class="situation-box rounded text-justify">
+                        <p class="mb-0 situation-text">{{ $questions[0]->situation }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Question et propositions -->
@@ -131,18 +149,18 @@
 
                 <div class="row g-4 justify-content-center mt-3" id="reponses">
                     @foreach (['A', 'B', 'C', 'D'] as $key => $lettre)
-                    <div class="col-md-5">
-                        <button class="btn w-100 p-3  rounded bg-white text-start text-dark choix-reponse" data-reponse="{{ $lettre }}" data-index="0">
-                            <span class="fw-bold fs-4 me-2">{{ $lettre }}</span>
-                            {{ $questions[0]->propositions[$key] ?? 'Proposition' }}
-                        </button>
-                    </div>
+                        <div class="col-md-5">
+                            <button class="btn w-100 p-3  rounded bg-white text-start text-dark choix-reponse"
+                                data-reponse="{{ $lettre }}" data-index="0">
+                                <span class="fw-bold fs-4 me-2">{{ $lettre }}</span>
+                                {{ $questions[0]->propositions[$key] ?? 'Proposition' }}
+                            </button>
+                        </div>
                     @endforeach
                 </div>
             </div>
         </div>
     </div>
-    <input type="hidden" name="test_type_id" id="testType" value="{{ $test_type }}">
 
     <!-- Audio -->
     <audio id="audio-success" src="/sounds/success.wav" preload="auto"></audio>
@@ -163,28 +181,28 @@
         const questions = @json($questions);
         const csrfToken = "{{ csrf_token() }}";
 
-
         function enregistrerResultatFinalEtRediriger() {
-    fetch('/comprehension_ecrite/resultat/final', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            const testTypeData = JSON.parse(document.getElementById("testType").value);
+
+            fetch('/comprehension_ecrite/resultat/final', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        test_type: testTypeData.string, // garde la chaîne "TCF-Canada"
+                        abonnement_id: testTypeData.id // on ajoute aussi l'id
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Résultat enregistré :", data);
+                    window.location.href = '/comprehension_ecrite/resultat';
+                })
+                .catch(err => console.error('Erreur AJAX:', err));
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Résultat enregistré :", data);
-        // Redirection vers la page de résultats après enregistrement
-        window.location.href = '/comprehension_ecrite/resultat';
-    })
-    .catch(error => {
-        console.error('Erreur enregistrement résultat final :', error);
-    });
-}
-
-
     </script>
 </body>
-</html>
 
+</html>
