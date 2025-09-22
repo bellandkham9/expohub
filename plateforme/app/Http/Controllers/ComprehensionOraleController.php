@@ -135,7 +135,7 @@ class ComprehensionOraleController extends Controller
         // Découper test_type
         [$examen, $plan] = explode('-', $testTypeString);
 
-        $testType = Abonnement::where('examen', $examen)
+        $testType = abonnement::where('examen', $examen)
             ->where('nom_du_plan', $plan)
             ->firstOrFail();
 

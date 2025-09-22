@@ -398,7 +398,7 @@ class ExpressionOraleController1 extends Controller
         // On découpe juste pour retrouver l'abonnement correspondant
         [$examen, $plan] = explode('-', $testTypeString);
 
-        $testType = Abonnement::where('examen', $examen)
+        $testType = abonnement::where('examen', $examen)
             ->where('nom_du_plan', $plan)
             ->firstOrFail();
 

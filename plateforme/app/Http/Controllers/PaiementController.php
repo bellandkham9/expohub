@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\Abonnement;
+use App\Models\abonnement;
 use App\Models\Paiement;
 use App\Models\Souscription;
 use Carbon\Carbon;
@@ -40,7 +40,7 @@ class PaiementController extends Controller
      */
     public function process(Request $request, $abonnementId)
     {
-        $abonnement = Abonnement::findOrFail($abonnementId);
+        $abonnement = abonnement::findOrFail($abonnementId);
         $user = auth()->user();
 
         $apiKey = env('CINETPAY_API_KEY');

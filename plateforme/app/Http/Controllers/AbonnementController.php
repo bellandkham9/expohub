@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Abonnement;
+use App\Models\abonnement;
 use App\Models\TestType;
 use Illuminate\Http\Request;
 
@@ -10,7 +10,7 @@ class AbonnementController extends Controller
 {
     public function index()
     {
-        $abonnements = Abonnement::with('testType')->get();
+        $abonnements = abonnement::with('testType')->get();
         return view('client.paiement', compact('abonnements'));
     }
 
@@ -31,17 +31,17 @@ class AbonnementController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Abonnement::create($request->all());
+        abonnement::create($request->all());
         return redirect()->route('gestion_test')->with('success', 'Abonnement créé avec succès');
     }
 
-    public function edit(Abonnement $abonnement)
+    public function edit(abonnement $abonnement)
     {
         $testTypes = TestType::all();
         return view('admin.abonnements.edit', compact('abonnement', 'testTypes'));
     }
 
-    public function update(Request $request, Abonnement $abonnement)
+    public function update(Request $request, abonnement $abonnement)
     {
         $request->validate([
             'nom_du_plan' => 'required|string|max:255',
@@ -55,13 +55,10 @@ class AbonnementController extends Controller
         return redirect()->route('gestion_test')->with('success', 'Abonnement mis à jour');
     }
 
-    public function destroy(Abonnement $abonnement)
+    public function destroy(abonnement $abonnement)
     {
         $abonnement->delete();
         return redirect()->route('gestion_test')->with('success', 'Abonnement supprimé');
     }
-
-
-
 
 }
