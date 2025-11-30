@@ -32,7 +32,7 @@
 
 <body>
 <!-- Stocker les infos du test_type en JSON utilisable par JS -->
-<input type="hidden" id="testType" '>
+<input type="hidden" id="testType" value='@json($testTypeData)'>
 
     <div class="container py-3">
         <div class="test-container">

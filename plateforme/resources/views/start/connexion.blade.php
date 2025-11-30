@@ -10,35 +10,7 @@
     <!-- Font Awesome pour les icônes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    // Pour afficher les messages flash
-    @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Succès',
-            text: '{{ session('success') }}',
-            confirmButtonColor: '#3085d6',
-        });
-    @endif
 
-    @if(session('error'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: '{{ session('error') }}',
-            confirmButtonColor: '#d33',
-        });
-    @endif
-
-    @if($errors->any())
-        Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            html: `<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`,
-            confirmButtonColor: '#d33',
-        });
-    @endif
-</script>
 
     <style>
         body {
@@ -168,11 +140,41 @@
             <p class="text-center"> 
                 <a class="link-light" href="{{route('auth.inscription')}}"> S'inscrire</a>  
             </p>
-
-            <p><a class="dropdown-item" href="{{ route('deconnexion') }}" style="color: white;">Se déconnecter</a></p>
+            <p class="text-center"> 
+                <a class="link-light" href="{{ route('password.request') }}"> Mot de passe oublié ?</a>  
+            </p>
         </div>
     </div>
 </body>
+<script>
+    // Pour afficher les messages flash
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Succès',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: '{{ session('error') }}',
+            confirmButtonColor: '#d33',
+        });
+    @endif
+
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            html: `<ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>`,
+            confirmButtonColor: '#d33',
+        });
+    @endif
+</script>
 
 
 </html>

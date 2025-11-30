@@ -31,13 +31,26 @@ if ($secret !== env('PAYMENT_SECRET_KEY')) {
 }
 
 // 2. Vérifier l'adresse IP du prestataire (exemple fictif CinetPay, adapte avec la doc officielle)
-$allowedIps = ['196.46.246.1', '196.46.246.2']; 
-if (!in_array($_SERVER['REMOTE_ADDR'], $allowedIps)) {
-    Log::warning('Callback refusé : IP non autorisée', [
+// Vérifier existence de l'ID de transaction (ou cpm_trans_id)
+$transactionIdCheck = $request->input('transaction_id') ?? $request->input('cpm_trans_id');
+if (!$transactionIdCheck) {
+    Log::warning("Callback refusé : transaction_id manquant", [
         'ip' => $_SERVER['REMOTE_ADDR'],
+        'params' => $request->all(),
     ]);
-    http_response_code(403);
-    exit('IP non autorisée.');
+    http_response_code(400);
+    exit("Vous n'est pas autorisé.");
+}
+
+// Vérifier que la transaction existe en base
+if (!Paiement::where('transaction_id', $transactionIdCheck)->exists()) {
+    Log::warning("Callback refusé : transaction inconnue", [
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'transaction_id' => $transactionIdCheck,
+        'params' => $request->all(),
+    ]);
+    http_response_code(404);
+    exit('Transaction inconnue.');
 }
 
 try {

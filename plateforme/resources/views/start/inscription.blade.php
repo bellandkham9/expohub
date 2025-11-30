@@ -174,8 +174,6 @@
             <p class="text-center"> 
                 <a class="link-light" href="{{route('auth.connexion')}}"> Connexion</a>  
             </p>
-
-            <p><a class="dropdown-item" href="{{ route('deconnexion') }}" style="color: white;">Se déconnecter</a></p>
         </div>
     </div>
 </body>

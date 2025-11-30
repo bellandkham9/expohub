@@ -142,45 +142,93 @@
                                 </div>
 
                                 <!-- MODAL -->
-                                <div class="modal fade" id="modalAbonnement{{ $abonnement->id }}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content shadow-lg">
-                                            <div class="modal-header">
-                                                <h6 class="modal-title">Méthodes de paiement</h6>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row g-3 text-center">
-                                                    <!-- Paiement direct -->
-                                                    <div class="col-6">
-                                                        <form
-                                                            action="{{ route('paiement.process', ['abonnement' => $abonnement->id]) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <button type="submit"
-                                                                class="paiement-link w-100 border p-2 rounded">
-                                                                <img src="{{ asset('images/card.png') }}" width="40">
-                                                                <img src="{{ asset('images/phone.png') }}" width="40">
-                                                                <p style="font-size: 12px;">Mobile Money / Carte</p>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-
-                                                    <!-- Autres moyens -->
-                                                    <div class="col-6">
-                                                        <a href="https://wa.me/NUMERO?text=Bonjour%2C%20je%20souhaite%20avoir%20plus%20d'informations%20sur%20le%20paiement"
-                                                            target="_blank"
-                                                            class="whatsapp-link w-100 border p-2 rounded d-block">
-                                                            <img src="{{ asset('images/western-union.png') }}"
-                                                                width="40">
-                                                            <p style="font-size: 12px;">Western Union, etc.</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <!-- ✅ Modal principal déjà présent -->
+                              <div class="modal fade" id="modalAbonnement{{ $abonnement->id }}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content shadow-lg">
+                                    <div class="modal-header">
+                                      <h6 class="modal-title">Méthodes de paiement</h6>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
+
+                                    <div class="modal-body">
+                                      <div class="row g-3 text-center">
+                                        <!-- ✅ BOUTON QUI OUVRE LE POPUP D'INFOS -->
+                                        <div class="col-6">
+                                          <button type="button" class="paiement-link w-100 border p-2 rounded" 
+                                                  data-bs-toggle="modal" 
+                                                  data-bs-target="#infoModal{{ $abonnement->id }}">
+                                            <img src="{{ asset('images/card.png') }}" width="40">
+                                            <img src="{{ asset('images/phone.png') }}" width="40">
+                                            <p style="font-size: 12px;">Mobile Money / Carte</p>
+                                          </button>
+                                        </div>
+
+                                        <!-- Autres moyens -->
+                                        <div class="col-6">
+                                          <a href="https://wa.me/237695982359?text=Bonjour%2C%20je%20souhaite%20avoir%20plus%20d'informations%20sur%20le%20paiement%20par%20western%20union%20pour%20un%20abonnement"
+                                            target="_blank" class="whatsapp-link w-100 border p-2 rounded d-block">
+                                            <img src="{{ asset('images/western-union.png') }}" width="40">
+                                            <p style="font-size: 12px;">Western Union, etc.</p>
+                                          </a>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
+                              </div>
+
+                              <!-- ✅ SECOND MODAL (INFOS CLIENT) -->
+                              <div class="modal fade" id="infoModal{{ $abonnement->id }}" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content shadow-lg">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="infoModalLabel">Informations de facturation</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                      <form id="paiementForm{{ $abonnement->id }}" 
+                                            action="{{ route('paiement.process', ['abonnement' => $abonnement->id]) }}" 
+                                            method="POST">
+                                        @csrf
+                                        <div class="mb-3">
+                                          <label class="form-label">Numéro de téléphone *</label>
+                                          <input type="text" name="customer_phone_number" class="form-control" value="+237" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                          <label class="form-label">Adresse *</label>
+                                          <input type="text" name="customer_address" class="form-control" placeholder="" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                          <label class="form-label">Ville *</label>
+                                          <input type="text" name="customer_city" class="form-control" placeholder="Yaoundé" required>
+                                        </div>
+
+                                        <div class="row">
+                                          <div class="col-md-6 mb-3">
+                                            <label class="form-label">Pays *</label>
+                                            <input type="text" name="customer_state" class="form-control" placeholder="Cameroun" required>
+                                          </div>
+                                          <div class="col-md-6 mb-3">
+                                            <label class="form-label">Code postal *</label>
+                                            <input type="text" name="customer_zip_code" class="form-control" placeholder="06510" required>
+                                          </div>
+                                        </div>
+
+                                        <!-- Boutons -->
+                                        <div class="d-flex justify-content-between mt-4">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                          <button type="submit" class="btn btn-primary">Procéder au paiement</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
         
                             @endforeach
                         </div>
@@ -208,4 +256,29 @@
             console.log(e.target.checked ? "1 mois sélectionné" : "2 semaines sélectionné");
         });
     </script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 🧩 Ferme le premier modal avant d’ouvrir le second
+    document.querySelectorAll('[data-bs-target^="#infoModal"]').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const parentModal = btn.closest('.modal');
+            if (parentModal) {
+                const instance = bootstrap.Modal.getInstance(parentModal);
+                instance.hide();
+            }
+        });
+    });
+
+    // ✅ Soumission normale du formulaire (fonctionnelle)
+    document.querySelectorAll('form[id^="paiementForm"]').forEach(form => {
+        form.addEventListener('submit', function () {
+            const currentModal = bootstrap.Modal.getInstance(form.closest('.modal'));
+            if (currentModal) currentModal.hide(); // ferme le popup proprement
+        });
+    });
+});
+</script>
+
+
 @endsection

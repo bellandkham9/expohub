@@ -1,0 +1,96 @@
+{
+  "_index-NIGUFBhG.js": {
+    "file": "assets/index-NIGUFBhG.js",
+    "name": "index"
+  },
+  "resources/css/admin-entrainement.css": {
+    "file": "assets/admin-entrainement-Bc-7yuRb.css",
+    "src": "resources/css/admin-entrainement.css",
+    "isEntry": true
+  },
+  "resources/css/admin-gestion-user.css": {
+    "file": "assets/admin-gestion-user-DO_Qgvyr.css",
+    "src": "resources/css/admin-gestion-user.css",
+    "isEntry": true
+  },
+  "resources/css/admin-stats.css": {
+    "file": "assets/admin-stats-CWx4ph4b.css",
+    "src": "resources/css/admin-stats.css",
+    "isEntry": true
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-D-Abtd1u.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/choix_test.css": {
+    "file": "assets/choix_test-S36bnyh3.css",
+    "src": "resources/css/choix_test.css",
+    "isEntry": true
+  },
+  "resources/css/comprehension_ecrite.css": {
+    "file": "assets/comprehension_ecrite-D8sirdtI.css",
+    "src": "resources/css/comprehension_ecrite.css",
+    "isEntry": true
+  },
+  "resources/css/custom.css": {
+    "file": "assets/custom-DfV8TzqZ.css",
+    "src": "resources/css/custom.css",
+    "isEntry": true
+  },
+  "resources/css/dashboard-client.css": {
+    "file": "assets/dashboard-client-DTeI6Pt7.css",
+    "src": "resources/css/dashboard-client.css",
+    "isEntry": true
+  },
+  "resources/css/expression_ecrite.css": {
+    "file": "assets/expression_ecrite-BhbBQVKC.css",
+    "src": "resources/css/expression_ecrite.css",
+    "isEntry": true
+  },
+  "resources/css/myExpressionEcrite.css": {
+    "file": "assets/myExpressionEcrite-DmdomTqK.css",
+    "src": "resources/css/myExpressionEcrite.css",
+    "isEntry": true
+  },
+  "resources/css/suggestion.css": {
+    "file": "assets/suggestion-DG4U0W9y.css",
+    "src": "resources/css/suggestion.css",
+    "isEntry": true
+  },
+  "resources/js/admin-stats.js": {
+    "file": "assets/admin-stats-CRNsPWtj.js",
+    "name": "admin-stats",
+    "src": "resources/js/admin-stats.js",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-C1XoJlMP.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_index-NIGUFBhG.js"
+    ]
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-B7OvUs4L.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true,
+    "imports": [
+      "_index-NIGUFBhG.js"
+    ]
+  },
+  "resources/js/comprehension_ecrite.js": {
+    "file": "assets/comprehension_ecrite-32KZd4f_.js",
+    "name": "comprehension_ecrite",
+    "src": "resources/js/comprehension_ecrite.js",
+    "isEntry": true
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-GhyEQwx5.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  }
+}

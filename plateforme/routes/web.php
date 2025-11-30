@@ -29,7 +29,7 @@ use App\Http\Controllers\AbonnementController;
 use App\Http\Controllers\TestTypeController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\ForgotPasswordController;
 
 
 
@@ -275,3 +275,10 @@ Route::get('/paiement/process/{abonnementId}', [PaiementController::class, 'proc
 // Route::get('/payment/collect/{abonnementId}', [PaymentController::class, 'collect']);
 // Route::post('/payment/deposit', [PaymentController::class, 'deposit']);
 // Route::get('/payment/status', [PaymentController::class, 'status']);
+
+// Element à ajouter pour la réinitialisation du mot de passe
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
