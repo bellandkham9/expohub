@@ -43,6 +43,7 @@ class PaiementController extends Controller
         $abonnement = abonnement::findOrFail($abonnementId);
         $user = auth()->user();
 
+<<<<<<< HEAD
         if (! $user) {
             Log::warning('Paiement: utilisateur non authentifié');
             return redirect()->route('auth.connexion')->with('error', 'Veuillez vous connecter pour effectuer un paiement.');
@@ -57,6 +58,8 @@ class PaiementController extends Controller
             'customer_zip_code'     => 'required|string|max:10',
         ]);
 
+=======
+>>>>>>> 7f683395dcde81ef48738974e53014077658bcca
         $apiKey = env('CINETPAY_API_KEY');
         $siteId = env('CINETPAY_SITE_ID');
         $secretKey = env('CINETPAY_SECRET_KEY'); // utilisé pour HMAC si nécessaire
@@ -73,6 +76,7 @@ class PaiementController extends Controller
         $prixXaf = round($prixUsd * $this->getUsdToXafRate());
 
         $formData = [
+<<<<<<< HEAD
             "apikey"                => $apiKey,
             "site_id"               => $siteId,
             "transaction_id"        => $transactionId,
@@ -94,6 +98,21 @@ class PaiementController extends Controller
             "channels"              => "ALL",
             "metadata"              => "user:{$user->id},abonnement:{$abonnement->id}",
             "lang"                  => "fr",
+=======
+            "apikey" => $apiKey,
+            "site_id" => $siteId,
+            "transaction_id" => $transactionId,
+            "amount" => $prixXaf,
+            "currency" => "XAF",
+            "description" => "Paiement abonnement : {$abonnement->examen}",
+            "return_url" => $returnUrl,
+            "notify_url" => $notifyUrl,
+            "customer_name" => $user->name,
+            "customer_email" => $user->email,
+            "channels" => "ALL",
+            "metadata" => "user:{$user->id},abonnement:{$abonnement->id}",
+            "lang" => "fr"
+>>>>>>> 7f683395dcde81ef48738974e53014077658bcca
         ];
 
 

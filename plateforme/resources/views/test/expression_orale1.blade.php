@@ -32,7 +32,11 @@
 
 <body>
 <!-- Stocker les infos du test_type en JSON utilisable par JS -->
+<<<<<<< HEAD
 <input type="hidden" id="testType" '>
+=======
+<input type="hidden" id="testType" value='@json($testTypeData)'>
+>>>>>>> 7f683395dcde81ef48738974e53014077658bcca
 
     <div class="container py-3">
         <div class="test-container">
@@ -391,7 +395,11 @@ document.querySelectorAll('.tache-btn1').forEach(btn => {
 
     // Afficher un indicateur de chargement
     uploadBtn.disabled = true;
+<<<<<<< HEAD
     uploadBtn.innerHTML = 'Envoi...';
+=======
+    uploadBtn.innerHTML = '<span class="spinner-border w-100 spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
+>>>>>>> 7f683395dcde81ef48738974e53014077658bcca
 
     fetch("{{ route('expression_orale.handleMessage') }}", {
         method: "POST",

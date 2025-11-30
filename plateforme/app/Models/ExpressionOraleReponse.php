@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExpressionOraleReponse extends Model
 {
-    protected $fillable = [
+  protected $fillable = [
     'user_id',
     'expression_orale_id',
     'audio_eleve',
@@ -14,14 +14,24 @@ class ExpressionOraleReponse extends Model
     'texte_ia',
     'audio_ia',
     'score',
-    'test_type', // ajoute-le ici
+    'test_type',
+    'abonnement_id', // ✅ ajoute ici
 ];
 
 
-
-    
     public function question()
     {
         return $this->belongsTo(ExpressionOrale::class, 'expression_orale_id');
     }
+    public function abonnement()
+{
+    return $this->belongsTo(abonnement::class, 'abonnement_id');
+}
+
+// Relation vers la tâche
+    public function tache()
+    {
+        return $this->belongsTo(ExpressionOrale::class, 'expression_orale_id');
+    }
+
 }

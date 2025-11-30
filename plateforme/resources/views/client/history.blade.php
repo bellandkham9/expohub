@@ -68,8 +68,14 @@
                             <div class="card-body text-center">
                                 <div class="d-flex flex-column align-items-center mb-3">
                                     <div class="avatar-container mb-2">
-                                        <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                             alt="Avatar" class="rounded-circle avatar-img img-fluid">
+                                        <img src="{{ auth()->user()->avatar_url 
+            ? (Str::startsWith(auth()->user()->avatar_url, ['http', 'https']) 
+                ? auth()->user()->avatar_url 
+                : asset(auth()->user()->avatar_url)) 
+            : asset('images/user-person.png') }}"
+     alt="Avatar" class="rounded-circle avatar-img img-fluid">
+
+                                    
                                     </div>
                                     <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                                 </div>
@@ -78,11 +84,12 @@
                                     <button onclick="showNiveauxInfo()" class="btn btn-info btn-sm mb-3">
                                         ℹ️ Infos niveaux
                                     </button>
-                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <div class="d-flex flex-wrap justify-content-center gap-2" style="height: 100px; overflow-y: scroll;">
                                         @foreach ($testTypes as $testType)
-                                            @php
+                                             @php
                                                 $modalId = 'modal_' . $testType->id;
                                                 $key = $testType->examen;
+                                                $key1 = $testType->nom_du_plan;
                                                 $niveaux = $userLevels[$key] ?? null;
                                                 $skills = [
                                                     'Compréhension Écrite' => 'comprehension_ecrite',
@@ -97,6 +104,7 @@
                                                 <i class="fas fa-lock me-1"></i>
                                                 @endif
                                                 {{ strtoupper($key) }}
+                                                <p style="font-size: 10px; color: #F8B70D;">({{ strtoupper($key1) }})</p>
                                             </button>
                                             <div class="modal fade" id="{{ $modalId }}" tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -113,7 +121,7 @@
                                                                 $level = $niveaux[$champ] ?? 'Non défini';
                                                                 $color = match($level) {
                                                                     'C2', 'C1', 'B2' => 'success',
-                                                                    'B1', 'A2', 'A1' => 'warning',
+                                                                    'B1', 'A2', 'A1','A0' => 'warning',
                                                                     default => 'secondary'
                                                                 };
                                                                 @endphp

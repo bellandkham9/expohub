@@ -29,7 +29,7 @@ class SuggestionController extends Controller
         // Exemple : appeler une IA pour générer une astuce
         // Ici je te simule un appel (tu peux remplacer par OpenAI API)
         $prompt = "Génère une astuce courte pour améliorer la compréhension(écite,orale), expression(écrite,orale) tout dépends de toi,  en français pour un apprenant par rapport à ces reponses, bref son niveau.";
-        
+
         $response = Http::withToken(env('OPENAI_API_KEY'))
             ->post('https://api.openai.com/v1/chat/completions', [
                 'model' => 'gpt-4o-mini',
@@ -45,10 +45,10 @@ class SuggestionController extends Controller
         // Enregistrer en base
         $suggestion = Suggestion::create([
             'user_id' => $user->id,
-            'type'    => 'astuce',
-            'title'   => 'Nouvelle astuce générée par IA',
+            'type' => 'astuce',
+            'title' => 'Nouvelle astuce générée par IA',
             'content' => $content,
-            'source'  => 'AI',
+            'source' => 'AI',
         ]);
 
         // Notifier l’utilisateur

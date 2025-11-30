@@ -35,19 +35,19 @@ class CompteController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-       if ($request->hasFile('avatar')) {
-    // Supprimer l'ancienne image si elle existe
-    if ($user->avatar_url && file_exists(public_path($user->avatar_url))) {
-        unlink(public_path($user->avatar_url));
-    }
+        if ($request->hasFile('avatar')) {
+            // Supprimer l'ancienne image si elle existe
+            if ($user->avatar_url && file_exists(public_path($user->avatar_url))) {
+                unlink(public_path($user->avatar_url));
+            }
 
-    // Sauvegarde de la nouvelle
-    $file = $request->file('avatar');
-    $filename = uniqid().'_'.$file->getClientOriginalName();
-    $file->move(public_path('images'), $filename);
+            // Sauvegarde de la nouvelle
+            $file = $request->file('avatar');
+            $filename = uniqid() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
 
-    $user->avatar_url = 'images/'.$filename; // Stocke le chemin relatif
-}
+            $user->avatar_url = 'images/' . $filename; // Stocke le chemin relatif
+        }
 
 
         // Sauvegarde des modifications
@@ -59,22 +59,22 @@ class CompteController extends Controller
 
 
     public function destroy(Request $request)
-{
-    $request->validate([
-        'password' => ['required', 'current_password'],
-    ]);
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
 
-    $user = $request->user();
-    Auth::logout();
-    
-    // Au lieu de supprimer de manière définitive, Laravel mettra à jour la colonne 'deleted_at'
-    $user->delete();
+        $user = $request->user();
+        Auth::logout();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
+        // Au lieu de supprimer de manière définitive, Laravel mettra à jour la colonne 'deleted_at'
+        $user->delete();
 
-    return redirect('/')->with('success', 'Votre compte a été désactivé avec succès. Vous pouvez le restaurer en contactant le support.');
-}
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Votre compte a été désactivé avec succès. Vous pouvez le restaurer en contactant le support.');
+    }
 
 
 

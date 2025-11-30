@@ -136,7 +136,7 @@
                                 </div>
                                 <hr style="background-color: #495057; height: 2px; width: 100%;">
                                 <div class="text-muted small mt-1">
-                                    <span style="color: #707070; font-weight: bold;">{{ $usersLastWeek }}</span> que la
+                                    <span style="color: #707070; font-weight: bold;">{{ $usersLastWeek }}</span> la
                                     semaine passée
                                 </div>
                             </div>

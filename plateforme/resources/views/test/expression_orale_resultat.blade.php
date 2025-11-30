@@ -22,7 +22,9 @@
                                                         </div>
                                                         <div class="text-md-end text-muted small">
                                                             <div><strong>60 min</strong></div>
-                                                            <div>{{ now()->addMonth()->format('d M Y') }}</div>
+                                                            <div>
+                                                                {{ \Carbon\Carbon::now('Africa/Douala')->addMonthNoOverflow()->format('d M Y') }}
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -35,9 +37,9 @@
                                                             <a href="{{ route($route) }}" class="btn"
                                                                 style="background-color: #224194; color: white;"
                                                                 onclick="event.preventDefault(); 
-                if(confirm('Êtes-vous sûr de vouloir recommencer le test ?')) { 
-                    document.getElementById('reset-form').submit(); 
-                }">
+                                                                    if(confirm('Êtes-vous sûr de vouloir recommencer le test ?')) { 
+                                                                        document.getElementById('reset-form').submit(); 
+                                                                    }">
                                                                 Refaire le test
                                                             </a>
 
@@ -97,21 +99,22 @@
                                                             $tache->id,
                                                         );
                                                     @endphp
-                                                  @if ($userReponse && $userReponse->audio_eleve)
-                                                    <audio controls class="w-100">
-    <source src="{{ asset('storage/' . $userReponse->audio_eleve) }}" type="audio/mp3">
-    Votre navigateur ne prend pas en charge la lecture audio.
-</audio>
+                                                    @if ($userReponse && $userReponse->audio_eleve)
+                                                        <audio controls class="w-100">
+                                                            <source src="{{ asset('storage/' . $userReponse->audio_eleve) }}"
+                                                                type="audio/mp3">
+                                                            Votre navigateur ne prend pas en charge la lecture audio.
+                                                        </audio>
 
 
-                                                    <button class="btn btn-outline-primary btn-sm mt-2"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#responseModal{{ $tache->id }}">
-                                                        Voir les détails
-                                                    </button>
-                                                @else
-                                                    <p class="text-muted fst-italic">Aucun enregistrement disponible</p>
-                                                @endif
+                                                        <button class="btn btn-outline-primary btn-sm mt-2"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#responseModal{{ $tache->id }}">
+                                                            Voir les détails
+                                                        </button>
+                                                    @else
+                                                        <p class="text-muted fst-italic">Aucun enregistrement disponible</p>
+                                                    @endif
 
                                                 </div>
                                             </div>
@@ -130,7 +133,7 @@
                                 <div class="d-flex flex-column align-items-center mb-3">
                                     <div class="avatar-container mb-2">
                                         <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                             alt="Avatar" class="rounded-circle avatar-img img-fluid">
+                                            alt="Avatar" class="rounded-circle avatar-img img-fluid">
                                     </div>
                                     <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                                 </div>
@@ -139,12 +142,15 @@
                                     <button onclick="showNiveauxInfo()" class="btn btn-info btn-sm mb-3">
                                         ℹ️ Infos niveaux
                                     </button>
-                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <div class="d-flex flex-wrap justify-content-center gap-2" style="height: 100px; overflow-y: scroll;">
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->examen;
+                                                $key = $testType->examen . '_' . $testType->nom_du_plan;
+                                                $key1 = $testType->examen;
+                                                $key2 = $testType->nom_du_plan;
                                                 $niveaux = $userLevels[$key] ?? null;
+
                                                 $skills = [
                                                     'Compréhension Écrite' => 'comprehension_ecrite',
                                                     'Compréhension Orale' => 'comprehension_orale',
@@ -152,42 +158,50 @@
                                                     'Expression Orale' => 'expression_orale',
                                                 ];
                                             @endphp
-                                            <button type="button" class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
-                                                    @if($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
-                                                @if(!$testType->paye)
-                                                <i class="fas fa-lock me-1"></i>
+                                            <button type="button"
+                                                class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$testType->paye)
+                                                    <i class="fas fa-lock me-1"></i>
                                                 @endif
-                                                {{ strtoupper($key) }}
+                                                {{ strtoupper($key1) }}
+                                                <p style="font-size: 10px; color: #F8B70D;">({{ strtoupper($key2) }})</p>
                                             </button>
-                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            @if($niveaux)
-                                                            <div class="row g-2">
-                                                                @foreach($skills as $label => $champ)
-                                                                @php
-                                                                $level = $niveaux[$champ] ?? 'Non défini';
-                                                                $color = match($level) {
-                                                                    'C2', 'C1', 'B2' => 'success',
-                                                                    'B1', 'A2', 'A1' => 'warning',
-                                                                    default => 'secondary'
-                                                                };
-                                                                @endphp
-                                                                <div class="col-6">
-                                                                    <div class="p-2 bg-light rounded">
-                                                                        <small class="d-block text-muted">{{ $label }}</small>
-                                                                        <strong class="text-{{ $color }}">{{ $level }}</strong>
-                                                                    </div>
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1','A0' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
-                                                                @endforeach
-                                                            </div>
                                                             @else
-                                                            <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -212,8 +226,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Réponse complète - Tâche {{ $reponse->question->numero_tache }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
@@ -235,20 +248,20 @@
     @endforeach
 
     <style>
-            /* Styles pour la card de profil */
-    .avatar-container {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 2px solid #e9ecef;
-    }
+        /* Styles pour la card de profil */
+        .avatar-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #e9ecef;
+        }
 
-    .avatar-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .card:hover {
             color: black;
@@ -259,7 +272,8 @@
             color: black;
             background-color: transparent;
         }
-         .btn-level {
+
+        .btn-level {
             width: 120px;
             height: 45px;
             border-radius: 8px;
@@ -285,7 +299,7 @@
     </style>
 
 
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         function showNiveauxInfo() {

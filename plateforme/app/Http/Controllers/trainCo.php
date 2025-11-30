@@ -53,43 +53,43 @@ Ta tâche : Génère EXACTEMENT {$request->nb_questions} nouvelles questions au 
 - Chaque champ est obligatoire et non vide.
 EOT;
 
-     $response = Http::timeout(60)
-    ->withHeaders([
-        'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
-        'Content-Type' => 'application/json',
-    ])
-    ->post('https://openrouter.ai/api/v1/chat/completions', [
-        'model' => 'deepseek/deepseek-chat',
-        'messages' => [
-            ['role' => 'system', 'content' => 'Tu es un générateur de questions pour un test de compréhension orale.'],
-            ['role' => 'user', 'content' => $prompt],
-        ],
-        'max_tokens' => 400
-    ]);
+        $response = Http::timeout(60)
+            ->withHeaders([
+                'Authorization' => 'Bearer ' . env('OPENROUTER_API_KEY'),
+                'Content-Type' => 'application/json',
+            ])
+            ->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model' => 'deepseek/deepseek-chat',
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Tu es un générateur de questions pour un test de compréhension orale.'],
+                    ['role' => 'user', 'content' => $prompt],
+                ],
+                'max_tokens' => 400
+            ]);
 
-if ($response->failed()) {
-    return back()->with('error', 'Erreur API IA : ' . $response->body());
-}
+        if ($response->failed()) {
+            return back()->with('error', 'Erreur API IA : ' . $response->body());
+        }
 
-// Contenu brut renvoyé par l'IA
-$rawContent = $response->json()['choices'][0]['message']['content'] ?? null;
+        // Contenu brut renvoyé par l'IA
+        $rawContent = $response->json()['choices'][0]['message']['content'] ?? null;
 
-// 🔍 DEBUG — afficher ou logguer le contenu
-\Log::info("Réponse brute IA:", ['content' => $rawContent]);
-// dd($rawContent); // <-- à activer si tu veux voir direct dans le navigateur
+        // 🔍 DEBUG — afficher ou logguer le contenu
+        \Log::info("Réponse brute IA:", ['content' => $rawContent]);
+        // dd($rawContent); // <-- à activer si tu veux voir direct dans le navigateur
 
-// On continue seulement après avoir vu le contenu
-$jsonContent = trim($rawContent);
+        // On continue seulement après avoir vu le contenu
+        $jsonContent = trim($rawContent);
 
-// Petit nettoyage si jamais il y a des ```json ... ```
-$jsonContent = preg_replace('/^```json\s*/', '', $jsonContent);
-$jsonContent = preg_replace('/```$/', '', $jsonContent);
+        // Petit nettoyage si jamais il y a des ```json ... ```
+        $jsonContent = preg_replace('/^```json\s*/', '', $jsonContent);
+        $jsonContent = preg_replace('/```$/', '', $jsonContent);
 
-$questions = json_decode($jsonContent, true);
+        $questions = json_decode($jsonContent, true);
 
-if (!is_array($questions)) {
-    return back()->with('error', 'Réponse IA invalide après nettoyage : ' . $jsonContent);
-}
+        if (!is_array($questions)) {
+            return back()->with('error', 'Réponse IA invalide après nettoyage : ' . $jsonContent);
+        }
 
 
         foreach ($questions as $q) {
@@ -123,11 +123,11 @@ if (!is_array($questions)) {
 
         }
 
-    return back()->with([
-    'success' => 'Audios générés avec succès.',
-    'generated_section' => 'comprehension_orale',
-    'generated_audios' => $question
-]);
+        return back()->with([
+            'success' => 'Audios générés avec succès.',
+            'generated_section' => 'comprehension_orale',
+            'generated_audios' => $question
+        ]);
 
 
     }
@@ -141,27 +141,27 @@ if (!is_array($questions)) {
     {
         try {
             $response = Http::timeout(60)
-    ->withHeaders([
-        'xi-api-key' => env('ELEVENLABS_API_KEY'),
-        'Accept' => 'audio/mpeg', // ✅ Force le retour en MP3
-        'Content-Type' => 'application/json',
-    ])
-    ->post("https://api.elevenlabs.io/v1/text-to-speech/" . env('ELEVENLABS_VOICE_ID'), [
-        'text' => $texte,
-        'voice_settings' => [
-            'stability' => 0.5,
-            'similarity_boost' => 0.75,
-        ],
-    ]);
+                ->withHeaders([
+                    'xi-api-key' => env('ELEVENLABS_API_KEY'),
+                    'Accept' => 'audio/mpeg', // ✅ Force le retour en MP3
+                    'Content-Type' => 'application/json',
+                ])
+                ->post("https://api.elevenlabs.io/v1/text-to-speech/" . env('ELEVENLABS_VOICE_ID'), [
+                    'text' => $texte,
+                    'voice_settings' => [
+                        'stability' => 0.5,
+                        'similarity_boost' => 0.75,
+                    ],
+                ]);
 
-if ($response->successful()) {
-    $audioPath = 'comprehension_orale/' . uniqid() . '.mp3';
-    Storage::disk('public')->put($audioPath, $response->body()); // ✅ Stocker le binaire
-    return $audioPath;
-} else {
-    \Log::error("Erreur ElevenLabs : " . $response->status() . " - " . $response->body());
-    return null;
-}
+            if ($response->successful()) {
+                $audioPath = 'comprehension_orale/' . uniqid() . '.mp3';
+                Storage::disk('public')->put($audioPath, $response->body()); // ✅ Stocker le binaire
+                return $audioPath;
+            } else {
+                \Log::error("Erreur ElevenLabs : " . $response->status() . " - " . $response->body());
+                return null;
+            }
 
 
             if ($response->successful()) {
@@ -170,7 +170,7 @@ if ($response->successful()) {
                 return $fileName;
             }
         } catch (\Exception $e) {
-             \Log::error("Erreur API ElevenLabs : " . $response->status() . " - " . $response->body());
+            \Log::error("Erreur API ElevenLabs : " . $response->status() . " - " . $response->body());
 
         }
         return null;

@@ -19,28 +19,36 @@ class HistoriqueTestController extends Controller
 {
     public function index()
     {
-       $user = Auth::user();
-       
-           // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
-        $souscriptionActive = Souscription::where('user_id', $user->id)
-                                          ->where('date_fin', '>=', Carbon::now())
-                                          ->with('abonnement') // Charger la relation 'abonnement'
-                                          ->get();
+        $user = Auth::user();
 
-                                          
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActive = Souscription::where('user_id', $user->id)
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
+
+
         if (!$souscriptionActive) {
             return dd('error', 'Votre abonnement est épuisé. Veuillez souscrire à un nouvel abonnement pour accéder à ce contenu.');
         }
 
         $tousLesAbonnements = abonnement::all();
 
-           // 3. Fusionner les deux collections et marquer les abonnements payés
-        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActive) {
-            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
-            $abonnement->paye = $souscriptionActive->contains($abonnement->id);
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
+
+        // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
+            });
             return $abonnement;
         });
+
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
@@ -66,8 +74,8 @@ class HistoriqueTestController extends Controller
                 ->where('paye', true)
                 ->where('abonnement_id', $testType->id)
                 ->first();
-         }
-        
+        }
+
 
         // 2. Regrouper tous les tests en un tableau commun
         $allTests = collect();
@@ -75,7 +83,7 @@ class HistoriqueTestController extends Controller
         $comprehensionEcrite = ComprehensionEcriteResultat::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Canada',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Compréhension Écrite',
                 'date' => $item->created_at,
                 'duration' => 60,
@@ -90,7 +98,7 @@ class HistoriqueTestController extends Controller
         $comprehensionOrale = ComprehensionOraleReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Québec',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Compréhension Orale',
                 'date' => $item->created_at,
                 'duration' => 30,
@@ -105,7 +113,7 @@ class HistoriqueTestController extends Controller
         $expressionEcrite = ExpressionEcriteReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Canada',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Expression Écrite',
                 'date' => $item->created_at,
                 'duration' => 60,
@@ -120,7 +128,7 @@ class HistoriqueTestController extends Controller
         $expressionOrale = ExpressionOraleReponse::where('user_id', $user->id)->get()->map(function ($item) {
             return [
                 'id' => $item->id,
-                'test_type' => $item->test_type ?? 'TCF Québec',
+                'test_type' => $item->test_type ?? 'INCONNU',
                 'skill' => 'Expression Orale',
                 'date' => $item->created_at,
                 'duration' => 15,
@@ -132,27 +140,26 @@ class HistoriqueTestController extends Controller
             ];
         });
 
-         // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
-    $completedTests = HistoriqueTest::where('user_id', $user->id)
-        ->orderByDesc('completed_at')
-        ->take(2)
-        ->get()
-        ->map(function ($test) {
-            return [
-                'id' => $test->id,
-                'test_type' => $test->test_type,
-                'skill' => ucwords(str_replace('_', ' ', $test->skill)),
-                'date' => $test->completed_at ?? $test->created_at,
-                'duration' => $test->duration ?? 0,
-                'score' => $test->score ?? 0,
-                'max_score' => 699,
-                'level' => $test->niveau ?? '—',
-                'correct_answers' => null, // À adapter si tu veux stocker ça
-                'total_questions' => null,
-                'details_route'=> $test->details_route,
-                'refaire_route'=> $test->refaire_route,
-            ];
-        });
+        // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
+        $completedTests = HistoriqueTest::where('user_id', $user->id)
+            ->orderByDesc('completed_at')
+            ->get()
+            ->map(function ($test) {
+                return [
+                    'id' => $test->id,
+                    'test_type' => $test->test_type,
+                    'skill' => ucwords(str_replace('_', ' ', $test->skill)),
+                    'date' => $test->completed_at ?? $test->created_at,
+                    'duration' => $test->duration ?? 0,
+                    'score' => $test->score ?? 0,
+                    'max_score' => 699,
+                    'level' => $test->niveau ?? '—',
+                    'correct_answers' => null, // À adapter si tu veux stocker ça
+                    'total_questions' => null,
+                    'details_route' => $test->details_route,
+                    'refaire_route' => $test->refaire_route,
+                ];
+            });
 
 
 
@@ -163,10 +170,12 @@ class HistoriqueTestController extends Controller
         ];
 
 
-        return view('client.history', compact('userLevels',
+        return view('client.history', compact(
+            'userLevels',
             'completedTests',
             'learningGoal',
             'testTypes',
-            'souscriptionsPayees'));
+            'souscriptionsPayees'
+        ));
     }
 }

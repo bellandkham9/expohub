@@ -16,40 +16,43 @@ use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
 {
-  
-     public function choixTest()
+
+    public function choixTest()
     {
         $user = Auth::user();
 
         // Récupérer tous les types de test (ex : TCF Canada, TCF Québec, ...)
-        
-        
+
+
         $tousLesAbonnements = abonnement::all();
 
         // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
         $souscriptionActives = Souscription::where('user_id', $user->id)
-                                          ->where('date_fin', '>=', Carbon::now())
-                                          ->with('abonnement') // Charger la relation 'abonnement'
-                                          ->get();
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
 
-          // 3. Fusionner les deux collections et marquer les abonnements payés
+        // 3. Fusionner les deux collections et marquer les abonnements payés
         $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
-            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
-            $abonnement->paye = $souscriptionActives->contains($abonnement->id);
-
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
+            });
             return $abonnement;
         });
 
 
+
         $userLevels = [];
-        foreach ($testTypes as $testType) {
-            // Récupérer le niveau global pour ce test (en tenant compte des compétences)
+        foreach ($testTypes as $abonnement) {
+            // Récupérer le niveau global pour cet abonnement
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testType->id)
+                ->where('test_type', $abonnement->id)
                 ->first();
 
-            $userLevels[$testType->examen] = $niveau ? [
+            $key = $abonnement->examen . '_' . $abonnement->nom_du_plan;
+
+            $userLevels[$key] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -62,86 +65,83 @@ class TestController extends Controller
             ];
         }
 
-        // Récupérer les 5 derniers tests complétés par type et compétence
+
         $completedTests = [];
 
-        // Exemple pour Comprehension Ecrite, filtrer par test_type_code 'tcf_canada' par ex.
-        $ceTestType = TestType::where('examen', 'TCF')->first();
-        if ($ceTestType) {
+        foreach ($tousLesAbonnements as $abonnement) {
+            // Compréhension Écrite
             foreach (ComprehensionEcriteResultat::where('user_id', $user->id)
+                ->where('abonnement_id', $abonnement->id) // Filtrer par abonnement
                 ->latest()->take(5)->get() as $reponse) {
                 $completedTests[] = [
                     'id' => $reponse->id,
-                    'test_type' => $ceTestType->label,
+                    'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
                     'skill' => 'Compréhension Écrite',
                     'date' => $reponse->created_at,
                     'duration' => 60,
                     'score' => $reponse->score,
                     'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => $reponse->nb_bonnes_reponses,
-                    'total_questions' => $reponse->nb_total_questions,
+                    'level' => $reponse->niveau ?? 'Non défini',
+                    'correct_answers' => $reponse->nb_bonnes_reponses ?? null,
+                    'total_questions' => $reponse->nb_total_questions ?? null,
                 ];
             }
-        }
 
-        // Même principe pour Compréhension Orale
-        $coTestType = TestType::where('examen', 'TCF')->first();
-        if ($coTestType) {
+            // Compréhension Orale
             foreach (ComprehensionOraleReponse::where('user_id', $user->id)
+                ->where('abonnement_id', $abonnement->id)
                 ->latest()->take(5)->get() as $reponse) {
                 $completedTests[] = [
                     'id' => $reponse->id,
-                    'test_type' => $coTestType->label,
+                    'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
                     'skill' => 'Compréhension Orale',
                     'date' => $reponse->created_at,
                     'duration' => 30,
                     'score' => $reponse->score,
                     'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => $reponse->nb_bonnes_reponses,
-                    'total_questions' => $reponse->nb_total_questions,
+                    'level' => $reponse->niveau ?? 'Non défini',
+                    'correct_answers' => $reponse->nb_bonnes_reponses ?? null,
+                    'total_questions' => $reponse->nb_total_questions ?? null,
                 ];
             }
-        }
 
-        // Expression Ecrite (TCF Canada)
-        if ($ceTestType) {
+            // Expression Écrite
             foreach (ExpressionEcriteReponse::where('user_id', $user->id)
+                ->where('abonnement_id', $abonnement->id)
                 ->latest()->take(5)->get() as $reponse) {
                 $completedTests[] = [
                     'id' => $reponse->id,
-                    'test_type' => $ceTestType->label,
+                    'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
                     'skill' => 'Expression Écrite',
                     'date' => $reponse->created_at,
                     'duration' => 60,
                     'score' => $reponse->score,
                     'max_score' => 699,
-                    'level' => $reponse->niveau,
+                    'level' => $reponse->niveau ?? 'Non défini',
+                    'correct_answers' => null,
+                    'total_questions' => null,
+                ];
+            }
+
+            // Expression Orale
+            foreach (ExpressionOraleReponse::where('user_id', $user->id)
+                ->where('abonnement_id', $abonnement->id)
+                ->latest()->take(5)->get() as $reponse) {
+                $completedTests[] = [
+                    'id' => $reponse->id,
+                    'test_type' => $abonnement->examen . ' - ' . $abonnement->nom_du_plan,
+                    'skill' => 'Expression Orale',
+                    'date' => $reponse->created_at,
+                    'duration' => 15,
+                    'score' => $reponse->score,
+                    'max_score' => 699,
+                    'level' => $reponse->niveau ?? 'Non défini',
                     'correct_answers' => null,
                     'total_questions' => null,
                 ];
             }
         }
 
-        // Expression Orale (TCF Québec)
-        if ($coTestType) {
-            foreach (ExpressionOraleReponse::where('user_id', $user->id)
-                ->latest()->take(5)->get() as $reponse) {
-                $completedTests[] = [
-                    'id' => $reponse->id,
-                    'test_type' => $coTestType->label,
-                    'skill' => 'Expression Orale',
-                    'date' => $reponse->created_at,
-                    'duration' => 15,
-                    'score' => $reponse->score,
-                    'max_score' => 699,
-                    'level' => $reponse->niveau,
-                    'correct_answers' => null,
-                    'total_questions' => null,
-                ];
-            }
-        }
 
         $learningGoal = [
             'target_level' => 'C1',
@@ -149,6 +149,6 @@ class TestController extends Controller
             'target_date' => Carbon::now()->addMonths(3)
         ];
 
-        return view('test.choix_test', compact('userLevels', 'completedTests', 'learningGoal','testTypes'));
+        return view('test.choix_test', compact('userLevels', 'completedTests', 'learningGoal', 'testTypes'));
     }
 }

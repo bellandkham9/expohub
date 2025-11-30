@@ -101,11 +101,11 @@ EOT;
             ]);
         }
 
-     return back()->with([
-    'success' => 'Tâches générées avec succès.',
-    'generated_section' => 'expression_ecrite',
-    'generated_taches' => $questions
-]);
+        return back()->with([
+            'success' => 'Tâches générées avec succès.',
+            'generated_section' => 'expression_ecrite',
+            'generated_taches' => $questions
+        ]);
 
 
     }
@@ -118,5 +118,5 @@ EOT;
         return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
-    
+
 }

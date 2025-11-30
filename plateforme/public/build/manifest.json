@@ -19,7 +19,11 @@
     "isEntry": true
   },
   "resources/css/app.css": {
+<<<<<<< HEAD
     "file": "assets/app-D-Abtd1u.css",
+=======
+    "file": "assets/app-BzCBQ6en.css",
+>>>>>>> 7f683395dcde81ef48738974e53014077658bcca
     "src": "resources/css/app.css",
     "isEntry": true
   },

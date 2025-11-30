@@ -29,7 +29,9 @@
                                 @foreach ($testTypes as $testType)
                                     <div class="col-12 col-md-6 col-lg-6">
                                         <div class="test-card text-center h-100 p-4">
-                                            <h3 class="test-title h5 mb-3">{{ strtoupper($testType->examen) }}</h3>
+                                            <h3 class="test-title h5 mb-3">{{ strtoupper($testType->examen) }} <span
+                                                    style="color: #F8B70D; font-size: 12px;">({{ strtoupper($testType->nom_du_plan) }})</span>
+                                            </h3>
                                             <p class="mb-4 text-muted">
                                                 {{ $testType->description ?? 'Test de langue officiel pour tous niveaux.' }}
                                             </p>
@@ -112,7 +114,7 @@
                                 <div class="d-flex flex-column align-items-center mb-3">
                                     <div class="avatar-container mb-2">
                                         <img src="{{ auth()->user()->avatar_url ? asset(auth()->user()->avatar_url) : asset('images/user-person.png') }}"
-                                             alt="Avatar" class="rounded-circle avatar-img img-fluid">
+                                            alt="Avatar" class="rounded-circle avatar-img img-fluid">
                                     </div>
                                     <h5 class="card-title mb-0">{{ Auth::user()->name }}</h5>
                                 </div>
@@ -121,12 +123,15 @@
                                     <button onclick="showNiveauxInfo()" class="btn btn-info btn-sm mb-3">
                                         ℹ️ Infos niveaux
                                     </button>
-                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    <div class="d-flex flex-wrap justify-content-center gap-2" style="height: 100px; overflow-y: scroll;">
                                         @foreach ($testTypes as $testType)
                                             @php
                                                 $modalId = 'modal_' . $testType->id;
-                                                $key = $testType->examen;
+                                                $key = $testType->examen . '_' . $testType->nom_du_plan;
+                                                $key1 = $testType->examen;
+                                                $key2 = $testType->nom_du_plan;
                                                 $niveaux = $userLevels[$key] ?? null;
+
                                                 $skills = [
                                                     'Compréhension Écrite' => 'comprehension_ecrite',
                                                     'Compréhension Orale' => 'comprehension_orale',
@@ -134,42 +139,50 @@
                                                     'Expression Orale' => 'expression_orale',
                                                 ];
                                             @endphp
-                                            <button type="button" class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
-                                                    @if($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
-                                                @if(!$testType->paye)
-                                                <i class="fas fa-lock me-1"></i>
+                                            <button type="button"
+                                                class="btn btn-level {{ $testType->paye ? 'btn-outline-primary' : 'btn-secondary' }} {{ $testType->paye ? '' : 'disabled' }}"
+                                                @if ($testType->paye) data-bs-toggle="modal" data-bs-target="#{{ $modalId }}" @endif>
+                                                @if (!$testType->paye)
+                                                    <i class="fas fa-lock me-1"></i>
                                                 @endif
-                                                {{ strtoupper($key) }}
+                                                {{ strtoupper($key1) }}
+                                                <p style="font-size: 10px; color: #F8B70D;">({{ strtoupper($key2) }})</p>
                                             </button>
-                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1" aria-hidden="true">
+                                            <div class="modal fade" id="{{ $modalId }}" tabindex="-1"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                            <h5 class="modal-title">Niveaux pour {{ strtoupper($key) }}
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Fermer"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            @if($niveaux)
-                                                            <div class="row g-2">
-                                                                @foreach($skills as $label => $champ)
-                                                                @php
-                                                                $level = $niveaux[$champ] ?? 'Non défini';
-                                                                $color = match($level) {
-                                                                    'C2', 'C1', 'B2' => 'success',
-                                                                    'B1', 'A2', 'A1' => 'warning',
-                                                                    default => 'secondary'
-                                                                };
-                                                                @endphp
-                                                                <div class="col-6">
-                                                                    <div class="p-2 bg-light rounded">
-                                                                        <small class="d-block text-muted">{{ $label }}</small>
-                                                                        <strong class="text-{{ $color }}">{{ $level }}</strong>
-                                                                    </div>
+                                                            @if ($niveaux)
+                                                                <div class="row g-2">
+                                                                    @foreach ($skills as $label => $champ)
+                                                                        @php
+                                                                            $level = $niveaux[$champ] ?? 'Non défini';
+                                                                            $color = match ($level) {
+                                                                                'C2', 'C1', 'B2' => 'success',
+                                                                                'B1', 'A2', 'A1','A0' => 'warning',
+                                                                                default => 'secondary',
+                                                                            };
+                                                                        @endphp
+                                                                        <div class="col-6">
+                                                                            <div class="p-2 bg-light rounded">
+                                                                                <small
+                                                                                    class="d-block text-muted">{{ $label }}</small>
+                                                                                <strong
+                                                                                    class="text-{{ $color }}">{{ $level }}</strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
-                                                                @endforeach
-                                                            </div>
                                                             @else
-                                                            <p class="text-muted">Aucun niveau enregistré pour ce test.</p>
+                                                                <p class="text-muted">Aucun niveau enregistré pour ce test.
+                                                                </p>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -186,7 +199,7 @@
         </div>
     </div>
     @include('start.chatbot')
-    
+
     <style>
         .btn-primary {
             border-radius: 20px;
@@ -198,7 +211,7 @@
             border-radius: 20px;
             color: white;
         }
-        
+
         .avatar-container {
             width: 80px;
             height: 80px;
@@ -239,7 +252,7 @@
     </style>
 
 
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         function showNiveauxInfo() {
@@ -262,5 +275,4 @@
             });
         }
     </script>
-
 @endsection

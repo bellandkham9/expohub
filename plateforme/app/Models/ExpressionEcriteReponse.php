@@ -9,6 +9,7 @@ class ExpressionEcriteReponse extends Model
     protected $fillable = [
         'user_id',
         'expression_ecrite_id',
+        'abonnement_id',
         'prompt',
         'reponse',
         'score',
@@ -27,4 +28,10 @@ class ExpressionEcriteReponse extends Model
     {
         return $this->belongsTo(ExpressionEcrite::class, 'expression_ecrite_id');
     }
+
+    public function abonnement()
+{
+    return $this->belongsTo(abonnement::class, 'abonnement_id');
+}
+
 }

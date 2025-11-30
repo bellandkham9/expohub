@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Storage;
 class TrainController extends Controller
 {
     // ================= Dashboard =================
-    public function index(){
+    public function index()
+    {
         $stats = [
             'total_questions' => ComprehensionEcrite::count() + ComprehensionOrale::count(),
             'oral_questions' => ComprehensionOrale::count(),

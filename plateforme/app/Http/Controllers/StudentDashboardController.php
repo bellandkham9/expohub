@@ -31,11 +31,11 @@ class StudentDashboardController extends Controller
 
         // Si aucune souscription active n'est trouvée
 
-         // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
         $souscriptionActive = Souscription::where('user_id', $user->id)
-                                          ->where('date_fin', '>=', Carbon::now())
-                                          ->with('abonnement') // Charger la relation 'abonnement'
-                                          ->get();
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
 
         if (!$souscriptionActive) {
@@ -44,27 +44,34 @@ class StudentDashboardController extends Controller
 
         $tousLesAbonnements = abonnement::all();
 
-           // 3. Fusionner les deux collections et marquer les abonnements payés
-        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActive) {
-            // Ajouter une nouvelle propriété 'paye' à chaque objet Abonnement
-            $abonnement->paye = $souscriptionActive->contains($abonnement->id);
+        // Récupérer la souscription active de l'utilisateur avec l'abonnement associé
+        $souscriptionActives = Souscription::where('user_id', $user->id)
+            ->where('date_fin', '>=', Carbon::now())
+            ->with('abonnement') // Charger la relation 'abonnement'
+            ->get();
 
+
+        // 3. Fusionner les deux collections et marquer les abonnements payés
+        $testTypes = $tousLesAbonnements->map(function ($abonnement) use ($souscriptionActives) {
+            $abonnement->paye = $souscriptionActives->contains(function ($souscription) use ($abonnement) {
+                return $souscription->abonnement_id == $abonnement->id;
+            });
             return $abonnement;
         });
+
 
         // 1. Récupération des niveaux par test
         $userLevels = [];
 
-        
+
         foreach ($testTypes as $testType) {
             // Récupérer le TestType en fonction de l'examen
-        $testTypeId = TestType::where('examen', $testType->examen)->first();
-
             $niveau = Niveau::where('user_id', $user->id)
-                ->where('test_type', $testTypeId->id)
+                ->where('test_type', $testType->id)
                 ->first();
+            $key = $testType->examen . '_' . $testType->nom_du_plan;
 
-            $userLevels[$testType->examen] = $niveau ? [
+            $userLevels[$key] = $niveau ? [
                 'comprehension_ecrite' => $niveau->comprehension_ecrite,
                 'comprehension_orale' => $niveau->comprehension_orale,
                 'expression_ecrite' => $niveau->expression_ecrite,
@@ -75,12 +82,15 @@ class StudentDashboardController extends Controller
                 'expression_ecrite' => 'Non défini',
                 'expression_orale' => 'Non défini',
             ];
-        // Vérifier si l’utilisateur a souscrit et payé cet abonnement
+            // Vérifier si l’utilisateur a souscrit et payé cet abonnement
             $souscriptionsPayees[$testType->examen] = Souscription::where('user_id', $user->id)
                 ->where('paye', true)
                 ->where('abonnement_id', $testType->id)
                 ->first();
-                }
+        }
+
+
+
 
         // 2. Regrouper tous les tests en un tableau commun
         $allTests = collect();
@@ -145,27 +155,27 @@ class StudentDashboardController extends Controller
             ];
         });
 
-         // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
-    $completedTests = HistoriqueTest::where('user_id', $user->id)
-        ->orderByDesc('completed_at')
-        ->take(3)
-        ->get()
-        ->map(function ($test) {
-            return [
-                'id' => $test->id,
-                'test_type' => $test->test_type,
-                'skill' => ucwords(str_replace('_', ' ', $test->skill)),
-                'date' => $test->completed_at ?? $test->created_at,
-                'duration' => $test->duration ?? 0,
-                'score' => $test->score ?? 0,
-                'max_score' => 699,
-                'level' => $test->niveau ?? '—',
-                'correct_answers' => null, // À adapter si tu veux stocker ça
-                'total_questions' => null,
-                'details_route'=> $test->details_route,
-                'refaire_route'=> $test->refaire_route,
-            ];
-        });
+        // ✅ Nouvelle récupération des tests depuis la table `historique_tests`
+        $completedTests = HistoriqueTest::where('user_id', $user->id)
+            ->orderByDesc('completed_at')
+            ->take(3)
+            ->get()
+            ->map(function ($test) {
+                return [
+                    'id' => $test->id,
+                    'test_type' => $test->test_type,
+                    'skill' => ucwords(str_replace('_', ' ', $test->skill)),
+                    'date' => $test->completed_at ?? $test->created_at,
+                    'duration' => $test->duration ?? 0,
+                    'score' => $test->score ?? 0,
+                    'max_score' => 699,
+                    'level' => $test->niveau ?? '—',
+                    'correct_answers' => null, // À adapter si tu veux stocker ça
+                    'total_questions' => null,
+                    'details_route' => $test->details_route,
+                    'refaire_route' => $test->refaire_route,
+                ];
+            });
 
 
 
@@ -175,7 +185,7 @@ class StudentDashboardController extends Controller
             'target_date' => Carbon::now()->addMonths(3)
         ];
 
-         $testTypes1 = abonnement::all();
+        $testTypes1 = abonnement::all();
 
         return view('client.dashboard', compact(
             'userLevels',
@@ -190,24 +200,23 @@ class StudentDashboardController extends Controller
     }
 
 
-   public function verifierAcces()
-{
-    $testsGratuits = HistoriqueTest::where('user_id', Auth::id())
-        ->where('is_free', true)
-        ->count();
+    public function verifierAcces()
+    {
+        $testsGratuits = HistoriqueTest::where('user_id', Auth::id())
+            ->where('is_free', true)
+            ->count();
 
-    if ($testsGratuits >=5) {
+        if ($testsGratuits >= 5) {
+            return response()->json([
+                'has_free_tests' => false,
+                'nombre' => $testsGratuits
+            ]);
+        }
+
         return response()->json([
-            'has_free_tests' => false,
-            'nombre' =>$testsGratuits
+            'has_free_tests' => true
         ]);
     }
 
-    return response()->json([
-        'has_free_tests' => true
-    ]);
-}
-
 
 }
-
